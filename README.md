@@ -1,4 +1,5 @@
-Chức năng:
+Chức năng
+
 I. Các chức năng cho người chủ / quản lý của hàng (admin)
   1. Giao diện admin: 
   Trang đăng nhập không dùng chung với khách hàng
