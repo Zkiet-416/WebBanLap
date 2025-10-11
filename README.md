@@ -5,17 +5,26 @@ I. Các chức năng cho người chủ / quản lý của hàng (admin)
   Trang đăng nhập không dùng chung với khách hàng
   Danh mục chức năng quản trị.(0,5)
   2. Quản lý người dùng / khách hàng: 
+  
   Hiển thị danh sách thông tin khách hàng(0,25)
+  
   Reset mật khẩu(0,25)
+  
   Khóa / mở khóa tài khoản(0,25)
   3. Quản lý loại sản phẩm: thêm, sửa, xóa / ẩn(0,5)
   4. Quản lý danh mục sản phẩm
+  
   Thêm sản phẩm: thông tin sản phẩm gồm loại, mã, tên, hình, mô tả.(0,25)
+  
   Sửa sản phẩm: hiển thị đúng thông tin trước khi sửa.(0,25)
+  
   Xóa / Ẩn sản phẩm(0,25)
   5. Quản lý Nhập sản phẩm
+  
   Hiển thị & tìm danh mục phiếu nhập hàng(0,25)
+  
   Thêm phiếu nhập hàng: thông tin phiếu nhập gồm ngày nhập, giá nhập và số lượng của từng sản phẩm (không quản lý nhà cung cấp)(0,25)
+  
   Sửa và hoàn thành phiếu nhập: chỉ có thể sửa phiếu nhập trước khi hoàn thành(0,25)
   6. Quản lý giá bán
   Hiển thị & nhập / sửa thông tin tỉ lệ % lợi nhuận theo loại sản phẩm, theo sản phẩm trong từng loại.(0,25)
