@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/log-reg.css">
+    <title>Login - Register</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="tab-header">
+            <div class="tab active" id="log-tab">ĐĂNG NHẬP</div>
+            <div class="tab" id="reg-tab">ĐĂNG KÝ</div>
+        </div>
+        <!--Form dnhap-->
+        <form id="log-form">
+            <label for="acc1"><b>Email hoặc số điện thoại</b><span style="color: red">*</span></label>
+            <input type="text" id="acc1">
+            <label for="psw1"><b>Mật khẩu</b><span style=color:red>*</span></label>
+            <div class="input-eye">
+                <input type="password" id="psw1">
+                <img src="../img/eye.jpg" id="openpsw" class="eye">
+            </div>
+
+            <label><input type="checkbox">Lưu mật khẩu đăng nhập</label>
+            <div id="forgotpsw"><b><a href="#">Quên mật khẩu?</a></b></div>
+            <button>ĐĂNG NHẬP</button>
+        </form>
+
+        <!-- Form dky -->
+        <form class="hidden" id="reg-form">
+            <label for="acc2"><b>Tên đăng nhập</b><span style="color:red">*</span></label>
+            <input type="text" id="acc2">
+            <label for="sdt"><b>Số điện thoại</b><span style="color:red">*</span></label>
+            <input type="text" id="sdt">
+            <label for="email"><b>Email</b><span style="color:red">*</span></label>
+            <input type="text" id="email">
+            <label for="psw2"><b>Mật khẩu</b><span style="color:red">*</span></label>
+            <div class="input-eye">
+                <input type="password" id="psw2">
+                <img src="../img/eye.jpg" id="openpsw" class="eye">
+            </div>
+            <label for="confirm"><b>Xác thực mật khẩu</b><span style="color:red">*</span></label>
+            <div class="input-eye">
+                <input type="password" id="confirm">
+                <img src="../img/eye.jpg" id="openpsw" class="eye">
+            </div>
+
+            <label><input type="checkbox" id="agree"><span></span>Đồng ý các điều khoản, điều kiện</label>
+            <button>ĐĂNG KÝ</button>
+            <div id="chooseLogin">Bạn đã có tài khoản?<a href="#" id="return-log">Đăng nhập</a></div>
+
+        </form>
+    </div>
+    <script src="../js/log-reg.js"></script>
+</body>
+
+</html>

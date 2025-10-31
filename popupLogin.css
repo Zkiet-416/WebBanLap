@@ -1,0 +1,24 @@
+#openLogin {
+    cursor: pointer;
+}
+
+#popupLogin.hidden {
+    display: none;
+}
+
+#popupLogin {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#popupLogin iframe {
+    width: 420px;
+    height: 600px;
+    border: none;
+    border-radius: 10px;
+}
