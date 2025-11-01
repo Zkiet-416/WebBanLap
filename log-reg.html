@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/log-reg.css">
+    <link rel="stylesheet" href="../assets/css/log-reg.css">
     <title>Login - Register</title>
 </head>
 
@@ -16,36 +16,36 @@
         </div>
         <!--Form dnhap-->
         <form id="log-form">
-            <label for="acc1"><b>Email hoặc số điện thoại</b><span style="color: red">*</span></label>
+            <label for="acc1"><b>Email hoặc số điện thoại</b><span class="red">*</span></label>
             <input type="text" id="acc1">
-            <label for="psw1"><b>Mật khẩu</b><span style=color:red>*</span></label>
+            <label for="psw1"><b>Mật khẩu</b><span class="red">*</span></label>
             <div class="input-eye">
                 <input type="password" id="psw1">
-                <img src="../img/eye.jpg" id="openpsw" class="eye">
+                <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
             </div>
 
-            <label><input type="checkbox">Lưu mật khẩu đăng nhập</label>
+            <label><input type="checkbox" id="rememberMe">Lưu mật khẩu đăng nhập</label>
             <div id="forgotpsw"><b><a href="#">Quên mật khẩu?</a></b></div>
             <button>ĐĂNG NHẬP</button>
         </form>
 
         <!-- Form dky -->
         <form class="hidden" id="reg-form">
-            <label for="acc2"><b>Tên đăng nhập</b><span style="color:red">*</span></label>
+            <label for="acc2"><b>Tên đăng nhập</b><span class="red">*</span></label>
             <input type="text" id="acc2">
-            <label for="sdt"><b>Số điện thoại</b><span style="color:red">*</span></label>
+            <label for="sdt"><b>Số điện thoại</b><span class="red">*</span></label>
             <input type="text" id="sdt">
-            <label for="email"><b>Email</b><span style="color:red">*</span></label>
+            <label for="email"><b>Email</b><span class="red">*</span></label>
             <input type="text" id="email">
-            <label for="psw2"><b>Mật khẩu</b><span style="color:red">*</span></label>
+            <label for="psw2"><b>Mật khẩu</b><span class="red">*</span></label>
             <div class="input-eye">
                 <input type="password" id="psw2">
-                <img src="../img/eye.jpg" id="openpsw" class="eye">
+                <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
             </div>
-            <label for="confirm"><b>Xác thực mật khẩu</b><span style="color:red">*</span></label>
+            <label for="confirm"><b>Xác thực mật khẩu</b><span class="red">*</span></label>
             <div class="input-eye">
                 <input type="password" id="confirm">
-                <img src="../img/eye.jpg" id="openpsw" class="eye">
+                <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
             </div>
 
             <label><input type="checkbox" id="agree"><span></span>Đồng ý các điều khoản, điều kiện</label>
@@ -54,7 +54,7 @@
 
         </form>
     </div>
-    <script src="../js/log-reg.js"></script>
+    <script src="../assets/js/log-reg.js"></script>
 </body>
 
 </html>

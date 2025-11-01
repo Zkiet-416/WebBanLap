@@ -1,0 +1,112 @@
+// ========= CHỌN YEAR - MONTH - DAY  ========= 
+window.addEventListener("load", () => {
+    const daySelect = document.getElementById("day");
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    for (let i = 1; i <= 12; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        monthSelect.appendChild(option);
+    }
+    for (let i = 2025; i >= 1900; i--) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        yearSelect.appendChild(option);
+    }
+
+    function updateDays() {
+        const month = parseInt(monthSelect.value);
+        const year = parseInt(yearSelect.value);
+
+        if (!month || !year) return;
+
+        const daysInMonth = new Date(year, month, 0).getDate();
+        daySelect.innerHTML = '<option>Ngày</option>';
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            daySelect.appendChild(option);
+        }
+    }
+    //cập nhật ngày khi thay đổi tháng
+    monthSelect.addEventListener("change", updateDays);
+    yearSelect.addEventListener("change", updateDays);
+
+    // ========= THAY AVATAR  ========= 
+    const avatar = document.querySelector(".avatar img");
+    const changeAvatar = document.getElementById("change-avatar");
+    const fileInput = document.getElementById("fileInput");
+
+    changeAvatar.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const newAvatar = e.target.result;
+            avatar.src = newAvatar;
+
+            // Cập nhật vào currentUser
+            let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+            if (currentUser) {
+                currentUser.image = newAvatar;
+                localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+                // Đồng bộ vào danh sách accounts
+                let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+                accounts = accounts.map(acc => acc.email === currentUser.email ? currentUser : acc);
+                localStorage.setItem("accounts", JSON.stringify(accounts));
+            }
+        }
+        reader.readAsDataURL(file);
+    });
+    //tạo biến lưu dữ liệu
+    const userProfile = JSON.parse(localStorage.getItem("currentUser"));
+    const usernameInput = document.getElementById("username");
+    const fullnameInput = document.getElementById("fullname");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const genderInput = document.querySelector('input[name="gender"]:checked')?.value || "";
+    const birthdayInput = `${yearSelect.value}-${monthSelect.value}-${daySelect.value}` || "";
+    // ========= LẤY DỮ LIỆU =========
+    if (userProfile) {
+        if (userProfile.image) avatar.src = userProfile.image;
+        if (usernameInput) usernameInput.value = userProfile.username || "";
+        if (fullnameInput) fullnameInput.value = userProfile.fullname || "";
+        if (emailInput) emailInput.value = userProfile.email || "";
+        if (phoneInput) phoneInput.value = userProfile.phone || "";
+    }
+
+    // ========= LƯU THÔNG TIN PROFILE =========
+    const save = document.getElementById("save-profile");
+    save.addEventListener("click", (e) => {
+        e.preventDefault();
+        let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        currentUser.username = usernameInput.value.trim();
+        currentUser.fullname = fullnameInput.value.trim();;
+        currentUser.email = emailInput.value.trim();
+        currentUser.phone = phoneInput.value.trim();
+        currentUser.gender = genderInput;
+        currentUser.birthday = birthdayInput;
+
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+        let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+        accounts = accounts.map(acc => acc.email === currentUser.email ? currentUser : acc);
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+
+        alert("Lưu thông tin thành công!");
+        location.reload();
+    })
+});
+
