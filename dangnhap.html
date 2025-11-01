@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+/*Nền xanh*/
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #07E7D8, #04CFC2);
+  }
+/*trang đăng nhập*/
+  .login-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+    padding: 40px 50px;
+    width: 500px;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+  }
+
+  h2 {
+    margin-bottom: 5px;
+    color: #222;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 25px;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+  }
+
+  input:focus {
+    border-color: #07E7D8;
+    box-shadow: 0 0 5px rgba(7,231,216,0.5);
+  }
+
+  .remember {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+/*login to dashboard*/
+  .login-btn {
+    width: 100%;
+    background-color: #07E7D8;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .login-btn:hover {
+    background-color: #04c5b7;
+  }
+/*tin nhan bao loi */
+  .error-message { 
+    margin-top: 12px;
+    font-size: 14px;
+    color: red;
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <h2>Welcome back,</h2>
+  <p>Please sign in to your admin account below.</p>
+
+  <form id="loginForm" onsubmit="login(event)">
+    <input type="email" id="email" placeholder="Email here..." required>
+    <input type="password" id="password" placeholder="Password here..." required>
+
+    <div class="remember">
+      <input type="checkbox" id="remember" style="margin-right:6px;">
+      <label for="remember">Keep me logged in</label>
+    </div>
+
+    <button type="submit" class="login-btn">Login to Dashboard</button>
+    <div id="errorMsg" class="error-message"></div>
+  </form>
+</div>
+<script>
+  function login(e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorMsg = document.getElementById("errorMsg");
+
+    // nhập đúng tài khoản, sai thì báo lỗi
+    const validEmail = "Admin@gmail.com";
+    const validPassword = "12345";
+
+    if (email === validEmail && password === validPassword) {
+      errorMsg.style.display = "none";
+      window.location.href = "dashboard.html"; // gắn tên miền để chuyển tab
+    } else {
+      errorMsg.textContent = "Sai tài khoản hoặc mật khẩu!";
+      errorMsg.style.display = "block";
+    }
+  }
+</script>
+
+</body>
+</html>
