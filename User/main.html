@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cửa hàng Laptop & Phụ kiện - Mẫu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/cart.css">
+    <link rel="stylesheet" href="../assets/css/productDetail.css">
+    <link rel="stylesheet" href="../assets/css/cartDetail.css">
+</head>
+
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header>
+        <!-- Top - Header -->
+        <div class="header-top">
+            <div class="container-header">
+                <a href="#" class="logo">Tên web + logo nhóm</a>
+
+                <div class="search-bar">
+                    <input type="text" placeholder="Tìm sản phẩm...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <div class="header-right">
+                    <div class="cart-container">
+                        <button class="cart-toggle-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Giỏ hàng</span>
+                        </button>
+                        <div class="cart-dropdown">
+                            <h3>GIỎ HÀNG</h3>
+                            <div class="cart-items">
+                                <div class="empty-cart">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <p>Hiện chưa có sản phẩm</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="cart-footer">
+                                <div class="cart-total">
+                                    <span>TỔNG TIỀN:</span>
+                                    <span id="cart-total">0đ</span>
+                                </div>
+                                <div class="cart-buttons">
+                                    <button class="btn-view">XEM GIỎ HÀNG</button>
+                                    <button class="btn-pay">THANH TOÁN</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lang-switch">
+                        <span class="flag-circle">
+                            <img src="../assets/images/vn.png" alt="VN" class="flag-img">
+                        </span>
+                        <span>Tiếng Việt</span>
+                    </div>
+
+                    <div class="user-info">
+                        <span>Đăng nhập</span>
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== MENU NGANG ========== -->
+        <nav class="main-menu">
+            <div class="menu-wrap">
+                <ul class="menu-list">
+                    <li> Danh mục sản phẩm
+                        <div class="dropdown">
+                            <div class="dropdown-wrapper">
+                                <div class="dropdown-header">
+                                    <div class="tab">
+                                        <img src="../assets/images/LapTop.png" alt="LT" class="LT-img"> Laptop
+                                    </div>
+                                    <div class="tab">
+                                        <img src="../assets/images/PK.svg" alt="PK" class="PK-img">
+                                        Phụ kiện
+                                    </div>
+                                </div>
+
+                                <!-- body: khối trắng chia 2 cột -->
+                                <div class="dropdown-body">
+                                    <div class="dropdown-inner">
+                                        <div class="col">
+                                            <ul>
+                                                <li>Acer</li>
+                                                <li>Asus</li>
+                                                <li>Lenovo</li>
+                                                <li>HP</li>
+                                                <li>Dell</li>
+                                            </ul>
+                                        </div>
+                                        <div class="middle-divider"></div>
+                                        <div class="col">
+                                            <ul>
+                                                <li>Balo</li>
+                                                <li>Đế tản nhiệt</li>
+                                                <li>Tai nghe</li>
+                                                <li>Chuột</li>
+                                                <li>Bàn phím</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <!--ket thuc body -->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Các menu khác -->
+                    <li>Trang chủ</li>
+                    <li>Tin tức</li>
+                    <li>Khuyến mãi</li>
+                    <li>Hotline</li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ========== MAIN CONTAINER ========== -->
+    <section class="container">
+        <!-- slider -->
+        <div class="slider" id="slider">
+            <div class="slides" id="slides">
+                <div class="slide">
+                    <img src="../assets/images/Banner1.jpg" alt="Banner1" class="banner">
+                </div>
+                <div class="slide">
+                    <img src="../assets/images/Banner2.jpg" alt="Banner2" class="banner">
+                </div>
+                <div class="slide">
+                    <img src="../assets/images/Banner3.jpg" alt="Banner3" class="banner">
+                </div>
+            </div>
+            <div class="arrow prev" id="prevBtn">&#10094;</div>
+            <div class="arrow next" id="nextBtn">&#10095;</div>
+        </div>
+
+        <section class="products" id="suggestions">
+            <h2>Gợi ý cho bạn</h2>
+            <div class="tabs" id="brandTabs">
+                <button class="active">Acer</button>
+                <button>Asus</button>
+                <button>Lenovo</button>
+                <button>HP</button>
+                <button>Dell</button>
+            </div>
+
+            <div class="grid-fixed-5" id="suggestGrid">
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Acer Gaming Nitro V ANV15-41-R2UP</div>
+                    <div class="product-price">16,390,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V 15 ProPanel ANV15-41-R0FE</div>
+                    <div class="product-price">21,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop gaming Acer Nitro V 15 ProPanel ANV15 41 R7CR</div>
+                    <div class="product-price">24,490,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer4.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop gaming Acer Nitro V 15 ProPanel ANV15 41 R0Y4</div>
+                    <div class="product-price">24,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer5.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro 16 AI ProPanel AN16S 61 R5F4</div>
+                    <div class="product-price">39,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer6.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro Lite 16 NL16 71G 56WQ</div>
+                    <div class="product-price">19,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer7.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop gaming Acer Nitro V ANV15 51 78BG</div>
+                    <div class="product-price">29,590,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer8.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Predator Helios 18 PH18 73 93P0</div>
+                    <div class="product-price">97,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer9.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Predator Helios Neo 16 AI PHN16 73 757W</div>
+                    <div class="product-price">50,890,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer10.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop gaming Acer Nitro V ProPanel ANV15 52 59AA</div>
+                    <div class="product-price">26,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer11.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V ANV15 41 R9M1</div>
+                    <div class="product-price">19,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer12.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V 15 ANV15 51 500A</div>
+                    <div class="product-price">19,290,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer13.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V ANV16 41 R6NA</div>
+                    <div class="product-price">29,890,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer14.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V ANV16 41 R36Y</div>
+                    <div class="product-price">27,390,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Acer">
+                    <div><img src="../assets/images/Acer15.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Acer Nitro V ANV16 41 R7EN</div>
+                    <div class="product-price">23,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus TUF F16 FX607VJB-RL151W</div>
+                    <div class="product-price">21,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus ROG Strix SCAR 18 G835LW-SA193W</div>
+                    <div class="product-price">79,890,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216W</div>
+                    <div class="product-price">24,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216Q</div>
+                    <div class="product-price">15,444,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216E</div>
+                    <div class="product-price">24,000,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus IA V16 V3607VU-RP216W</div>
+                    <div class="product-price">23,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AO V16 V3607VU-RP216W</div>
+                    <div class="product-price">22,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP226W</div>
+                    <div class="product-price">21,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AP V16 V3607VU-RP216W</div>
+                    <div class="product-price">20,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V10 V3607VU-RP216W</div>
+                    <div class="product-price">19,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VP-RP216W</div>
+                    <div class="product-price">29,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216C</div>
+                    <div class="product-price">28,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216R</div>
+                    <div class="product-price">30,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216A</div>
+                    <div class="product-price">31,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Asus">
+                    <div><img src="../assets/images/Asus3.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Asus AI V16 V3607VU-RP216D</div>
+                    <div class="product-price">17,190,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Lenovo">
+                    <div><img src="../assets/images/Lenovo1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Lenovo LOQ Essential 15IRX11 83SC003TVN</div>
+                    <div class="product-price">30,490,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Lenovo">
+                    <div><img src="../assets/images/Lenovo2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Lenovo LOQ Essential 14IRX11 83SC003RVN</div>
+                    <div class="product-price">26,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Lenovo">
+                    <div><img src="../assets/images/Lenovo1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Lenovo LOQ Essential 15IRX12 83SC003TVN</div>
+                    <div class="product-price">30,999,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Lenovo">
+                    <div><img src="../assets/images/Lenovo2.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Lenovo LOQ Essential 13IRX11 83SC003RVN</div>
+                    <div class="product-price">28,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Lenovo">
+                    <div><img src="../assets/images/Lenovo1.png" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming Lenovo LOQ Essential 15IRX10 83SC003TVN</div>
+                    <div class="product-price">30,000,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="HP">
+                    <div><img src="../assets/images/HP1.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming HP Victus 16-s1141AX AZ0C6PA</div>
+                    <div class="product-price">27,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="HP">
+                    <div><img src="../assets/images/HP2.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming HP Victus 16-s1146AX AZ0D1PA</div>
+                    <div class="product-price">24,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="HP">
+                    <div><img src="../assets/images/HP1.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming HP Victus 16-s1041AX AZ0C6PA</div>
+                    <div class="product-price">28,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="HP">
+                    <div><img src="../assets/images/HP2.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming HP Victus 16-s1156AX AZ0D1PA</div>
+                    <div class="product-price">25,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="HP">
+                    <div><img src="../assets/images/HP1.jpg" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Laptop Gaming HP Victus 16-s141AX AZ0C6PA</div>
+                    <div class="product-price">29,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Dell">
+                    <div><img src="../assets/images/Dell1.webp" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Dell Latitude 3420 Laptop</div>
+                    <div class="product-price">9,000,560đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Dell">
+                    <div><img src="../assets/images/Dell1.webp" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Dell Latitude 3419 Laptop</div>
+                    <div class="product-price">9,500,560đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Dell">
+                    <div><img src="../assets/images/Dell1.webp" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Dell Latitude 3418 Laptop</div>
+                    <div class="product-price">10,000,560đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Dell">
+                    <div><img src="../assets/images/Dell1.webp" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Dell Latitude 3417 Laptop</div>
+                    <div class="product-price">11,000,560đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="Dell">
+                    <div><img src="../assets/images/Dell1.webp" alt="LapTop" class="product-img"></div>
+                    <div class="product-name">Dell Latitude 3416 Laptop</div>
+                    <div class="product-price">12,000,560đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+            </div>
+
+            <div class="pager" aria-hidden="true">
+                <button>1</button><button>2</button><button>3</button>
+            </div>
+        </section>
+
+        <!-- Phụ kiện: 2 hàng x 5 cột -->
+        <section class="products" id="accessories" style="margin-top:28px;">
+            <h2>Phụ kiện</h2>
+            <div class="tabs">
+                <button class="active">Balo</button>
+                <button>Đế tản nhiệt</button>
+                <button>Tai nghe</button>
+                <button>Chuột</button>
+                <button>Bàn phím</button>
+            </div>
+
+            <div class="grid-accessory-5" id="accessGrid">
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo1.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo Predator SUV</div>
+                    <div class="product-price">300,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo Predator Utility</div>
+                    <div class="product-price">990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo3.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo ROG Archer BP1505</div>
+                    <div class="product-price">2,490,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo4.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo ROG Archer BP2702</div>
+                    <div class="product-price">5,490,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo5.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo ROG Archer Weekender BP2703</div>
+                    <div class="product-price">4,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="balo">
+                    <div><img src="../assets/images/Balo1.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Balo ROG Archer Weekender BP2703</div>
+                    <div class="product-price">5,990,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master Ergostand Air</div>
+                    <div class="product-price">690,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master NOTEPAL CMC2</div>
+                    <div class="product-price">100,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master Ergostand Air</div>
+                    <div class="product-price">590,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master NOTEPAL CMC3</div>
+                    <div class="product-price">200,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master Ergostand Air</div>
+                    <div class="product-price">790,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="de-tan-nhiet">
+                    <div><img src="../assets/images/Dtn2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Đế tản nhiệt Cooler Master NOTEPAL CMC4</div>
+                    <div class="product-price">300,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe Gaming Logitech G335</div>
+                    <div class="product-price">1,250,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe gaming Rapoo VH520C</div>
+                    <div class="product-price">420,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear3.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe gaming Rapoo VH650 (USB, 7.2 Led RGB)</div>
+                    <div class="product-price">350,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe Gaming Logitech G333</div>
+                    <div class="product-price">1,550,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear2.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe gaming Rapoo VH520D</div>
+                    <div class="product-price">450,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="tai-nghe">
+                    <div><img src="../assets/images/Ear3.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Tai nghe gaming Rapoo VH650 (USB, 7.1 Led RGB)</div>
+                    <div class="product-price">850,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột Razer Cobra - Zenless Zone One Edition</div>
+                    <div class="product-price">1,369,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse2.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột Logitech G501 Hero RGB</div>
+                    <div class="product-price">960,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse3.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột quang USB Logitech B100</div>
+                    <div class="product-price">79,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse1.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột Razer Cobra - Zenless Zone Zero Edition</div>
+                    <div class="product-price">1,100,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse2.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột Logitech G502 Hero RGB</div>
+                    <div class="product-price">1,000,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="chuot">
+                    <div><img src="../assets/images/Mouse3.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Chuột quang USB Logitech B101</div>
+                    <div class="product-price">100,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP1.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night</div>
+                    <div class="product-price">3,150,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP2.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V3 Horizon Blue</div>
+                    <div class="product-price">3,050,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP3.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V3 Lilac Purple</div>
+                    <div class="product-price">3,150,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP1.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V4 Dark Night</div>
+                    <div class="product-price">3,550,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP2.jpg" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V5 Horizon Blue</div>
+                    <div class="product-price">4,050,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+                <div class="card" data-type="ban-phim">
+                    <div><img src="../assets/images/BP3.png" alt="PK" class="product-img"></div>
+                    <div class="product-name">Bàn phím Akko MonsGeek M1W HE-SP V5 Lilac Purple</div>
+                    <div class="product-price">3,650,000đ</div>
+                    <div class="btn-detail">Chi tiết sản phẩm</div>
+                </div>
+            </div>
+
+            <div class="pager" aria-hidden="true">
+                <button>1</button><button>2</button><button>3</button>
+            </div>
+        </section>
+
+        <!-- ========== PRODUCT DETAIL SECTION ========== -->
+        <!-- Trong phần productDetail của main.html -->
+        <section class="products product-detail-page" id="productDetail" style="display: none;">
+            <div class="container">
+                <div class="product-detail-wrapper">
+                    <!-- Left Column -->
+                    <div class="product-left">
+                        <div class="product-image-section">
+                            <h2 id="detail-product-name">Tên sản phẩm</h2>
+                            <div class="main-image">
+                                <img id="detail-product-img" src="" alt="Product Image" class="product-detail-img">
+                            </div>
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3>Thông tin sản phẩm</h3>
+                            <div class="info-content">
+                                <p id="detail-product-info">Thông tin chi tiết về sản phẩm...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="product-right">
+                        <div class="specs-section">
+                            <h3>Thông số kỹ thuật</h3>
+                            <div class="specs-content">
+                                <div class="spec-item">
+                                    <span class="spec-label">CPU:</span>
+                                    <span class="spec-value" id="spec-cpu">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">RAM:</span>
+                                    <span class="spec-value" id="spec-ram">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Ổ cứng:</span>
+                                    <span class="spec-value" id="spec-storage">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Màn hình:</span>
+                                    <span class="spec-value" id="spec-display">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Card đồ họa:</span>
+                                    <span class="spec-value" id="spec-gpu">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Hệ điều hành:</span>
+                                    <span class="spec-value" id="spec-os">-</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Pin:</span>
+                                    <span class="spec-value" id="spec-battery">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="price-section">
+                            <div class="product-price" id="detail-product-price">0đ</div>
+                            <div class="action-buttons">
+                                <button class="btn-buy">ĐẶT MUA NGAY</button>
+                                <button class="btn-cart">THÊM GIỎ HÀNG</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CART DETAIL -->
+        <section class="cart-detail-page" id="cartDetail" style="display: none;">
+            <div class="container">
+                <!-- Cart Items -->
+                <div class="cart-section">
+                    <div class="cart-header">
+                        <h3>Giỏ hàng(3)</h3>
+                    </div>
+                    <div class="cart-ct">
+                        <div class="cart-subheader">
+                            <a href="../User/main.html" class="subheader-left">
+                                Mua thêm
+                                <i class="fas fa-plus-circle"></i>
+                            </a>
+                            <span class="subheader-right">Thành tiền</span>
+                        </div>
+
+                        <!-- Danh sách sản phẩm -->
+                        <div class="cart-list">
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Giỏ hàng của bạn đang trống</p>
+                                <a href="../User/main.html" class="continue-shopping">Tiếp tục mua sắm</a>
+                            </div>
+                        </div>
+
+                        <!-- Phân trang -->
+                        <div class="pagination"></div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <h3>Thanh toán</h3>
+                    <div class="summary-row">
+                        <span>Tổng tạm tính</span>
+                        <span class="subtotal-value">0đ</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Thành tiền</span>
+                        <span class="total-price">0đ</span>
+                    </div>
+                    <button class="checkout-btn">THANH TOÁN</button>
+                </div>
+            </div>
+        </section>
+        </div> <!-- end container -->
+
+        <!-- ========== FOOTER ========== -->
+        <footer>
+            <div class="footer-inner">
+                <div class="footer-left"></div>
+
+                <div class="footer-col">
+                    <strong>Tên</strong>
+                    <a href="#">Giới thiệu</a>
+                    <a href="#">Tuyển dụng</a>
+                </div>
+
+                <div class="footer-col">
+                    <strong>DỊCH VỤ</strong>
+                    <a href="#">Trung tâm trợ giúp</a>
+                    <a href="#">Hoạt động xã hội</a>
+                    <a href="#">Hướng dẫn đặt hàng online</a>
+                    <a href="#">Điều khoản sử dụng</a>
+                    <a href="#">Chính sách thanh toán, đổi trả - hoàn hàng</a>
+                </div>
+
+                <div class="footer-right">
+                    <strong>THEO DÕI CHÚNG TÔI</strong>
+                    <div class="socials">
+                        <div class="social-box"></div>
+                        <div class="social-box"></div>
+                        <div class="social-box"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-col">© 2025</div>
+                <div class="footer-col">CHÍNH SÁCH BẢO MẬT</div>
+                <div class="footer-right">LIÊN HỆ</div>
+            </div>
+        </footer>
+        <script src="../assets/js/main.js"></script>
+        <script src="../assets/js/cart.js"></script>
+        <script src="../assets/js/productDetail.js"></script>
+        <script src="../assets/js/cartDetail.js"></script>
+</body>
+
+</html>
