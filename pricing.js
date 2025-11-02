@@ -202,21 +202,31 @@ const openEditModal = (item) => {
     }
 
     if (mode === "product") {
-      // Sửa từng sản phẩm
-      item.profit = newProfit;
-      item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
-    } else {
-      // === Sửa loại sản phẩm: ảnh hưởng đến tất cả sản phẩm cùng loại
-      const categoryName = item.name;
-      products.forEach((p) => {
-        if (p.category === categoryName) {
-          p.profit = newProfit;
-          p.sellPrice = Math.round(p.importPrice * (1 + newProfit / 100));
-        }
-      });
-      // Cập nhật lại loại sản phẩm đang hiển thị
-      item.profit = newProfit;
+    // === Sửa từng sản phẩm ===
+    item.profit = newProfit;
+    item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
+
+    // === 🔄 Cập nhật lại lợi nhuận trung bình của loại sản phẩm tương ứng ===
+    const cat = categories.find(c => c.name === item.category);
+    if (cat) {
+      const sameCategoryProducts = products.filter(p => p.category === item.category);
+      const avgProfit =
+        sameCategoryProducts.reduce((sum, p) => sum + p.profit, 0) / sameCategoryProducts.length;
+      cat.profit = avgProfit.toFixed(1);
     }
+
+    } else {
+    // === Sửa loại sản phẩm: ảnh hưởng đến tất cả sản phẩm cùng loại ===
+    const categoryName = item.name;
+    products.forEach((p) => {
+      if (p.category === categoryName) {
+        p.profit = newProfit;
+        p.sellPrice = Math.round(p.importPrice * (1 + newProfit / 100));
+      }
+    });
+    // Cập nhật lại loại sản phẩm đang hiển thị
+    item.profit = newProfit;
+  }
 
     alert("✅ Đã lưu thay đổi thành công!");
     modal.classList.remove("show");
