@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px;
+}
+
+h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+input, button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button.save { background: #4CAF50; color: white; }
+button.cancel { background: #ccc; }
+button.edit { background: #0a84ff; color: white; }
+button.delete { background: #d9534f; color: white; }
+
+.table-container {
+    background: #eaf4f3;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid black;
+    text-align: center;
+    padding: 10px;
+}
+
+.product-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.product-row input {
+    flex: 1;
+}
+
+#addProductContainer,
+#editProductContainer {
+    margin-top: 15px;
+}
+
+.btn-add-product {
+    background: #0a84ff;
+    color: white;
+    border: none;
+    margin-top: 12px;
+}
