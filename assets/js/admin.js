@@ -44,11 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
           pageStyle.href = "/WebBanLap/assets/css/AdminProduct.css";
           content.innerHTML = `
           <div class="container-simple">
-        <header style="margin-bottom:10px">
-            <h1 class="page-title">Quản lý loại sản phẩm</h1>
-        </header>
+        <div>
+            <h1 class="page-title">Sản phẩm</h1>
+        </div>
 
-        <div class="search-box">
+        <div class="search-box" style="margin-bottom:20px;">
             <input type="text" id="brand-search-input" placeholder="Tìm kiếm theo tên" >
             <i class="fas fa-search"></i>
         </div>
@@ -123,9 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 </div>
         </div>
-
         <div id="product-pagination-container" class="pagination-container page-2-pagination"></div>
-
     </div>
 
     <div id="detailsModal" class="modal-overlay" onclick="closeModal(event)">
@@ -150,22 +148,18 @@ document.addEventListener("DOMContentLoaded", () => {
                             <strong style="font-size: 1.1rem;">Ưu đãi:</strong>
                             <i class="fas fa-pen-nib" onclick="editOffer()" style="margin-left: auto; font-size: 1rem; cursor: pointer;"></i>
                         </div>
-                        <div id="detail-offer-content" style="padding: 10px 15px; border: 1px solid #FF7043; border-top: none; background-color: white; min-height: 70px; color: #333;">
-                            </div>
+                        <div id="detail-offer-content" style="padding: 10px 15px; border: 1px solid #FF7043; border-top: none; background-color: white; min-height: 70px; color: #333;"></div>
                     </div>
                     </div>
             </div>
 
             <div class="detail-specs">
                 <h4 class="detail-specs-title">Thông số kỹ thuật chi tiết</h4>
-                <div id="detail-description-content" style="font-size: 0.95rem; line-height: 1.7; color: #333; white-space: pre-line;">
-                    </div>
+                <div id="detail-description-content" style="font-size: 0.95rem; line-height: 1.7; color: #333; white-space: pre-line;"></div>
             </div>
-
         </div>
     </div>`;
-          // Gọi logic trong file AdminProduct.js
-          if (window.loadAdminProductPage) window.loadAdminProductPage();
+          window.loadAdminProductPage();
           break;
 
         case "orders":
@@ -176,8 +170,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
         case "warehouse":
           content.innerHTML = `
-            <h1 class="page-title">Kho</h1>
-            <p>Thông tin kho hàng được hiển thị ở đây.</p>`;
+            <div> 
+            <h1 class="page-title" style="margin-bottom:-10px">Kho</h1> 
+
+        <main class="main-content">
+            
+            <div class="main-left-area"> 
+                
+                <div class="header-controls">
+                    
+                    <div class="search-box">
+                        <input type="text" id="product-search-input" placeholder="Tìm tên/ID sản phẩm...">
+                        <i class="fas fa-search"></i>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="transaction-type">Phân loại</label>
+                        <select id="transaction-type">
+                            <option value="ton" selected>Tồn kho</option>
+                            <option value="nhap">Nhập</option>
+                            <option value="xuat">Xuất</option>
+                        </select>
+                    </div>
+                    
+                    <div class="date-picker-group">
+                        <label for="start-date">Từ ngày</label>
+                        <input type="date" id="start-date">
+                    </div>
+                    
+                    <div class="date-picker-group">
+                        <label for="end-date">Đến ngày</label>
+                        <input type="date" id="end-date">
+                    </div>
+                    
+                    <button id="lookup-button" class="filter-btn lookup-btn">
+                        <i class="fas fa-search"></i> Tra cứu
+                    </button>
+
+                </div>
+
+                <div class="inventory-background">
+                    <div class="table-wrapper">
+                        <table class="inventory-table">
+                            <thead id="inventory-thead">
+                                </thead>
+                            <tbody id="inventory-tbody">
+                                </tbody >
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="pagination-container" class="pagination-container">
+                    </div>
+                
+            </div>
+            <aside class="right-panel">
+                <div class="warning-header">
+                    ⚠️ SẢN PHẨM SẮP HẾT
+                </div>
+                
+                <div id="low-stock-list" class="low-stock-list">
+                    
+                    </div>
+            </aside>
+        </main>
+    </div>`;
+          window.loadStockPage();
           break;
 
         case "pricing":
