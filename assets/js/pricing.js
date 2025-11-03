@@ -1,268 +1,283 @@
 // =======================
-// 💰 FILE: pricing.js
+// pricing.js (v3 - styled modal + linked profit update + keep search state)
 // =======================
 
-function formatCategoryName(name) {
-  if (!name) return "";
-  return name
-    .split("-")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+function parsePriceString(price) {
+  if (typeof price === "number") return Math.round(price);
+  if (!price) return 0;
+  return Math.round(
+    Number(
+      price.toString()
+        .replace(/\s/g, "")
+        .replace(/\./g, "")
+        .replace(/,/g, "")
+        .replace(/[^\d\-\.]/g, "")
+    ) || 0
+  );
+}
+
+function savePricingToLocalStorage(data) {
+  try {
+    localStorage.setItem("pricingData", JSON.stringify(data));
+    console.log("✅ pricingData saved to localStorage.");
+  } catch (e) {
+    console.error("❌ Failed saving pricingData:", e);
+  }
+}
+
+function loadPricingFromLocalStorage() {
+  try {
+    const s = localStorage.getItem("pricingData");
+    if (!s) return null;
+    return JSON.parse(s);
+  } catch (e) {
+    console.error("❌ Failed reading pricingData:", e);
+    return null;
+  }
+}
+
+function normalizeForSearch(s) {
+  if (!s) return "";
+  return s.toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .toLowerCase();
+}
+
+function buildProductsFromAdminProduct(globalJsonData) {
+  const productTypes = ["laptop", "balo", "phukienkhac"];
+  const out = [];
+
+  if (!globalJsonData || !globalJsonData.product || !Array.isArray(globalJsonData.product.brand)) {
+    console.warn("AdminProduct data không hợp lệ hoặc không tồn tại.");
+    return out;
+  }
+
+  globalJsonData.product.brand.forEach((brandObj) => {
+    const brandName = brandObj.name || "Không rõ";
+    productTypes.forEach((type) => {
+      const arr = Array.isArray(brandObj[type]) ? brandObj[type] : [];
+      arr.forEach((p) => {
+        const rawPrice = parsePriceString(p.price);
+        const sellPrice = rawPrice;
+        // ✅ giá nhập mặc định = 90% giá bán
+        const importPrice = Math.round(sellPrice * 0.9);
+        const profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
+
+        out.push({
+          id: p.id || `${brandName}-${type}-${Math.random().toString(36).slice(2,8)}`,
+          name: p.model || p.name || "Unknown",
+          brand: brandName,
+          type: brandName,
+          importPrice,
+          sellPrice,
+          profit: parseFloat(profit.toFixed(1)),
+        });
+      });
+    });
+  });
+
+  return out;
 }
 
 async function loadPricing() {
   const content = document.getElementById("content");
+  if (!content) return;
 
-  // ==== ĐỌC DỮ LIỆU TỪ FILE JSON ====
-  let products = [];
-  try {
-    const res = await fetch("/WebBanLap-main/products.json");
-    products = await res.json();
-  } catch (error) {
-    console.error("❌ Lỗi khi đọc products.json:", error);
-    content.innerHTML = "<p>Không thể tải dữ liệu sản phẩm!</p>";
-    return;
+  let products = loadPricingFromLocalStorage();
+  if (!products || !products.length) {
+    if (window.globalJsonData) {
+      console.log("ℹ️ Lấy dữ liệu từ globalJsonData (AdminProduct.js).");
+      products = buildProductsFromAdminProduct(window.globalJsonData);
+      savePricingToLocalStorage(products);
+    } else {
+      console.error("❌ Không tìm thấy dữ liệu AdminProduct.");
+      return;
+    }
   }
 
-  // ==== XỬ LÝ DỮ LIỆU SẢN PHẨM ====
-  products = products.map((p) => {
-    const importPrice = Math.round((p.price || 0) * 0.9);
-    const sellPrice = p.price || 0;
-    const profit = ((sellPrice - importPrice) / importPrice) * 100;
-    return {
-      name: p.name,
-      category: p.type || "Khác",
-      importPrice,
-      sellPrice,
-      profit,
-    };
-  });
+  // tạo danh sách loại
+  function getCategories() {
+    const categoryMap = {};
+    products.forEach((p) => {
+      const cat = p.brand || "Khác";
+      if (!categoryMap[cat]) categoryMap[cat] = { name: cat, totalProfit: 0, count: 0 };
+      categoryMap[cat].totalProfit += Number(p.profit || 0);
+      categoryMap[cat].count += 1;
+    });
+    return Object.values(categoryMap).map(cat => ({
+      name: cat.name,
+      profit: cat.count ? parseFloat((cat.totalProfit / cat.count).toFixed(1)) : 0
+    }));
+  }
 
-  // ==== TÍNH LỢI NHUẬN TRUNG BÌNH CHO LOẠI SẢN PHẨM ====
-  const categoryMap = {};
-  products.forEach((p) => {
-    if (!categoryMap[p.category]) {
-      categoryMap[p.category] = { name: p.category, totalProfit: 0, count: 0 };
-    }
-    categoryMap[p.category].totalProfit += p.profit;
-    categoryMap[p.category].count += 1;
-  });
-  const categories = Object.values(categoryMap).map(cat => ({
-    name: cat.name,
-    profit: (cat.totalProfit / cat.count).toFixed(1),
-  }));
-
-  // ==== BIẾN TRẠNG THÁI ====
+  let categories = getCategories();
+  let mode = "product";
   let currentPage = 1;
   const itemsPerPage = 10;
-  let mode = "product"; // "product" hoặc "category"
-  let currentData = []; // ✅ Dữ liệu hiện đang hiển thị (đầy đủ hoặc đã lọc)
+  let searchKeyword = "";
 
-  // ==== HÀM HIỂN THỊ BẢNG ====
-  const renderTable = (data) => {
+  function formatProfit(value) {
+  const n = Number(value);
+  if (Number.isInteger(n)) return n + "%";
+  return n.toFixed(1) + "%";
+}
+
+  function renderTable(data) {
     const start = (currentPage - 1) * itemsPerPage;
     const pageData = data.slice(start, start + itemsPerPage);
+    const totalPages = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
-    const rows = pageData
-      .map(
-        (item, i) =>
-          mode === "product"
-            ? `<tr>
-                <td>${formatCategoryName(item.name)}</td>
-                <td>${item.importPrice.toLocaleString("vi-VN")}</td>
-                <td>${item.sellPrice.toLocaleString("vi-VN")}</td>
-                <td>${(Math.round(item.profit * 10) / 10).toFixed(item.profit % 1 === 0 ? 0 : 1)}%</td>
-                <td><button class="edit-btn" data-index="${(currentPage - 1) * itemsPerPage + i}">Sửa</button></td>
-              </tr>`
-            : `<tr>
-                <td>${formatCategoryName(item.name)}</td>
-                <td>${item.profit}%</td>
-                <td><button class="edit-btn" data-index="${(currentPage - 1) * itemsPerPage + i}">Sửa</button></td>
-              </tr>`
-      )
-      .join("");
+    const tableRows = mode === "product"
+      ? pageData.map((item, i) => `
+        <tr>
+          <td>${item.brand}</td>
+          <td>${item.name}</td>
+          <td>${(item.importPrice || 0).toLocaleString("vi-VN")}</td>
+          <td>${(item.sellPrice || 0).toLocaleString("vi-VN")}</td>
+          <td>${formatProfit(item.profit || 0)}</td>
+          <td><button class="edit-btn" data-index="${start + i}">Sửa</button></td>
+        </tr>`).join("")
+      : pageData.map((cat, i) => `
+        <tr>
+          <td>${cat.name}</td>
+          <td>${formatProfit(cat.profit)}</td>
+          <td><button class="edit-btn" data-index="${start + i}">Sửa</button></td>
+        </tr>`).join("");
 
-    const totalPages = Math.ceil(data.length / itemsPerPage);
-    const pagination = Array.from({ length: totalPages }, (_, i) =>
-      `<button class="page-btn ${i + 1 === currentPage ? "active" : ""}" data-page="${i + 1}">${i + 1}</button>`
-    ).join("");
+    const pagination = Array.from({ length: totalPages }, (_, idx) => {
+      const pageNum = idx + 1;
+      return `<button class="page-btn ${pageNum === currentPage ? "active" : ""}" data-page="${pageNum}">${pageNum}</button>`;
+    }).join("");
 
     return `
       <div class="pricing-header">
-        <button class="switch-btn">${mode === "product" ? "Loại sản phẩm" : "Sản phẩm"}</button>
+        <button id="modeSwitch" class="switch-btn">${mode === "product" ? "Xem theo loại" : "Xem theo sản phẩm"}</button>
       </div>
       <table class="pricing-table">
         <thead>
-          <tr>
-            ${
-              mode === "product"
-                ? "<th>Tên sản phẩm</th><th>Giá nhập</th><th>Giá bán</th><th>% lợi nhuận</th><th></th>"
-                : "<th>Loại sản phẩm</th><th>% lợi nhuận</th><th></th>"
-            }
-          </tr>
+          ${mode === "product"
+            ? "<tr><th>Loại</th><th>Tên sản phẩm</th><th>Giá nhập</th><th>Giá bán</th><th>% lợi nhuận</th><th></th></tr>"
+            : "<tr><th>Loại</th><th>% lợi nhuận TB</th><th></th></tr>"
+          }
         </thead>
-        <tbody>${rows}</tbody>
+        <tbody>${tableRows}</tbody>
       </table>
-      <div class="pagination">${pagination}</div>
-    `;
-  };
+      <div class="pagination">${pagination}</div>`;
+  }
 
-  // ==== RENDER TRANG ====
-  const render = (data) => {
-    currentData = data; // ✅ Lưu lại trạng thái hiện tại
-    content.innerHTML = `
-      <h1 class="page-title">Giá bán</h1>
-      <div class="pricing-wrapper">${renderTable(data)}</div>
-    `;
-    attachEvents(data);
-  };
+  function render(data) {
+    content.innerHTML = `<h1 class="page-title">Giá bán</h1><div class="pricing-wrapper">${renderTable(data)}</div>`;
+    attachEvents();
+  }
 
-  // ==== GÁN SỰ KIỆN ====
-  const attachEvents = (data) => {
-    // Chuyển giữa sản phẩm / loại
-    document.querySelector(".switch-btn").onclick = () => {
+  function filterData(keyword) {
+    if (!keyword) return mode === "product" ? products : categories;
+    const kw = normalizeForSearch(keyword);
+    return (mode === "product" ? products : categories).filter((item) => {
+      const txt = mode === "product"
+        ? `${item.name} ${item.brand} ${item.importPrice} ${item.sellPrice} ${item.profit}`
+        : `${item.name} ${item.profit}`;
+      return normalizeForSearch(txt).includes(kw);
+    });
+  }
+
+  function attachEvents() {
+    document.getElementById("modeSwitch").onclick = () => {
       mode = mode === "product" ? "category" : "product";
       currentPage = 1;
-      render(mode === "product" ? products : categories);
+      categories = getCategories();
+      render(filterData(searchKeyword));
     };
 
-    // Nút sửa
-    document.querySelectorAll(".edit-btn").forEach((btn) => {
-      btn.onclick = () => openEditModal(data[btn.dataset.index]);
-    });
+    document.querySelector(".pagination").onclick = (e) => {
+      const btn = e.target.closest(".page-btn");
+      if (!btn) return;
+      currentPage = parseInt(btn.dataset.page);
+      render(filterData(searchKeyword));
+    };
 
-    // Nút phân trang
-    document.querySelectorAll(".page-btn").forEach((btn) => {
-      btn.onclick = () => {
-        currentPage = parseInt(btn.dataset.page);
-        render(mode === "product" ? currentData : currentData);
+    document.querySelector(".pricing-table").onclick = (e) => {
+      const btn = e.target.closest(".edit-btn");
+      if (!btn) return;
+      const index = parseInt(btn.dataset.index);
+      if (mode === "product") openEditModal(products[index], index, false);
+      else openEditModal(categories[index], index, true);
+    };
+
+    const headerSearch = document.querySelector(".search-box input");
+    if (headerSearch) {
+      headerSearch.oninput = (e) => {
+        searchKeyword = e.target.value.trim();
+        currentPage = 1;
+        render(filterData(searchKeyword));
       };
-    });
-  };
-
-  // ==== POPUP SỬA ====
-  const openEditModal = (item) => {
-    const modal = document.createElement("div");
-    modal.className = "modal-overlay";
-    modal.innerHTML = `
-      <div class="modal scale-in">
-        <h2>${mode === "product" ? "Tên sản phẩm" : "Loại sản phẩm"}</h2>
-        <input type="text" value="${item.name}" disabled />
-
-        <label>% Lợi nhuận cũ</label>
-        <input type="text" value="${parseFloat(item.profit).toFixed(1)}" disabled />
-
-        <label>% Lợi nhuận mới</label>
-        <input type="number" id="newProfit" placeholder="Nhập lợi nhuận mới" />
-
-        ${
-          mode === "product"
-            ? `<label>Giá mới</label>
-               <input type="number" id="newPrice" placeholder="Tự động tính" disabled />`
-            : ""
-        }
-
-        <div class="modal-buttons">
-          <button class="save-btn">Lưu</button>
-          <button class="cancel-btn">Hủy</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    setTimeout(() => modal.classList.add("show"), 10);
-
-    const newProfitInput = modal.querySelector("#newProfit");
-    const newPriceInput = modal.querySelector("#newPrice");
-
-    if (mode === "product") {
-      newProfitInput.addEventListener("input", () => {
-        const newProfit = parseFloat(newProfitInput.value);
-        if (!isNaN(newProfit)) {
-          const newPrice = Math.round(item.importPrice * (1 + newProfit / 100));
-          newPriceInput.value = newPrice;
-        } else {
-          newPriceInput.value = "";
-        }
-      });
     }
+  }
 
-    // Hủy
-    modal.querySelector(".cancel-btn").onclick = () => {
-      modal.classList.remove("show");
-      setTimeout(() => modal.remove(), 300);
-    };
+  function openEditModal(item, index, isCategory = false) {
+    const oldModal = document.querySelector(".modal-overlay");
+    if (oldModal) oldModal.remove();
 
-    // Lưu
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay show";
+    const modal = document.createElement("div");
+    modal.className = "modal";
+
+    modal.innerHTML = isCategory
+      ? `
+      <label>Loại sản phẩm</label>
+      <input type="text" value="${item.name}" disabled>
+      <label>% Lợi nhuận cũ</label>
+      <input type="text" value="${item.profit}" disabled>
+      <label>% Lợi nhuận mới</label>
+      <input type="number" id="newProfit" value="${item.profit}">
+      <div class="modal-buttons">
+        <button class="save-btn">Save</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>`
+      : `
+      <label>Loại sản phẩm</label>
+      <input type="text" value="${item.brand}" disabled>
+      <label>Tên sản phẩm</label>
+      <input type="text" value="${item.name}" disabled>
+      <label>% Lợi nhuận cũ</label>
+      <input type="text" value="${item.profit}" disabled>
+      <label>% Lợi nhuận mới</label>
+      <input type="number" id="newProfit" value="${item.profit}">
+      <div class="modal-buttons">
+        <button class="save-btn">Save</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>`;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    modal.querySelector(".cancel-btn").onclick = () => overlay.remove();
     modal.querySelector(".save-btn").onclick = () => {
-      const newProfit = parseFloat(newProfitInput.value);
-      if (isNaN(newProfit) || newProfit <= 0) {
-        alert("Vui lòng nhập lợi nhuận hợp lệ!");
-        return;
-      }
-
-      if (mode === "product") {
-        // === Sửa từng sản phẩm ===
-        item.profit = newProfit;
-        item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
-
-        // 🔄 Cập nhật lại trung bình loại tương ứng
-        const cat = categories.find(c => c.name === item.category);
-        if (cat) {
-          const sameCategory = products.filter(p => p.category === item.category);
-          const avg = sameCategory.reduce((s, p) => s + p.profit, 0) / sameCategory.length;
-          cat.profit = avg.toFixed(1);
-        }
-
-      } else {
-        // === Sửa loại sản phẩm: ảnh hưởng tất cả sản phẩm cùng loại ===
-        const categoryName = item.name;
-        products.forEach((p) => {
-          if (p.category === categoryName) {
-            p.profit = newProfit;
+      const newProfit = parseFloat(document.getElementById("newProfit").value) || 0;
+      if (isCategory) {
+        products.forEach(p => {
+          if (p.brand === item.name) {
+            p.profit = parseFloat(newProfit.toFixed(1));
             p.sellPrice = Math.round(p.importPrice * (1 + newProfit / 100));
           }
         });
-        // ✅ Cập nhật luôn UI
-        const cat = categories.find(c => c.name === categoryName);
-        if (cat) cat.profit = newProfit.toFixed(1);
+      } else {
+        item.profit = parseFloat(newProfit.toFixed(1));
+        item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
+        products[index] = item;
       }
-
-      alert("✅ Đã lưu thay đổi thành công!");
-      modal.classList.remove("show");
-      setTimeout(() => modal.remove(), 300);
-      render(currentData); // ✅ Giữ nguyên trạng thái hiện tại
-    };
-  };
-
-  // ==== TÌM KIẾM ====
-  const searchBox = document.querySelector(".search-box");
-  if (searchBox) {
-    searchBox.oninput = (e) => {
-      const keyword = removeVietnameseTones(e.target.value.trim().toLowerCase());
-      currentPage = 1;
-
-      const filtered =
-        mode === "product"
-          ? products.filter((p) =>
-              removeVietnameseTones(p.name.toLowerCase()).includes(keyword)
-            )
-          : categories.filter((c) =>
-              removeVietnameseTones(c.name.toLowerCase()).includes(keyword)
-            );
-
-      render(filtered);
+      // Cập nhật danh mục trung bình
+      categories = getCategories();
+      savePricingToLocalStorage(products);
+      overlay.remove();
+      render(filterData(searchKeyword));
     };
   }
 
-  // ==== HÀM BỎ DẤU TIẾNG VIỆT ====
-  function removeVietnameseTones(str) {
-    return str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/đ/g, "d")
-      .replace(/Đ/g, "D");
-  }
-
-  // ==== HIỂN THỊ LẦN ĐẦU ====
   render(products);
 }
+
+window.loadPricing = loadPricing;

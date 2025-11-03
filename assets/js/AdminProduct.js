@@ -1,4 +1,4 @@
-let globalJsonData = {
+window.globalJsonData = {
   "product": {
     "brand": [
       {
