@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<link rel="stylesheet" href="adminlog.css"/>
+</head>
+<body>
+<div class="login-container">
+  <h2>Welcome back,</h2>
+  <p>Please sign in to your admin account below.</p>
+
+  <form id="loginForm" onsubmit="login(event)">
+    <input type="email" id="email" placeholder="Email here..." required>
+    <input type="password" id="password" placeholder="Password here..." required>
+
+    <div class="remember">
+      <input type="checkbox" id="remember" style="margin-right:6px;">
+      <label for="remember">Keep me logged in</label>
+    </div>
+
+    <button type="submit" class="login-btn">Login to Dashboard</button>
+    <div id="errorMsg" class="error-message"></div>
+  </form>
+</div>
+<script src="adminlog.js"></script>
+</body>
+</html>
