@@ -169,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "warehouse":
+          pageStyle.href = "/WebBanLap/assets/css/stock.css";
           content.innerHTML = `
             <div> 
             <h1 class="page-title" style="margin-bottom:-10px">Kho</h1> 
