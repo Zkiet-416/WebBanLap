@@ -751,3 +751,6 @@ footer {
         padding-left: 16px;
     }
 }
+
+/* helper class dùng khi JS add/remove */
+.hidden { display: none !important; }
