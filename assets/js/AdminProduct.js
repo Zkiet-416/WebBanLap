@@ -1,4 +1,4 @@
-window.globalJsonData = {
+let globalJsonData = {
   "product": {
     "brand": [
       {
@@ -669,7 +669,7 @@ let currentViewingBrandName = null;
 // BIẾN PHÂN TRANG
 let brandsPerPage = 10;
 let currentBrandPage = 1;
-let productsPerPage = 8;
+let productsPerPage = 7;
 let currentProductPage = 1;
 let currentProductsList = []; 
 let filteredProductsList = []; 
