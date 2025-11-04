@@ -285,7 +285,7 @@ nav.main-menu {
     left: 0;
     top: 65px;
     z-index: 999;
-    overflow-x: hidden; /* THÊM */
+    overflow: visible; /* ĐỔI từ overflow-x: hidden */    
 }
 
 .menu-wrap {
@@ -294,6 +294,7 @@ nav.main-menu {
     padding: 10px 20px;
     display: flex;
     align-items: center;
+    overflow: visible; /* THÊM */
 }
 
 .menu-list {
@@ -303,6 +304,7 @@ nav.main-menu {
     justify-content: space-between;
     list-style: none;
     gap: 20px;
+    overflow: visible; /* THÊM */
 }
 
 .menu-list li {
@@ -310,6 +312,7 @@ nav.main-menu {
     padding: 8px 12px;
     font-weight: 600;
     cursor: pointer;
+    overflow: visible;
 }
 
 .menu-list li:hover {
@@ -326,8 +329,9 @@ nav.main-menu {
     visibility: hidden;
     transform: translateY(-8px);
     transition: all 200ms ease;
-    z-index: 90;
+    z-index: 9999;
     pointer-events: none;
+    min-width: 460px;
 }
 
 /* hiện menu cap 2 khi hover */
@@ -344,6 +348,7 @@ nav.main-menu {
     padding: 8px;
     min-width: 460px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    position: relative; /* THÊM */
 }
 
 .dropdown-header {
