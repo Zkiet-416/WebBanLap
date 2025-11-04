@@ -5,6 +5,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 32px;
   margin-top: 28px;
+  max-width: 100%; /* THÊM */
+  overflow: hidden; /* THÊM */
 }
 
 /* Left Column */
@@ -28,12 +30,11 @@
   font-weight: 700;
 }
 
-.main-image {
+.main-image img {
   width: 100%;
-  aspect-ratio: 4/3;
-  background: #f5f5f5;
+  height: 100%;
+  object-fit: contain;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .image-placeholder {
@@ -121,6 +122,20 @@
   color: #666;
   flex: 1;
   font-size: 14px;
+}
+
+.price-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.price-section .product-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #d6453b;
+  margin-bottom: 20px;
 }
 
 /* Action Buttons */
