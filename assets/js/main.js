@@ -463,6 +463,28 @@ document.addEventListener('DOMContentLoaded', () => {
     return laptopTypes.includes(type) || laptopTypes.includes(type.trim());
   }
 
+  // Hàm parse description từ AdminProduct.js
+  function parseDescription(description) {
+    if (!description) return {};
+    
+    const specs = {};
+    const parts = description.split('|').map(p => p.trim());
+    
+    parts.forEach(part => {
+      if (part.includes('CPU:')) {
+        specs.cpu = part.replace('CPU:', '').trim();
+      } else if (part.includes('RAM:')) {
+        specs.ram = part.replace('RAM:', '').trim();
+      } else if (part.includes('Ổ cứng:')) {
+        specs.storage = part.replace('Ổ cứng:', '').trim();
+      } else if (part.includes('VGA:') || part.includes('Card đồ họa:')) {
+        specs.gpu = part.replace('VGA:', '').replace('Card đồ họa:', '').trim();
+      }
+    });
+    
+    return specs;
+  }
+
   const detailSection = document.getElementById('productDetail');
   const suggestions = document.getElementById('suggestions');
   const accessories = document.getElementById('accessories');
@@ -471,12 +493,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const detailName = document.getElementById('detail-product-name');
   const detailImg = document.getElementById('detail-product-img');
   const detailInfo = document.getElementById('detail-product-info');
+  const detailPrice = document.getElementById('detail-product-price');
 
-  // spec elements inside detail (tạo id tương ứng trong main.html nếu cần)
-  const specCPU = document.querySelector('.spec-item .spec-value[data-spec="cpu"]');
-  const specRAM = document.querySelector('.spec-item .spec-value[data-spec="ram"]');
-  const specHDD = document.querySelector('.spec-item .spec-value[data-spec="hdd"]');
-  const specGPU = document.querySelector('.spec-item .spec-value[data-spec="gpu"]');
+  // spec elements inside detail
+  const specCPU = document.getElementById('spec-cpu');
+  const specRAM = document.getElementById('spec-ram');
+  const specStorage = document.getElementById('spec-storage');
+  const specGPU = document.getElementById('spec-gpu');
 
   // attach click to every .btn-detail
   document.querySelectorAll('.btn-detail').forEach(btn => {
@@ -501,43 +524,67 @@ document.addEventListener('DOMContentLoaded', () => {
         detailImg.setAttribute('src', imgSrc || '');
         detailImg.setAttribute('alt', name || 'Product Image');
       }
-      if(detailInfo) detailInfo.textContent = (price ? 'Giá: ' + price + '. ' : '') + 'Loại: ' + type;
+      if(detailPrice) detailPrice.textContent = price;
 
-      // Nếu có AdminProduct data (ví dụ window.adminProducts là mảng), ưu tiên lấy thông số chi tiết từ đó
-      // adminProducts format expected: [{ id: 'xxx', name: '...', cpu:'', ram:'', hdd:'', gpu:'' }, ...]
-      let adminData = null;
-      if(window.adminProducts && Array.isArray(window.adminProducts)) {
-        adminData = window.adminProducts.find(p => {
-          const nameLower = name.toLowerCase();
-          const adminName = (p.name || "").toLowerCase();
-          return nameLower.includes(adminName) || adminName.includes(nameLower);
-        }) || null;
+      // Tìm dữ liệu từ globalJsonData
+      let productData = null;
+      if(window.globalJsonData && window.globalJsonData.product && window.globalJsonData.product.brand) {
+        const brands = window.globalJsonData.product.brand;
+        
+        // Tìm trong tất cả brands
+        for(let brand of brands) {
+          // Tìm trong laptop
+          if(brand.laptop && Array.isArray(brand.laptop)) {
+            productData = brand.laptop.find(p => p.model === name);
+            if(productData) break;
+          }
+          // Tìm trong balo
+          if(!productData && brand.balo && Array.isArray(brand.balo)) {
+            productData = brand.balo.find(p => p.model === name);
+            if(productData) break;
+          }
+          // Tìm trong phukienkhac
+          if(!productData && brand.phukienkhac && Array.isArray(brand.phukienkhac)) {
+            productData = brand.phukienkhac.find(p => p.model === name);
+            if(productData) break;
+          }
+        }
       }
 
       if(isLaptop(type)) {
-        // hiển thị spec CPU/RAM/HDD/GPU (ẩn pin/OS)
-        if(adminData) {
-          if(specCPU) specCPU.textContent = adminData.cpu || 'N/A';
-          if(specRAM) specRAM.textContent = adminData.ram || 'N/A';
-          if(specHDD) specHDD.textContent = adminData.hdd || 'N/A';
-          if(specGPU) specGPU.textContent = adminData.gpu || 'N/A';
+        // Hiển thị spec CPU/RAM/Storage/GPU cho laptop
+        if(productData && productData.description) {
+          const specs = parseDescription(productData.description);
+          if(specCPU) specCPU.textContent = specs.cpu || '-';
+          if(specRAM) specRAM.textContent = specs.ram || '-';
+          if(specStorage) specStorage.textContent = specs.storage || '-';
+          if(specGPU) specGPU.textContent = specs.gpu || '-';
+          
+          // Cập nhật thông tin sản phẩm
+          if(detailInfo) detailInfo.textContent = productData.description.replace(/\|/g, '\n');
         } else {
-          // fallback: nếu không có admin data, cố lấy từ data-* attributes (ví dụ data-cpu)
-          if(specCPU) specCPU.textContent = card.getAttribute('data-cpu') || 'Xem chi tiết';
-          if(specRAM) specRAM.textContent = card.getAttribute('data-ram') || 'Xem chi tiết';
-          if(specHDD) specHDD.textContent = card.getAttribute('data-hdd') || 'Xem chi tiết';
-          if(specGPU) specGPU.textContent = card.getAttribute('data-gpu') || 'Xem chi tiết';
+          // Fallback nếu không tìm thấy data
+          if(specCPU) specCPU.textContent = '-';
+          if(specRAM) specRAM.textContent = '-';
+          if(specStorage) specStorage.textContent = '-';
+          if(specGPU) specGPU.textContent = '-';
+          if(detailInfo) detailInfo.textContent = 'Thông tin chi tiết đang được cập nhật...';
         }
       } else {
-        // Nếu không phải laptop: bạn muốn hiện thông số khác — ví dụ hiện "Loại" và "Mô tả ngắn"
-        // (Bạn có thể tinh chỉnh phần này theo yêu cầu)
-        if(specCPU) specCPU.textContent = 'Loại: ' + (type || 'Phụ kiện');
-        if(specRAM) specRAM.textContent = '';
-        if(specHDD) specHDD.textContent = '';
-        if(specGPU) specGPU.textContent = '';
+        // Nếu không phải laptop (balo, phụ kiện khác) - hiển thị dấu -
+        if(specCPU) specCPU.textContent = '-';
+        if(specRAM) specRAM.textContent = '-';
+        if(specStorage) specStorage.textContent = '-';
+        if(specGPU) specGPU.textContent = '-';
+        
+        if(productData && productData.description) {
+          if(detailInfo) detailInfo.textContent = productData.description.replace(/\|/g, '\n');
+        } else {
+          if(detailInfo) detailInfo.textContent = `Loại: ${type}\nThông tin chi tiết đang được cập nhật...`;
+        }
       }
 
-      // Ẩn list & show detail
+      // ẩn list & show detail
       if(suggestions) suggestions.style.display = 'none';
       if(accessories) accessories.style.display = 'none';
       if(slider) slider.style.display = 'none';
