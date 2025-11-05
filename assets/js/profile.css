@@ -1,0 +1,197 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+/* SỬA Ở ĐÂY - thêm display: flex và bọc trong :not(.hidden) */
+#profile:not(.hidden) {
+    display: flex;
+    width: 100%;
+    min-height: 80vh;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0;
+}
+
+/* ... phần CSS còn lại giữ nguyên ... */
+
+
+
+/* Khung tổng thể */
+.profile-container {
+    position: relative;
+    top: 30px;
+    display: block;
+    width: 700px;
+    border-radius: 25px;
+    margin-top: 50px;
+    background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.15);
+    color: #e8f1f8;
+    padding-bottom: 20px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.container-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+}
+
+/* Ảnh đại diện */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1c1f26 0%, #0f2027 100%);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.avatar:hover {
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+}
+
+.avatar img {
+    border-radius: 50%;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.avatar img:hover {
+    transform: scale(1.08);
+    opacity: 0.8;
+}
+
+#change-avatar {
+    color: #00eaff;
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#change-avatar:hover {
+    color: #26ffe6;
+    transform: scale(1.05);
+}
+
+/* Form */
+.profile-form {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    width: 80%;
+}
+
+.form-group label {
+    flex: 1;
+    text-align: left;
+    font-size: 14px;
+    color: #a8b3bd;
+    letter-spacing: 0.3px;
+}
+
+/* Ô nhập liệu */
+.form-group input {
+    flex: 2;
+    padding: 9px;
+    border: 1px solid #1e2a33;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #e8f1f8;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-group input:focus {
+    border-color: #00eaff;
+    box-shadow: 0 0 8px rgba(0, 234, 255, 0.5);
+}
+
+/* Giới tính */
+.gender-options {
+    flex: 2;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.gender-options label {
+    color: #c5d0d9;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.gender-options label:hover {
+    color: #00eaff;
+}
+
+/* Ngày sinh */
+.birthday-select {
+    display: flex;
+    flex: 2;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.birthday-select select {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #e8f1f8;
+    border: 1px solid #1e2a33;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.birthday-select select:focus {
+    border-color: #00eaff;
+    box-shadow: 0 0 8px rgba(0, 234, 255, 0.4);
+}
+
+
+/* CSS cho nút Lưu trong profile */
+.button-group button {
+    background: linear-gradient(135deg, #00eaff, #0078ff);
+    border: none;
+    color: #fff;
+    padding: 12px 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
+    transition: all 0.25s ease;
+}
+
+.button-group button:hover {
+    background: linear-gradient(135deg, #26ffe6, #0099ff);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.45);
+    transform: translateY(-1px);
+}
