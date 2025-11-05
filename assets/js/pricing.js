@@ -18,20 +18,20 @@ function parsePriceString(price) {
 
 function savePricingToLocalStorage(data) {
   try {
-    localStorage.setItem("pricingData", JSON.stringify(data));
-    console.log("✅ pricingData saved to localStorage.");
+    localStorage.setItem("adminProductData", JSON.stringify(data));
+    console.log("✅ adminProductData saved to localStorage.");
   } catch (e) {
-    console.error("❌ Failed saving pricingData:", e);
+    console.error("❌ Failed saving adminProductData:", e);
   }
 }
 
 function loadPricingFromLocalStorage() {
   try {
-    const s = localStorage.getItem("pricingData");
+    const s = localStorage.getItem("adminProductData");
     if (!s) return null;
     return JSON.parse(s);
   } catch (e) {
-    console.error("❌ Failed reading pricingData:", e);
+    console.error("❌ Failed reading adminProductData:", e);
     return null;
   }
 }
