@@ -240,7 +240,6 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "pricing":
-          pageStyle.href = "/WebBanLap/assets/css/pricing.css";
           content.innerHTML = "";
           loadPricing();
           break;
@@ -249,12 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
           pageStyle.href = "/WebBanLap/assets/css/receipt.css";
           content.innerHTML = "";
           LoadReceipt();
-          break;
-
-        case "settings":
-          content.innerHTML = `
-            <h1 class="page-title">Cài đặt</h1>
-            <p>Tùy chỉnh hệ thống tại đây.</p>`;
           break;
 
         default:

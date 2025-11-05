@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Admin</title>
   <link rel="stylesheet" href="/WebBanLap/assets/css/admin.css" />
+  <link rel="stylesheet" href="/WebBanLap/assets/css/pricing.css" />
+  <link rel="stylesheet" href="/WebBanLap/assets/css/logout.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -42,9 +44,10 @@
       <i class="fas fa-file-alt"></i>
       <span class="menu-text">Phiếu nhập hàng</span>
     </div>
-    <div class="menu-item" data-page="settings">
-      <i class="fas fa-cog"></i>
-      <span class="menu-text">Cài đặt</span>
+    <!-- Nút đăng xuất -->
+    <div class="menu-item logout-item" id="logout-menu">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="menu-text">Đăng xuất</span>
     </div>
   </aside>
 
@@ -73,11 +76,23 @@
     </main>
   </div>
 
+  <!-- Modal đăng xuất -->
+  <div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+      <h3><i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> Xác nhận đăng xuất</h3>
+      <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+      <div class="logout-modal-buttons">
+        <button class="logout-cancel-btn" onclick="closeLogoutModal()">Hủy</button>
+        <button class="logout-confirm-btn" onclick="confirmLogout()">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/WebBanLap/assets/js/admin.js"></script>
+  <script src="/WebBanLap/assets/js/logout.js"></script>
   <script src="/WebBanLap/assets/js/AdminProduct.js"></script>
   <script src="/WebBanLap/assets/js/pricing.js"></script>
   <script src="/WebBanLap/assets/js/stock.js"></script>
   <script src="/WebBanLap/assets/js/receipt.js"></script>
 </body>
 </html>
-
