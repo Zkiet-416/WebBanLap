@@ -175,6 +175,17 @@
     box-shadow: 0 0 8px rgba(0, 234, 255, 0.4);
 }
 
+.birthday-select select option {
+    background-color: #1c1f26;
+    color: #e8f1f8;
+
+}
+
+.birthday-select select option:hover,
+.birthday-select select option:focus {
+    background-color: #00eaff;
+    color: #0f2027;
+}
 
 /* CSS cho nút Lưu trong profile */
 .button-group button {
