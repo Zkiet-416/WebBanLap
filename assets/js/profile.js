@@ -123,7 +123,8 @@ window.addEventListener("load", () => {
         location.reload();
     })
     // ========= CHẾ ĐỘ CHỈ XEM =========
-    const allInputs = document.querySelectorAll("input, select");
+    const profileSection = document.getElementById("profile");
+    const allInputs = profileSection.querySelectorAll("input, select"); // 👈 chỉ trong profile
     const edit = document.getElementById("edit-profile");
 
     allInputs.forEach(function (i) {
