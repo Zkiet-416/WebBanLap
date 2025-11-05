@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="../assets/css/cart.css">
     <link rel="stylesheet" href="../assets/css/productDetail.css">
     <link rel="stylesheet" href="../assets/css/cartDetail.css">
+    <link rel="stylesheet" href="../assets/css/log-reg.css">
+    <link rel="stylesheet" href="../assets/css/popupLogin.css">
+    <link rel="stylesheet" href="../assets/css/profile.css">
+
 </head>
 
 <body>
@@ -53,7 +57,9 @@
                                     <button class="btn-pay">THANH TOÁN</button>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
 
                     <div class="lang-switch">
@@ -62,11 +68,21 @@
                         </span>
                         <span>Tiếng Việt</span>
                     </div>
+                    <div>
+                        <div id="openLogin" class="user-infor">
+                            <span id="loginText">Đăng nhập</span>
+                            <img id="avatarUser" src=""
+                                style="display:none; width:20px; height:20px; border-radius:50%;">
+                        </div>
 
-                    <div class="user-info">
-                        <span>Đăng nhập</span>
-                        <i class="fas fa-user-circle"></i>
+                        <div id="dropUser" class="hidden">
+                            <ul>
+                                <li id="openProfile">Xem hồ sơ</li>
+                                <li id="logout">Đăng xuất</li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -735,50 +751,167 @@
                     <button class="checkout-btn">THANH TOÁN</button>
                 </div>
             </div>
+            </div> <!-- end container -->
         </section>
-        </div> <!-- end container -->
 
-        <!-- ========== FOOTER ========== -->
-        <footer>
-            <div class="footer-inner">
-                <div class="footer-left"></div>
+    </section>
 
-                <div class="footer-col">
-                    <strong>Tên</strong>
-                    <a href="#">Giới thiệu</a>
-                    <a href="#">Tuyển dụng</a>
+    <!-- ========== POPUP LOGIN ========== -->
+
+    <div class="hidden" id="popupLogin">
+        <div class="logreg-container">
+            <div class="tab-header">
+                <div class="tab active" id="log-tab">ĐĂNG NHẬP</div>
+                <div class="tab" id="reg-tab">ĐĂNG KÝ</div>
+            </div>
+            <!--Form dnhap-->
+            <form id="log-form">
+                <label for="acc1"><b>Email hoặc số điện thoại</b><span class="red">*</span></label>
+                <input type="text" id="acc1">
+                <label for="psw1"><b>Mật khẩu</b><span class="red">*</span></label>
+                <div class="input-eye">
+                    <input type="password" id="psw1">
+                    <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
                 </div>
 
-                <div class="footer-col">
-                    <strong>DỊCH VỤ</strong>
-                    <a href="#">Trung tâm trợ giúp</a>
-                    <a href="#">Hoạt động xã hội</a>
-                    <a href="#">Hướng dẫn đặt hàng online</a>
-                    <a href="#">Điều khoản sử dụng</a>
-                    <a href="#">Chính sách thanh toán, đổi trả - hoàn hàng</a>
+                <label><input type="checkbox" id="rememberMe">Lưu mật khẩu đăng nhập</label>
+                <div id="forgotpsw"><b><a href="#">Quên mật khẩu?</a></b></div>
+                <button class="logreg-button">ĐĂNG NHẬP</button>
+            </form>
+
+            <!-- Form dky -->
+            <form class="hidden" id="reg-form">
+                <label for="acc2"><b>Tên đăng nhập</b><span class="red">*</span></label>
+                <input type="text" id="acc2">
+                <label for="sdt"><b>Số điện thoại</b><span class="red">*</span></label>
+                <input type="text" id="sdt">
+                <label for="email"><b>Email</b><span class="red">*</span></label>
+                <input type="text" id="email">
+                <label for="psw2"><b>Mật khẩu</b><span class="red">*</span></label>
+                <div class="input-eye">
+                    <input type="password" id="psw2">
+                    <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
+                </div>
+                <label for="confirm"><b>Xác thực mật khẩu</b><span class="red">*</span></label>
+                <div class="input-eye">
+                    <input type="password" id="confirm">
+                    <img src="../assets/images/eye.jpg" id="openpsw" class="eye">
                 </div>
 
-                <div class="footer-right">
-                    <strong>THEO DÕI CHÚNG TÔI</strong>
-                    <div class="socials">
-                        <div class="social-box"></div>
-                        <div class="social-box"></div>
-                        <div class="social-box"></div>
+                <label><input type="checkbox" id="agree"><span></span>Đồng ý các điều khoản, điều kiện</label>
+                <button class="logreg-button">ĐĂNG KÝ</button>
+                <div id="chooseLogin">Bạn đã có tài khoản?<a href="#" id="return-log">Đăng nhập</a></div>
+
+            </form>
+        </div>
+    </div>
+    <!-- ========== PROFILE ========== -->
+    <div class="hidden" id="profile">
+        <div class="profile-container">
+            <div class="avatar-section">
+                <div class="avatar"><img src="../assets/images/defaultAvt.svg" style="width:150px; height:150px;">
+                </div>
+                <button id="change-avatar">Đổi ảnh đại diện</button>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+            <form class="profile-form">
+                <div class="form-group">
+                    <label for="profile-username">Tên đăng nhập</label>
+                    <input type="text" id="profile-username" value="Meo">
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-fullname">Tên</label>
+                    <input type="text" id="profile-fullname" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-email">Email</label>
+                    <input type="email" id="profile-email" value="">
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-phone">Số điện thoại</label>
+                    <input type="text" id="profile-phone" value="********75">
+                </div>
+
+                <div class="form-group">
+                    <label>Giới tính</label>
+                    <div class="gender-options">
+                        <label><input type="radio" name="gender" value="Nam"> Nam</label>
+                        <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                        <label><input type="radio" name="gender" value="Khác"> Khác</label>
+
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label>Ngày sinh</label>
+                    <div class="birthday-select">
+                        <select id="year">
+                            <option>Năm</option>
+                        </select>
+                        <select id="month">
+                            <option>Tháng</option>
+                        </select>
+                        <select id="day">
+                            <option>Ngày</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="edit-profile">Chỉnh sửa</button>
+                    <button type="submit" id="save-profile" class="hidden">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-left"></div>
+
+            <div class="footer-col">
+                <strong>Tên</strong>
+                <a href="#">Giới thiệu</a>
+                <a href="#">Tuyển dụng</a>
             </div>
 
-            <div class="footer-bottom">
-                <div class="footer-col">© 2025</div>
-                <div class="footer-col">CHÍNH SÁCH BẢO MẬT</div>
-                <div class="footer-right">LIÊN HỆ</div>
+            <div class="footer-col">
+                <strong>DỊCH VỤ</strong>
+                <a href="#">Trung tâm trợ giúp</a>
+                <a href="#">Hoạt động xã hội</a>
+                <a href="#">Hướng dẫn đặt hàng online</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Chính sách thanh toán, đổi trả - hoàn hàng</a>
             </div>
-        </footer>
-        <script src="/WebBanLap/assets/js/AdminProduct.js"></script>
-        <script src="../assets/js/productDetail.js"></script>
-        <script src="../assets/js/main.js"></script>
-        <script src="../assets/js/cart.js"></script>
-        <script src="../assets/js/cartDetail.js"></script>
+
+            <div class="footer-right">
+                <strong>THEO DÕI CHÚNG TÔI</strong>
+                <div class="socials">
+                    <div class="social-box"></div>
+                    <div class="social-box"></div>
+                    <div class="social-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-col">© 2025</div>
+            <div class="footer-col">CHÍNH SÁCH BẢO MẬT</div>
+            <div class="footer-right">LIÊN HỆ</div>
+        </div>
+    </footer>
+    <script src="../assets/js/AdminProduct.js"></script>
+    <script src="../assets/js/productDetail.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/cartDetail.js"></script>
+    <script src="../assets/js/log-reg.js"></script>
+    <script src="../assets/js/popupLogin.js"></script>
+    <script src="../assets/js/profile.js"></script>
 </body>
 
 </html>
