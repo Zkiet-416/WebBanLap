@@ -8,10 +8,9 @@
     align-items: center;
 }
 
-#user-menu {
-    position: relative;
-    display: inline-block;
-    z-index: 1002;
+#avatarUser {
+    position: absolute;
+    margin-left: 5px;
 }
 
 #popupLogin.hidden {
@@ -46,6 +45,8 @@
     width: 150px;
     z-index: 2001;
 }
+
+
 
 #dropUser ul {
     list-style: none;
