@@ -1,5 +1,8 @@
+
 // ========= CHỌN YEAR - MONTH - DAY  ========= 
 window.addEventListener("load", () => {
+
+
     const daySelect = document.getElementById("day");
     const monthSelect = document.getElementById("month");
     const yearSelect = document.getElementById("year");
@@ -124,7 +127,7 @@ window.addEventListener("load", () => {
     })
     // ========= CHẾ ĐỘ CHỈ XEM =========
     const profileSection = document.getElementById("profile");
-    const allInputs = profileSection.querySelectorAll("input, select"); // 👈 chỉ trong profile
+    const allInputs = profileSection.querySelectorAll("input, select");
     const edit = document.getElementById("edit-profile");
 
     allInputs.forEach(function (i) {
@@ -141,7 +144,6 @@ window.addEventListener("load", () => {
         save.classList.remove("hidden");
     })
 
-
-
+   
 });
 

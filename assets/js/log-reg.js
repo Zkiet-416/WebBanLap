@@ -117,6 +117,8 @@ window.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+
+
         const accounts = getAccounts();
         var existedEmail = false;
         var existedPhone = false;
@@ -129,17 +131,76 @@ window.addEventListener("DOMContentLoaded", function () {
             alert("Email đã tồn tại!");
             return;
         }
-        else if (existedPhone) {
+        if (existedPhone) {
             alert("Số điện thoại đã tồn tại!");
             return;
         }
+        if (!phonePattern.test(phone)) {
+            alert("Vui lòng nhập đúng định dạng số điện thoại!");
+            return;
+        }
+        if (!emailPattern.test(email)) {
+            alert("Vui lòng nhập đúng định dạng email!");
+            return;
+        }
 
-        const newUser = { username, phone, email, password, image: "../img/defaultAvt.svg" };
+
+        const newUser = { username, phone, email, password, image: "../assets/images//defaultAvt.png" };
         accounts.push(newUser);
         saveAccount(accounts);
         alert("Đăng ký thành công!");
         showLogin();
     };
+
+    // Chọn input và tạo phần hiển thị lỗi
+    const phoneInput = document.getElementById("sdt");
+    const emailInput = document.getElementById("email");
+
+    // Tạo nhãn lỗi
+    const phoneError = document.createElement("small");
+    const emailError = document.createElement("small");
+
+    phoneError.style.color = "red";
+    emailError.style.color = "red";
+
+    phoneInput.insertAdjacentElement("afterend", phoneError);
+    emailInput.insertAdjacentElement("afterend", emailError);
+
+    // Biểu thức kiểm tra
+    const phonePattern = /^0[0-9]{9}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Khi nhập số điện thoại
+    phoneInput.addEventListener("input", () => {
+        if (phoneInput.value === "") {
+            phoneError.textContent = "";
+        } else if (!phonePattern.test(phoneInput.value)) {
+            phoneError.textContent = "Số điện thoại không hợp lệ! Phải có 10 chữ số và bắt đầu bằng 0.";
+            phoneInput.style.borderColor = "#e74c3c";
+            phoneInput.style.boxShadow = "0 0 5px #f5b7b1";
+        }
+        else {
+            phoneError.textContent = "";
+            phoneInput.style.borderColor = "";
+            phoneInput.style.boxShadow = "";
+        }
+    });
+
+    // Khi nhập email
+    emailInput.addEventListener("input", () => {
+        if (emailInput.value === "") {
+            emailError.textContent = "";
+        } else if (!emailPattern.test(emailInput.value)) {
+            emailError.textContent = "Email không hợp lệ! Vui lòng nhập đúng định dạng (vd: ten@gmail.com).";
+            emailInput.style.borderColor = "#e74c3c";
+            emailInput.style.boxShadow = "0 0 5px #f5b7b1";
+        }
+        else {
+            emailError.textContent = "";
+            emailInput.style.borderColor = "";
+            emailInput.style.boxShadow = "";
+        }
+    });
 
     //Ẩn - hiện pass
     const eyes = document.getElementsByClassName("eye");
