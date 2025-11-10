@@ -14,6 +14,7 @@ const products = [
   cpu: "AMD Ryzen 5 7535HS",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-2",
@@ -27,6 +28,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-3",
@@ -40,6 +42,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-4",
@@ -53,6 +56,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-5",
@@ -66,6 +70,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-6",
@@ -79,6 +84,7 @@ const products = [
   cpu: "Intel Core i5-13420H",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-7",
@@ -92,6 +98,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-8",
@@ -131,6 +138,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-11",
@@ -144,6 +152,7 @@ const products = [
   cpu: "AMD Ryzen 5 7535HS",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-12",
@@ -157,6 +166,7 @@ const products = [
   cpu: "AMD Ryzen 5 7535HS",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-13",
@@ -170,6 +180,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-14",
@@ -183,6 +194,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "acer-15",
@@ -196,6 +208,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-1",
@@ -209,6 +222,7 @@ const products = [
   cpu: "Intel Core i7-13620H",
   pin: "90Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-2",
@@ -235,6 +249,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-4",
@@ -248,6 +263,7 @@ const products = [
   cpu: "Intel Core i7-13620H",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-5",
@@ -261,6 +277,7 @@ const products = [
   cpu: "Intel Core i7-13620H",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-6",
@@ -274,6 +291,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-7",
@@ -287,6 +305,7 @@ const products = [
   cpu: "Intel Core i7-13620H",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-8",
@@ -300,6 +319,7 @@ const products = [
   cpu: "Intel Core i7-13620H",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-9",
@@ -313,6 +333,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-10",
@@ -326,6 +347,7 @@ const products = [
   cpu: "Intel Core i5-13420H",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-11",
@@ -339,6 +361,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-12",
@@ -352,6 +375,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-13",
@@ -365,6 +389,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-14",
@@ -378,6 +403,7 @@ const products = [
   cpu: "Intel Core i7-13700HX",
   pin: "73Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "asus-15",
@@ -391,6 +417,7 @@ const products = [
   cpu: "Intel Core i5-13420H",
   pin: "57Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "lenovo-1",
@@ -404,6 +431,7 @@ const products = [
   cpu: "Intel Core i7-13650HX",
   pin: "60Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "lenovo-2",
@@ -417,6 +445,7 @@ const products = [
   cpu: "Intel Core i5-13500HX",
   pin: "60Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "lenovo-3",
@@ -430,6 +459,7 @@ const products = [
   cpu: "Intel Core i7-13650HX",
   pin: "60Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "lenovo-4",
@@ -443,6 +473,7 @@ const products = [
   cpu: "Intel Core i5-13420H",
   pin: "60Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "lenovo-5",
@@ -456,6 +487,7 @@ const products = [
   cpu: "Intel Core i7-13650HX",
   pin: "60Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "hp-1",
@@ -469,6 +501,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "70Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "hp-2",
@@ -482,6 +515,7 @@ const products = [
   cpu: "AMD Ryzen 5 7640HS",
   pin: "70Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "hp-3",
@@ -495,6 +529,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "70Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "hp-4",
@@ -508,6 +543,7 @@ const products = [
   cpu: "AMD Ryzen 5 7640HS",
   pin: "70Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "hp-5",
@@ -521,6 +557,7 @@ const products = [
   cpu: "AMD Ryzen 7 7840HS",
   pin: "70Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "dell-1",
@@ -534,6 +571,7 @@ const products = [
   cpu: "Intel Core i5-1135G7",
   pin: "42Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "dell-2",
@@ -547,6 +585,7 @@ const products = [
   cpu: "Intel Core i5-1135G7",
   pin: "42Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "dell-3",
@@ -560,6 +599,7 @@ const products = [
   cpu: "Intel Core i5-1135G7",
   pin: "42Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "dell-4",
@@ -573,6 +613,7 @@ const products = [
   cpu: "Intel Core i7-1165G7",
   pin: "54Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "dell-5",
@@ -586,6 +627,7 @@ const products = [
   cpu: "Intel Core i7-1165G7",
   pin: "54Wh",
   heDieuHanh: "Windows 11 Home",
+  category: "laptop"
 },
 {
   id: "balo-1",
@@ -599,6 +641,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "balo-2",
@@ -612,6 +655,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "balo-3",
@@ -625,6 +669,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "balo-4",
@@ -638,6 +683,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "balo-5",
@@ -651,6 +697,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "balo-6",
@@ -664,6 +711,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-1",
@@ -677,6 +725,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-2",
@@ -690,6 +739,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-3",
@@ -703,6 +753,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-4",
@@ -716,6 +767,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-5",
@@ -729,6 +781,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "de-tan-nhiet-6",
@@ -742,6 +795,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-1",
@@ -755,6 +809,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-2",
@@ -768,6 +823,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-3",
@@ -781,6 +837,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-4",
@@ -794,6 +851,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-5",
@@ -807,6 +865,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "tai-nghe-6",
@@ -820,6 +879,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-1",
@@ -833,6 +893,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-2",
@@ -846,6 +907,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-3",
@@ -859,6 +921,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-4",
@@ -872,6 +935,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-5",
@@ -885,6 +949,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "chuot-6",
@@ -898,6 +963,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-1",
@@ -911,6 +977,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-2",
@@ -924,6 +991,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-3",
@@ -937,6 +1005,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-4",
@@ -950,6 +1019,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-5",
@@ -963,6 +1033,7 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 {
   id: "ban-phim-6",
@@ -976,20 +1047,455 @@ const products = [
   cpu: "-",
   pin: "-",
   heDieuHanh: "-",
+  category: "phukien"
 },
 ];
 
+// ========== HÀM LOCAL STORAGE ==========
 function getLocalProducts() {
-  const data = localStorage.getItem("productsLocal");
-  if (data) return JSON.parse(data);
-  localStorage.setItem("productsLocal", JSON.stringify(products));
-  return products;
+    try {
+        const data = localStorage.getItem("laptopProducts");
+        if (data) {
+            const parsedData = JSON.parse(data);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+                return parsedData;
+            }
+        }
+        console.log("Khởi tạo dữ liệu laptop từ mẫu");
+        localStorage.setItem("laptopProducts", JSON.stringify(products));
+        return products;
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu sản phẩm:", error);
+        return products;
+    }
 }
 
 function saveLocalProducts(data) {
-  localStorage.setItem("productsLocal", JSON.stringify(data));
+    localStorage.setItem("laptopProducts", JSON.stringify(data));
 }
 
-function removeLocalProducts() {
-  localStorage.removeItem("productsLocal");
+// ========== HỆ THỐNG PHÂN TRANG ==========
+const PER_PAGE = 15;
+let currentLaptopPage = 1;
+let currentAccessoryPage = 1;
+let currentLaptopProducts = [];
+let currentAccessoryProducts = [];
+let allProducts = getLocalProducts();
+
+// ========== HÀM TẠO THẺ SẢN PHẨM ==========
+function createProductCard(product) {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" onerror="this.src='../assets/images/default-product.jpg'">
+        <h3>${product.name}</h3>
+        <p class="price">${formatPrice(product.priceValue)}</p>
+        <button class="add-to-cart" data-id="${product.id}">
+            Thêm vào giỏ hàng
+        </button>
+    `;
+    
+    // Thêm sự kiện cho nút thêm vào giỏ
+    const addToCartBtn = card.querySelector('.add-to-cart');
+    addToCartBtn.addEventListener('click', function() {
+        addToCart(product.id);
+    });
+    
+    return card;
 }
+
+// Hàm định dạng giá tiền
+function formatPrice(price) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(price);
+}
+
+// Hàm thêm vào giỏ hàng (tạm thời)
+function addToCart(productId) {
+    console.log(`Thêm sản phẩm ${productId} vào giỏ hàng`);
+    // Anh có thể tích hợp với giỏ hàng của anh sau
+    alert(`Đã thêm sản phẩm vào giỏ hàng!`);
+}
+
+// Render sản phẩm với phân trang
+function renderProducts(productsList, page = 1, gridId = "product-grid") {
+    const grid = document.getElementById(gridId);
+    if (!grid) {
+        console.error(`Không tìm thấy grid với id: ${gridId}`);
+        return;
+    }
+    
+    // PHÂN BIỆT LAPTOP VÀ PHỤ KIỆN
+    if (gridId === "product-grid") {
+        currentLaptopProducts = productsList;
+        currentLaptopPage = page;
+    } else {
+        currentAccessoryProducts = productsList;
+        currentAccessoryPage = page;
+    }
+    
+    grid.innerHTML = "";
+    
+    const total = productsList.length;
+    const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+    
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+    
+    const start = (page - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageProducts = productsList.slice(start, end);
+    
+    // Render sản phẩm - SỬA LẠI Ở ĐÂY
+    pageProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        grid.appendChild(productCard);
+    });
+    
+    // Cập nhật số lượng sản phẩm
+    updateProductCount(total, page, gridId);
+    
+    // Render phân trang
+    renderPagination(totalPages, page, gridId);
+}
+
+// Cập nhật số lượng sản phẩm
+function updateProductCount(total, currentPage, gridId) {
+    const countElement = document.getElementById(gridId === "product-grid" ? "productCount" : "accessoryCount");
+    if (countElement) {
+        const start = (currentPage - 1) * PER_PAGE + 1;
+        const end = Math.min(currentPage * PER_PAGE, total);
+        countElement.textContent = `Hiển thị ${start}-${end} của ${total} sản phẩm`;
+    }
+}
+
+// Render phân trang
+function renderPagination(totalPages, currentPage, gridId = "product-grid") {
+    const paginationId = gridId === "product-grid" ? "pagination" : "accessory-pagination";
+    const container = document.getElementById(paginationId);
+    if (!container) return;
+    
+    container.innerHTML = "";
+    
+    if (totalPages <= 1) return;
+    
+    // Nút Previous
+    const prevBtn = document.createElement("button");
+    prevBtn.innerHTML = "‹";
+    prevBtn.className = "pagination-btn";
+    prevBtn.disabled = currentPage <= 1;
+    prevBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, currentPage - 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, currentPage - 1, gridId);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+    container.appendChild(prevBtn);
+    
+    // Các nút trang
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // Trang đầu
+    if (startPage > 1) {
+        const firstBtn = document.createElement("button");
+        firstBtn.textContent = "1";
+        firstBtn.className = "pagination-btn";
+        firstBtn.addEventListener("click", () => {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, 1, gridId);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        container.appendChild(firstBtn);
+        
+        if (startPage > 2) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.className = "pagination-dots";
+            container.appendChild(dots);
+        }
+    }
+    
+    // Các trang giữa
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.textContent = i;
+        pageBtn.className = "pagination-btn";
+        if (i === currentPage) {
+            pageBtn.classList.add("active");
+        }
+        pageBtn.addEventListener("click", () => {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, i, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, i, gridId);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        container.appendChild(pageBtn);
+    }
+    
+    // Trang cuối
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const dots = document.createElement("span");
+            dots.textContent = "...";
+            dots.className = "pagination-dots";
+            container.appendChild(dots);
+        }
+        
+        const lastBtn = document.createElement("button");
+        lastBtn.textContent = totalPages;
+        lastBtn.className = "pagination-btn";
+        lastBtn.addEventListener("click", () => {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, totalPages, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, totalPages, gridId);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        container.appendChild(lastBtn);
+    }
+    
+    // Nút Next
+    const nextBtn = document.createElement("button");
+    nextBtn.innerHTML = "›";
+    nextBtn.className = "pagination-btn";
+    nextBtn.disabled = currentPage >= totalPages;
+    nextBtn.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, currentPage + 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, currentPage + 1, gridId);
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+    container.appendChild(nextBtn);
+}
+
+// ========== LỌC SẢN PHẨM ==========
+function filterLaptopsByBrand(brand) {
+    const filtered = allProducts.filter(product => 
+        product.category === "laptop" && (brand === "all" || product.type === brand)
+    );
+    renderProducts(filtered, 1, "product-grid");
+}
+
+function filterAccessoriesByType(type) {
+    const typeMap = {
+        "Balo": "Balo",
+        "Đế tản nhiệt": "De-Tan-Nhiet", 
+        "Tai nghe": "Tai-Nghe",
+        "Chuột": "Chuot",
+        "Bàn phím": "Ban-Phim"
+    };
+    
+    const typeKey = typeMap[type] || type.toLowerCase();
+    const filtered = allProducts.filter(product => 
+        product.category === "phukien" && (type === "all" || product.type === typeKey)
+    );
+    renderProducts(filtered, 1, "accessory-grid");
+}
+
+// ========== TÌM KIẾM ==========
+function searchProducts() {
+    const searchInput = document.getElementById("searchInput");
+    if (!searchInput) return;
+    
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    
+    if (searchTerm === "") {
+        // Nếu search rỗng, hiển thị lại tất cả
+        const laptops = allProducts.filter(p => p.category === "laptop");
+        const accessories = allProducts.filter(p => p.category === "phukien");
+        renderProducts(laptops, 1, "product-grid");
+        renderProducts(accessories, 1, "accessory-grid");
+        
+        // Hiện lại phần phụ kiện
+        const accessoriesSection = document.getElementById("accessories");
+        if (accessoriesSection) {
+            accessoriesSection.style.display = "block";
+        }
+        return;
+    }
+    
+    // Tìm kiếm trong tất cả sản phẩm
+    const filtered = allProducts.filter(product =>
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.type.toLowerCase().includes(searchTerm)
+    );
+    
+    // Hiển thị kết quả tìm kiếm
+    renderProducts(filtered, 1, "product-grid");
+    
+    // Ẩn phần phụ kiện khi đang tìm kiếm
+    const accessoriesSection = document.getElementById("accessories");
+    if (accessoriesSection) {
+        accessoriesSection.style.display = "none";
+    }
+}
+
+// ========== KHỞI TẠO ==========
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("Đang khởi tạo trang sản phẩm...");
+    
+    allProducts = getLocalProducts();
+    
+    // Lọc laptop và phụ kiện
+    const laptops = allProducts.filter(p => p.category === "laptop");
+    const accessories = allProducts.filter(p => p.category === "phukien");
+    
+    console.log(`Tổng sản phẩm: ${allProducts.length}`);
+    console.log(`Laptop: ${laptops.length}`);
+    console.log(`Phụ kiện: ${accessories.length}`);
+    
+    // Render ban đầu
+    renderProducts(laptops, 1, "product-grid");
+    renderProducts(accessories, 1, "accessory-grid");
+    
+    // Gắn sự kiện cho tabs laptop
+    const laptopTabs = document.querySelectorAll("#brandTabs button");
+    if (laptopTabs.length > 0) {
+        laptopTabs.forEach((tab, index) => {
+            tab.addEventListener("click", () => {
+                laptopTabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                
+                const brand = index === 0 ? "all" : tab.textContent.trim();
+                filterLaptopsByBrand(brand);
+            });
+        });
+    }
+    
+    // Gắn sự kiện cho tabs phụ kiện
+    const accessoryTabs = document.querySelectorAll("#accessories .tabs button");
+    if (accessoryTabs.length > 0) {
+        accessoryTabs.forEach((tab, index) => {
+            tab.addEventListener("click", () => {
+                accessoryTabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                
+                const type = index === 0 ? "all" : tab.textContent.trim();
+                filterAccessoriesByType(type);
+            });
+        });
+    }
+    
+    // Gắn sự kiện tìm kiếm
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", searchProducts);
+        searchInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                searchProducts();
+            }
+        });
+    }
+    
+    // Gắn sự kiện cho menu dropdown
+    attachDropdownEvents();
+    
+    console.log("Khởi tạo trang sản phẩm thành công!");
+});
+
+// ========== MENU DROPDOWN EVENTS ==========
+function attachDropdownEvents() {
+    // Laptop brands từ dropdown
+    const laptopItems = document.querySelectorAll(".dropdown .col:first-child ul li");
+    laptopItems.forEach(item => {
+        item.addEventListener("click", () => {
+            const brand = item.textContent.trim();
+            
+            // Active tab tương ứng
+            const laptopTabs = document.querySelectorAll("#brandTabs button");
+            let found = false;
+            laptopTabs.forEach(tab => {
+                if (tab.textContent.trim() === brand) {
+                    tab.classList.add("active");
+                    found = true;
+                } else {
+                    tab.classList.remove("active");
+                }
+            });
+            
+            // Nếu không tìm thấy tab, chọn tab "Tất cả"
+            if (!found && laptopTabs[0]) {
+                laptopTabs[0].classList.add("active");
+                filterLaptopsByBrand("all");
+            } else {
+                filterLaptopsByBrand(brand);
+            }
+            
+            // Cuộn đến phần laptop
+            const suggestionsSection = document.getElementById("suggestions");
+            if (suggestionsSection) {
+                suggestionsSection.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    });
+    
+    // Phụ kiện từ dropdown
+    const accessoryItems = document.querySelectorAll(".dropdown .col:last-child ul li");
+    accessoryItems.forEach(item => {
+        item.addEventListener("click", () => {
+            const type = item.textContent.trim();
+            
+            // Active tab tương ứng
+            const accessoryTabs = document.querySelectorAll("#accessories .tabs button");
+            let found = false;
+            accessoryTabs.forEach(tab => {
+                if (tab.textContent.trim() === type) {
+                    tab.classList.add("active");
+                    found = true;
+                } else {
+                    tab.classList.remove("active");
+                }
+            });
+            
+            // Nếu không tìm thấy tab, chọn tab "Tất cả"
+            if (!found && accessoryTabs[0]) {
+                accessoryTabs[0].classList.add("active");
+                filterAccessoriesByType("all");
+            } else {
+                filterAccessoriesByType(type);
+            }
+            
+            // Cuộn đến phần phụ kiện
+            const accessoriesSection = document.getElementById("accessories");
+            if (accessoriesSection) {
+                accessoriesSection.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    });
+}
+
+// Xuất biến để có thể debug từ console
+window.productsAPI = {
+    getAllProducts: () => allProducts,
+    getLaptops: () => allProducts.filter(p => p.category === "laptop"),
+    getAccessories: () => allProducts.filter(p => p.category === "phukien"),
+    refreshData: () => {
+        allProducts = getLocalProducts();
+        const laptops = allProducts.filter(p => p.category === "laptop");
+        const accessories = allProducts.filter(p => p.category === "phukien");
+        renderProducts(laptops, 1, "product-grid");
+        renderProducts(accessories, 1, "accessory-grid");
+    }
+};
