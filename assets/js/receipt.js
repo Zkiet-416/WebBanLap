@@ -18,7 +18,7 @@ function LoadReceipt() {
             <tbody></tbody>
         </table>
     </div>
-
+    
     <h2>Thêm Phiếu nhập hàng</h2>
     <div>
         <input id="addId" placeholder="ID phiếu">
@@ -59,12 +59,12 @@ function LoadReceipt() {
             if (Array.isArray(brand[type])) {
                 brand[type].forEach(product => {
                     // Loại bỏ dấu chấm (.) trong giá tiền để chuyển từ định dạng chuỗi VN sang chuỗi số
-                    // Ví dụ: "16.390.000" -> "16390000"
                     const cleanedPrice = (product.price || '0').replace(/\./g, '');
                     
                     allProducts.push({
                         name: product.model,
-                        price: cleanedPrice
+                        price: cleanedPrice,
+                        imagePath: product.imagePath
                     });
                 });
             }
@@ -86,23 +86,29 @@ function LoadReceipt() {
   }
   
   // 1. Dữ liệu sản phẩm tĩnh (Static Product List)
-  // Lấy dữ liệu sản phẩm từ file AdminProduct.js (biến globalJsonData)
   const productList = getAllProductsFromAdminData(); 
-  
+  // 2. Tạo Map để tìm kiếm nhanh imagePath bằng Tên sản phẩm
+  const productMap = new Map();
+  productList.forEach(p => {
+      productMap.set(p.name, { price: p.price, imagePath: p.imagePath });
+  });
+
   // Lấy dữ liệu từ Local Storage hoặc sử dụng dữ liệu mẫu
   let invoices = JSON.parse(localStorage.getItem('receiptData')) || [
     {
       id: "PN001",
       date: "2025-10-28",
       products: [
-        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "3150000", qty: "10" },
-        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15" },
+        // *************** ĐÃ SỬA: Dùng đường dẫn giả định nhưng theo cấu trúc AdminProduct *******************
+        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "3150000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
+        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15", imagePath: "../assets/images/mouse1.jpg" },
       ],
     },
     {
       id: "PN002",
       date: "2025-10-30",
-      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5" }],
+      // *************** ĐÃ SỬA: Dùng đường dẫn chính xác của Laptop Acer *******************
+      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5", imagePath: "../assets//images/Acer1.png" }],
     },
   ];
 
@@ -111,10 +117,10 @@ function LoadReceipt() {
   
   // Hàm lưu dữ liệu vào Local Storage
   function saveToLocalStorage() {
-      // Dữ liệu được lưu trữ trong Local Storage theo định dạng: 
-      // [ { id: "...", date: "...", products: [ { name: "...", price: "...", qty: "..." }, ... ] }, ... ]
       localStorage.setItem('receiptData', JSON.stringify(invoices));
   }
+
+  // ... (Hàm addProductRow và updatePrice giữ nguyên) ...
 
   function addProductRow(containerId) {
     
@@ -161,6 +167,7 @@ function LoadReceipt() {
     }
   }
 
+
   function renderTable() {
     let tbody = document.querySelector("#invoiceTable tbody");
     tbody.innerHTML = "";
@@ -175,10 +182,20 @@ function LoadReceipt() {
       invoice.products.forEach((p, i) => {
         // Định dạng giá tiền 
         const formattedPrice = Number(p.price).toLocaleString('vi-VN');
+        
+        // *************** BỔ SUNG LOGIC HIỂN THỊ ẢNH *******************
+        const imageUrl = p.imagePath || 'placeholder.jpg'; 
+        
+        // Sử dụng một class mới cho TD để dễ dàng định dạng CSS (ví dụ: căn giữa, flex)
         tbody.innerHTML += `
                 <tr>
                     <td>${i === 0 ? invoice.id : ""}</td>
-                    <td>${p.name}</td>
+                    
+                    <td class="product-cell-display" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${imageUrl}" alt="${p.name}" style="width: 50px; height: 50px; object-fit: cover;">
+                        <span>${p.name}</span>
+                    </td>
+
                     <td>${invoice.date}</td>
                     <td>${formattedPrice}</td>
                     <td>${p.qty}</td>
@@ -215,7 +232,11 @@ function LoadReceipt() {
         let productPrice = inputs[0].value; 
         let productQty = inputs[1].value; 
         
-        return { name: productName, price: productPrice, qty: productQty };
+        // Lấy imagePath từ productMap
+        const productInfo = productMap.get(productName);
+        const imagePath = productInfo ? productInfo.imagePath : '';
+
+        return { name: productName, price: productPrice, qty: productQty, imagePath: imagePath };
     });
 
     // Kiểm tra nếu chưa thêm sản phẩm nào
@@ -246,6 +267,8 @@ function LoadReceipt() {
     document.getElementById("addProductContainer").innerHTML = "";
   }
   
+  // ... (Hàm editInvoice và updateInvoice giữ nguyên logic lưu imagePath) ...
+
   function editInvoice(index) {
     editingIndex = index;
     const invoice = invoices[index];
@@ -296,7 +319,11 @@ function LoadReceipt() {
             let productName = selectEl.options[selectEl.selectedIndex].text;
             let productPrice = inputs[0].value;
             let productQty = inputs[1].value;
-            return { name: productName, price: productPrice, qty: productQty };
+
+            const productInfo = productMap.get(productName);
+            const imagePath = productInfo ? productInfo.imagePath : '';
+
+            return { name: productName, price: productPrice, qty: productQty, imagePath: imagePath };
         }
     );
 
@@ -322,6 +349,7 @@ function LoadReceipt() {
     renderTable();
     cancelEdit();
   }
+
 
   function cancelEdit() {
     editingIndex = null;
@@ -359,10 +387,18 @@ function LoadReceipt() {
 
         invoice.products.forEach((p, i) => {
             const formattedPrice = Number(p.price).toLocaleString('vi-VN');
+            
+            const imageUrl = p.imagePath || 'placeholder.jpg'; 
+
             tbody.innerHTML += `
                 <tr>
                     <td>${i === 0 ? invoice.id : ""}</td>
-                    <td>${p.name}</td>
+                    
+                    <td class="product-cell-display" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${imageUrl}" alt="${p.name}" style="width: 50px; height: 50px; object-fit: cover;">
+                        <span>${p.name}</span>
+                    </td>
+
                     <td>${invoice.date}</td>
                     <td>${formattedPrice}</td>
                     <td>${p.qty}</td>
