@@ -317,8 +317,8 @@ async function loadPricing() {
         pin: p.pin,
         heDieuHanh: p.heDieuHanh,
         category: p.category,
-        // Lưu thêm importPrice để admin có thể dùng lại
-        importPrice: p.importPrice
+        importPrice: p.importPrice,
+        profit: p.profit   // <-- thêm dòng này
       }));
       
       // Cập nhật danh mục trung bình
