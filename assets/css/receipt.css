@@ -71,3 +71,25 @@ th, td {
     border: none;
     margin-top: 12px;
 }
+
+/* --- PHẦN CSS MỚI ĐƯỢC DI CHUYỂN VÀO ĐÂY --- */
+.product-cell-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Yêu cầu căn lề trái */
+    text-align: left; 
+}
+
+.receipt-product-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Căn lề trái cho header của cột sản phẩm */
+#invoiceTable th:nth-child(2) {
+    text-align: left;
+}
