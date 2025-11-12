@@ -1,5 +1,4 @@
 window.addEventListener("load", () => {
-    //LOGIN - REGISTER POPUP
     const openLogin = document.getElementById("openLogin");
     const popupLogin = document.getElementById("popupLogin");
     const loginText = document.getElementById("loginText");
@@ -33,7 +32,7 @@ window.addEventListener("load", () => {
 
     // bấm ra ngoài thì ẩn
     popupLogin.addEventListener("click", function (e) {
-        if (e.target === popupLogin) popupLogin.classList.add("hidden");
+        if (e.target == popupLogin) popupLogin.classList.add("hidden");
     });
     document.addEventListener("click", function (e) {
         if (!openLogin.contains(e.target) && !dropUser.contains(e.target)) {
@@ -49,6 +48,7 @@ window.addEventListener("load", () => {
         location.reload();
     })
 
+    //XEM PROFILE
     const mainContainer = document.querySelector(".container");
     const openProfile = document.getElementById("openProfile");
     const profile = document.getElementById("profile");
@@ -56,7 +56,12 @@ window.addEventListener("load", () => {
         mainContainer.classList.add("hidden");
         profile.classList.remove("hidden");
         dropUser.classList.add("hidden");
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     });
+
 
 
     document.addEventListener('click', function (e) {
@@ -67,12 +72,7 @@ window.addEventListener("load", () => {
             // Hiện container chính
             if (mainContainer) mainContainer.classList.remove("hidden");
 
-            if (typeof window.resetToHomePage === 'function') {
-                window.resetToHomePage();
-            } else {
-                // Fallback
-                location.reload();
-            }
+            window.resetToHomePage();
 
             e.preventDefault();
             e.stopPropagation();
