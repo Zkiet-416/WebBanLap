@@ -1,4 +1,5 @@
 // productDetail.js - Đồng bộ với localStorage "laptopProducts"
+// Hỗ trợ cấu trúc mới cho laptop và phụ kiện
 
 // ========== HÀM LẤY DỮ LIỆU TỪ LOCALSTORAGE ==========
 function getLocalProducts() {
@@ -57,19 +58,11 @@ function showProductDetail(productId) {
   
   productDetail.style.display = 'block';
   
-  // Cập nhật nội dung
+  // Cập nhật nội dung cơ bản
   const detailName = document.getElementById('detail-product-name');
   const detailImg = document.getElementById('detail-product-img');
   const detailPrice = document.getElementById('detail-product-price');
   const detailInfo = document.getElementById('detail-product-info');
-  
-  // Cập nhật thông số kỹ thuật
-  const specCpu = document.getElementById('spec-cpu');
-  const specRam = document.getElementById('spec-ram');
-  const specGpu = document.getElementById('spec-gpu');
-  const specScreen = document.getElementById('spec-screen');
-  const specBattery = document.getElementById('spec-battery');
-  const specOs = document.getElementById('spec-os');
   
   if (detailName) detailName.textContent = product.name;
   if (detailImg) {
@@ -86,13 +79,152 @@ function showProductDetail(productId) {
     detailInfo.textContent = "Sản phẩm chất lượng, giá cả phải chăng.";
   }
   
-  // Cập nhật thông số kỹ thuật
-  if (specCpu) specCpu.textContent = product.cpu || '-';
-  if (specRam) specRam.textContent = product.ram || '-';
-  if (specGpu) specGpu.textContent = product.cardManHinh || '-';
-  if (specScreen) specScreen.textContent = product.manHinh ? `${product.manHinh}` : '-';
-  if (specBattery) specBattery.textContent = product.pin || '-';
-  if (specOs) specOs.textContent = product.heDieuHanh || '-';
+  // Cập nhật thông số kỹ thuật dựa trên category
+  const specsSection = document.querySelector('.specs-section');
+  const specsContent = document.querySelector('.specs-content');
+  
+  if (specsSection && specsContent) {
+    if (product.category === "laptop") {
+      // Hiển thị specs cho laptop
+      specsContent.innerHTML = `
+        <div class="spec-item">
+          <span class="spec-label">CPU:</span>
+          <span class="spec-value">${product.cpu || '-'}</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">RAM:</span>
+          <span class="spec-value">${product.ram || '-'}</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Card đồ họa:</span>
+          <span class="spec-value">${product.cardManHinh || '-'}</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Màn hình:</span>
+          <span class="spec-value">${product.manHinh ? `${product.manHinh}"` : '-'}</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Pin:</span>
+          <span class="spec-value">${product.pin || '-'}</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Hệ điều hành:</span>
+          <span class="spec-value">${product.heDieuHanh || '-'}</span>
+        </div>
+        ${product.oCung ? `
+        <div class="spec-item">
+          <span class="spec-label">Ổ cứng:</span>
+          <span class="spec-value">${product.oCung}</span>
+        </div>` : ''}
+      `;
+    } else {
+      // Hiển thị specs cho phụ kiện
+      let specsHTML = '';
+      
+      // Thuộc tính chung
+      if (product.trongLuong) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Trọng lượng:</span>
+          <span class="spec-value">${product.trongLuong}</span>
+        </div>`;
+      }
+      if (product.kichCo) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Kích cỡ:</span>
+          <span class="spec-value">${product.kichCo}</span>
+        </div>`;
+      }
+      
+      // Thuộc tính của đế tản nhiệt
+      if (product.congKetNoi) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Cổng kết nối:</span>
+          <span class="spec-value">${product.congKetNoi}</span>
+        </div>`;
+      }
+      if (product.tocDoQuat) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Tốc độ quạt:</span>
+          <span class="spec-value">${product.tocDoQuat}</span>
+        </div>`;
+      }
+      
+      // Thuộc tính của tai nghe
+      if (product.daiTanSo) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Dải tần số:</span>
+          <span class="spec-value">${product.daiTanSo}</span>
+        </div>`;
+      }
+      if (product.ketNoi) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Kết nối:</span>
+          <span class="spec-value">${product.ketNoi}</span>
+        </div>`;
+      }
+      if (product.jackCam) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Jack cắm:</span>
+          <span class="spec-value">${product.jackCam}</span>
+        </div>`;
+      }
+      
+      // Thuộc tính của chuột
+      if (product.doPhanGiai) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Độ phân giải:</span>
+          <span class="spec-value">${product.doPhanGiai}</span>
+        </div>`;
+      }
+      if (product.khoangCachKetNoi) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Khoảng cách kết nối:</span>
+          <span class="spec-value">${product.khoangCachKetNoi}</span>
+        </div>`;
+      }
+      if (product.denLED) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Đèn LED:</span>
+          <span class="spec-value">${product.denLED}</span>
+        </div>`;
+      }
+      if (product.hangSanXuat) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Hãng sản xuất:</span>
+          <span class="spec-value">${product.hangSanXuat}</span>
+        </div>`;
+      }
+      
+      // Thuộc tính của bàn phím
+      if (product.soPhim) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Số phím:</span>
+          <span class="spec-value">${product.soPhim}</span>
+        </div>`;
+      }
+      if (product.day) {
+        specsHTML += `
+        <div class="spec-item">
+          <span class="spec-label">Dây:</span>
+          <span class="spec-value">${product.day}</span>
+        </div>`;
+      }
+      
+      specsContent.innerHTML = specsHTML || '<p>Không có thông số kỹ thuật</p>';
+    }
+  }
   
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -100,7 +232,6 @@ function showProductDetail(productId) {
   // Gắn sự kiện cho nút "Thêm giỏ hàng"
   const btnCart = document.querySelector('#productDetail .btn-cart');
   if (btnCart) {
-    // Xóa event listener cũ (nếu có)
     const newBtnCart = btnCart.cloneNode(true);
     btnCart.parentNode.replaceChild(newBtnCart, btnCart);
     
@@ -112,13 +243,11 @@ function showProductDetail(productId) {
   // Gắn sự kiện cho nút "Đặt mua ngay"
   const btnBuy = document.querySelector('#productDetail .btn-buy');
   if (btnBuy) {
-    // Xóa event listener cũ (nếu có)
     const newBtnBuy = btnBuy.cloneNode(true);
     btnBuy.parentNode.replaceChild(newBtnBuy, btnBuy);
     
     newBtnBuy.addEventListener('click', function() {
       addToCartFromDetail(productId);
-      // Chuyển sang trang giỏ hàng để thanh toán
       if (typeof showCartDetail === 'function') {
         showCartDetail();
       }
@@ -164,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchTerm = this.value.trim();
         if (searchTerm) {
           console.log('Tìm kiếm:', searchTerm);
-          // Hàm searchProducts() đã được định nghĩa trong products.js
           if (typeof searchProducts === 'function') {
             searchProducts();
           }

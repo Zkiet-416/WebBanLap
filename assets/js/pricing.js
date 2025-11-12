@@ -1,5 +1,5 @@
 // =======================
-// pricing.js (v4 - sync với user qua laptopProducts)
+// pricing.js (v5 - Hỗ trợ cấu trúc mới của laptop và phụ kiện)
 // =======================
 
 function parsePriceString(price) {
@@ -43,7 +43,7 @@ function normalizeForSearch(s) {
   return s.toString()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .replace(/Đ/g, "d").replace(/Đ/g, "D")
     .toLowerCase();
 }
 
@@ -69,16 +69,18 @@ async function loadPricing() {
   products = products.map(p => {
     const sellPrice = p.priceValue || 0;
     let importPrice = p.importPrice;
-    let profit = p.profit; // ✅ ưu tiên lấy profit đã lưu, không tính lại
+    let profit = p.profit;
 
     // Nếu chưa có importPrice thì tự tạo mặc định
     if (!importPrice || importPrice === 0) {
       importPrice = Math.round(sellPrice * 0.9);
+      needsUpdate = true;
     }
 
     // Nếu chưa có profit, mới tính lại
     if (profit === undefined || profit === null || isNaN(profit)) {
       profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
+      needsUpdate = true;
     }
 
     return {
@@ -91,33 +93,76 @@ async function loadPricing() {
       sellPrice,
       profit: parseFloat(profit.toFixed(1)),
       image: p.image,
+      // Thuộc tính laptop
       ram: p.ram,
       manHinh: p.manHinh,
       cardManHinh: p.cardManHinh,
       cpu: p.cpu,
       pin: p.pin,
-      heDieuHanh: p.heDieuHanh
+      heDieuHanh: p.heDieuHanh,
+      oCung: p.oCung,
+      // Thuộc tính phụ kiện
+      trongLuong: p.trongLuong,
+      kichCo: p.kichCo,
+      congKetNoi: p.congKetNoi,
+      tocDoQuat: p.tocDoQuat,
+      daiTanSo: p.daiTanSo,
+      ketNoi: p.ketNoi,
+      jackCam: p.jackCam,
+      doPhanGiai: p.doPhanGiai,
+      khoangCachKetNoi: p.khoangCachKetNoi,
+      denLED: p.denLED,
+      hangSanXuat: p.hangSanXuat,
+      soPhim: p.soPhim,
+      day: p.day
     };
   });
 
   // ✅ Nếu có sản phẩm chưa có importPrice, lưu lại ngay
   if (needsUpdate) {
-  const userFormatProducts = products.map(p => ({
-    id: p.id,
-    type: p.type,
-    name: p.name,
-    priceValue: p.sellPrice,
-    image: p.image,
-    ram: p.ram,
-    manHinh: p.manHinh,
-    cardManHinh: p.cardManHinh,
-    cpu: p.cpu,
-    pin: p.pin,
-    heDieuHanh: p.heDieuHanh,
-    category: p.category,
-    importPrice: p.importPrice,
-    profit: p.profit // ✅ lưu thêm trường này để không bị tính lại sai
-  }));
+    const userFormatProducts = products.map(p => {
+      const baseProduct = {
+        id: p.id,
+        type: p.type,
+        name: p.name,
+        priceValue: p.sellPrice,
+        image: p.image,
+        category: p.category,
+        importPrice: p.importPrice,
+        profit: p.profit
+      };
+
+      // Thêm thuộc tính theo category
+      if (p.category === "laptop") {
+        return {
+          ...baseProduct,
+          ram: p.ram,
+          manHinh: p.manHinh,
+          cardManHinh: p.cardManHinh,
+          cpu: p.cpu,
+          pin: p.pin,
+          heDieuHanh: p.heDieuHanh,
+          oCung: p.oCung
+        };
+      } else {
+        return {
+          ...baseProduct,
+          trongLuong: p.trongLuong,
+          kichCo: p.kichCo,
+          congKetNoi: p.congKetNoi,
+          tocDoQuat: p.tocDoQuat,
+          daiTanSo: p.daiTanSo,
+          ketNoi: p.ketNoi,
+          jackCam: p.jackCam,
+          doPhanGiai: p.doPhanGiai,
+          khoangCachKetNoi: p.khoangCachKetNoi,
+          denLED: p.denLED,
+          hangSanXuat: p.hangSanXuat,
+          soPhim: p.soPhim,
+          day: p.day
+        };
+      }
+    });
     savePricingToLocalStorage(userFormatProducts);
     console.log("✅ Đã tự động thêm importPrice cho các sản phẩm chưa có");
   }
@@ -288,38 +333,60 @@ async function loadPricing() {
         products.forEach(p => {
           if (p.brand === item.name) {
             p.profit = parseFloat(newProfit.toFixed(1));
-            // 🛠️ **KHÔNG tính lại importPrice**
-            // Thay vào đó: tính lại sellPrice dựa trên importPrice cố định và profit mới
-            // sellPrice = importPrice * (1 + profit/100)
             p.sellPrice = Math.round(p.importPrice * (1 + newProfit / 100));
           }
         });
       } else {
         // Cập nhật sản phẩm đơn lẻ
         item.profit = parseFloat(newProfit.toFixed(1));
-        // 🛠️ **KHÔNG tính lại importPrice**
-        // Cập nhật sellPrice dựa trên importPrice cố định
         item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
         products[index] = item;
       }
       
       // Chuyển đổi lại về format user và lưu
-      const userFormatProducts = products.map(p => ({
-        id: p.id,
-        type: p.type,
-        name: p.name,
-        priceValue: p.sellPrice,
-        image: p.image,
-        ram: p.ram,
-        manHinh: p.manHinh,
-        cardManHinh: p.cardManHinh,
-        cpu: p.cpu,
-        pin: p.pin,
-        heDieuHanh: p.heDieuHanh,
-        category: p.category,
-        importPrice: p.importPrice,
-        profit: p.profit   // <-- thêm dòng này
-      }));
+      const userFormatProducts = products.map(p => {
+        const baseProduct = {
+          id: p.id,
+          type: p.type,
+          name: p.name,
+          priceValue: p.sellPrice,
+          image: p.image,
+          category: p.category,
+          importPrice: p.importPrice,
+          profit: p.profit
+        };
+
+        // Thêm thuộc tính theo category
+        if (p.category === "laptop") {
+          return {
+            ...baseProduct,
+            ram: p.ram,
+            manHinh: p.manHinh,
+            cardManHinh: p.cardManHinh,
+            cpu: p.cpu,
+            pin: p.pin,
+            heDieuHanh: p.heDieuHanh,
+            oCung: p.oCung
+          };
+        } else {
+          return {
+            ...baseProduct,
+            trongLuong: p.trongLuong,
+            kichCo: p.kichCo,
+            congKetNoi: p.congKetNoi,
+            tocDoQuat: p.tocDoQuat,
+            daiTanSo: p.daiTanSo,
+            ketNoi: p.ketNoi,
+            jackCam: p.jackCam,
+            doPhanGiai: p.doPhanGiai,
+            khoangCachKetNoi: p.khoangCachKetNoi,
+            denLED: p.denLED,
+            hangSanXuat: p.hangSanXuat,
+            soPhim: p.soPhim,
+            day: p.day
+          };
+        }
+      });
       
       // Cập nhật danh mục trung bình
       categories = getCategories();

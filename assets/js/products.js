@@ -872,7 +872,7 @@ const products = [
     "category": "phukien",
     "doPhanGiai": "800 DPI",
     "congKetNoi": "USB + Bluetooth",
-    "khoangCachKetNoi": "2m dây",
+    "khoangCachKetNoi": "2m",
     "denLED": "Có",
     "hangSanXuat": "Corsair"
   },
@@ -898,7 +898,7 @@ const products = [
     "category": "phukien",
     "doPhanGiai": "12000 DPI",
     "congKetNoi": "USB",
-    "khoangCachKetNoi": "1.8m dây",
+    "khoangCachKetNoi": "1.8m",
     "denLED": "Có",
     "hangSanXuat": "Asus"
   },
@@ -951,7 +951,7 @@ const products = [
     "soPhim": "87 phím",
     "congKetNoi": "USB",
     "day": "Không",
-    "khoangCachKetNoi": "2m dây",
+    "khoangCachKetNoi": "2m",
     "denLED": "Không"
   },
   {
@@ -977,7 +977,7 @@ const products = [
     "soPhim": "61 phím",
     "congKetNoi": "Bluetooth",
     "day": "Có",
-    "khoangCachKetNoi": "1.8m dây",
+    "khoangCachKetNoi": "1.8m",
     "denLED": "Không"
   },
   {
@@ -990,7 +990,7 @@ const products = [
     "soPhim": "104 phím",
     "congKetNoi": "Bluetooth",
     "day": "Có",
-    "khoangCachKetNoi": "2m dây",
+    "khoangCachKetNoi": "2m",
     "denLED": "Có"
   },
   {
@@ -1003,7 +1003,7 @@ const products = [
     "soPhim": "61 phím",
     "congKetNoi": "Bluetooth",
     "day": "Không",
-    "khoangCachKetNoi": "2m dây",
+    "khoangCachKetNoi": "2m",
     "denLED": "Có"
   },
   {
@@ -1016,7 +1016,7 @@ const products = [
     "soPhim": "61 phím",
     "congKetNoi": "USB + Bluetooth",
     "day": "Không",
-    "khoangCachKetNoi": "1.8m dây",
+    "khoangCachKetNoi": "1.8m",
     "denLED": "Có"
   }
 ];
