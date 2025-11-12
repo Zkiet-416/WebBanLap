@@ -7,13 +7,15 @@
     <title>Cửa hàng Laptop & Phụ kiện</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/search.css">
     <link rel="stylesheet" href="../assets/css/cart.css">
     <link rel="stylesheet" href="../assets/css/productDetail.css">
     <link rel="stylesheet" href="../assets/css/cartDetail.css">
     <link rel="stylesheet" href="../assets/css/log-reg.css">
-    <link rel="stylesheet" href="../assets/css/popupLogin.css">
+    <link rel="stylesheet" href="../assets/css/popupLog-Profile.css">
     <link rel="stylesheet" href="../assets/css/profile.css">
     <link rel="stylesheet" href="../assets/css/checkout.css">
+    <link rel="stylesheet" href="../assets/css/history.css">
 </head>
 
 <body>
@@ -25,35 +27,43 @@
             <div class="container-header">
                 <a href="#" class="logo">Tên web + logo nhóm</a>
 
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." onkeyup="searchProducts()">
-                    <button class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Tìm sản phẩm...">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <div id="searchResults" class="search-results">
+                        <div class="search-results-content">
+                            <!-- JS sẽ render kết quả ở đây -->
+                        </div>
+                    </div>
                 </div>
+
 
                 <div class="header-right">
                     <div class="cart-container">
                         <button class="cart-toggle-btn">
                             <i class="fas fa-shopping-cart"></i>
-                            <span>Giỏ hàng</span>
+                            Giỏ hàng
                         </button>
+
                         <div class="cart-dropdown">
                             <h3>GIỎ HÀNG</h3>
                             <div class="cart-items">
-                                <div class="empty-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    <p>Hiện chưa có sản phẩm</p>
-                                </div>
+                                <!-- Sản phẩm sẽ được thêm vào đây bằng JavaScript -->
                             </div>
-                            <hr>
                             <div class="cart-footer">
                                 <div class="cart-total">
                                     <span>TỔNG TIỀN:</span>
                                     <span id="cart-total">0đ</span>
                                 </div>
                                 <div class="cart-buttons">
-                                    <button class="btn-view">XEM GIỎ HÀNG</button>
+                                    <button class="btn-view"
+                                        onclick="window.showCartDetailFromDropdown && window.showCartDetailFromDropdown()">XEM
+                                        GIỎ HÀNG</button>
                                     <button class="btn-pay">THANH TOÁN</button>
                                 </div>
                             </div>
@@ -133,8 +143,8 @@
                     <!-- Các menu khác -->
                     <li onclick="resetToHomePage()">Trang chủ</li>
                     <li>Tin tức</li>
-                    <li>Khuyến mãi</li>
                     <li>Hotline</li>
+                    <li onclick="showHistoryPage()">Lịch sử</li>
                 </ul>
             </div>
         </nav>
@@ -159,7 +169,7 @@
             <div class="arrow next" id="nextBtn">&#10095;</div>
         </div>
 
-        <!-- ===== PHẦN GỢI Ý CHO BẠN - ĐÃ SỬA ===== -->
+        <!-- ===== PHẦN GỢI Ý CHO BẠN ===== -->
         <section class="products" id="suggestions">
             <h2>Gợi ý cho bạn</h2>
             <div class="tabs" id="brandTabs">
@@ -179,7 +189,7 @@
             <div id="pagination" class="pagination"></div>
         </section>
 
-        <!-- ===== PHẦN PHỤ KIỆN - ĐÃ SỬA ===== -->
+        <!-- ===== PHẦN PHỤ KIỆN ===== -->
         <section class="products" id="accessories" style="margin-top:28px;">
             <h2>Phụ kiện</h2>
             <div class="tabs">
@@ -191,7 +201,6 @@
                 <button>Bàn phím</button>
             </div>
 
-            <!-- THAY THẾ GRID CŨ BẰNG HỆ THỐNG PHÂN TRANG MỚI -->
             <div class="product-grid" id="accessory-grid">
                 <!-- JS sẽ render 15 sản phẩm phụ kiện/trang ở đây -->
             </div>
@@ -286,6 +295,50 @@
                         <span class="total-price">0đ</span>
                     </div>
                     <button class="checkout-btn">THANH TOÁN</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== LỊCH SỬ MUA HÀNG ====== -->
+        <section class="history-page" id="historyPage" style="display: none;">
+            <div class="container">
+                <div class="history-header">
+                    <h1><i class="fas fa-history"></i> Lịch sử mua hàng</h1>
+                    <p>Xem lại các đơn hàng bạn đã đặt</p>
+                </div>
+
+                <div class="history-filters">
+                    <div class="filter-group">
+                        <label for="statusFilter">Lọc theo trạng thái:</label>
+                        <select id="statusFilter">
+                            <option value="all">Tất cả</option>
+                            <option value="completed">Đã đặt</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFilter">Lọc theo thời gian:</label>
+                        <select id="dateFilter">
+                            <option value="all">Tất cả</option>
+                            <option value="7days">7 ngày gần đây</option>
+                            <option value="30days">30 ngày gần đây</option>
+                            <option value="3months">3 tháng gần đây</option>
+                            <option value="6months">6 tháng gần đây</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="orders-list" id="ordersList">
+                    <!-- Orders will be loaded here by JavaScript -->
+                    <div class="empty-history">
+                        <i class="fas fa-receipt"></i>
+                        <h3>Chưa có đơn hàng nào</h3>
+                        <p>Bạn chưa có đơn hàng nào trong lịch sử</p>
+                        <button class="btn-shopping" onclick="resetToHomePage()">
+                            <i class="fas fa-shopping-cart"></i>
+                            Mua sắm ngay
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -535,15 +588,19 @@
         </footer>
 
         <!-- ========== JAVASCRIPT ========== -->
-        <script src="../assets/js/products.js"></script>
-        <script src="../assets/js/main.js"></script>
-        <script src="../assets/js/productDetail.js"></script>
-        <script src="../assets/js/cart.js"></script>
-        <script src="../assets/js/cartDetail.js"></script>
-        <script src="../assets/js/checkout.js"></script>
         <script src="../assets/js/log-reg.js"></script>
-        <script src="../assets/js/popupLogin.js"></script>
+        <script src="../assets/js/products.js">
+        </script>
+        <script src="../assets/js/cart.js"></script>
+        <script src="../assets/js/search.js"></script>
+        <script src="../assets/js/productDetail.js"></script>
+        <script src="../assets/js/cartDetail.js"></script>
+        <script src="../assets/js/main.js"></script>
+        <script src="../assets/js/checkout.js"></script>
+        <script src="../assets/js/history.js"></script>
+        <script src="../assets/js/popupLog-Profile.js"></script>
         <script src="../assets/js/profile.js"></script>
+
 
     </section>
 </body>
