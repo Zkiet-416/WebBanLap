@@ -84,7 +84,7 @@ window.resetToHomePage = function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// ========== CART TOGGLE - GIỮ NGUYÊN ==========
+// ========== CART TOGGLE ==========
 document.addEventListener('DOMContentLoaded', function() {
     const cartToggle = document.querySelector('.cart-toggle-btn');
     const cartDropdown = document.querySelector('.cart-dropdown');
@@ -105,4 +105,35 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
         });
     }
+
+    // ========== HÀM HIỂN THỊ TRANG LỊCH SỬ ==========
+  window.showHistoryPage = function() {
+    console.log('📜 Hiển thị trang lịch sử');
+    
+    // Ẩn tất cả section khác
+    const sectionsToHide = [
+        'suggestions', 'accessories', 'productDetail', 'cartDetail'
+    ];
+    
+    sectionsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'none';
+    });
+    
+    const slider = document.querySelector('.slider');
+    if (slider) slider.style.display = 'none';
+    
+    // Hiển thị trang lịch sử
+    const historyPage = document.getElementById('historyPage');
+    if (historyPage) {
+        historyPage.style.display = 'block';
+        
+        // Load lịch sử đơn hàng
+        if (typeof loadOrderHistory === 'function') {
+            loadOrderHistory();
+        }
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 });
