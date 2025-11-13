@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="../assets/css/cartDetail.css">
     <link rel="stylesheet" href="../assets/css/log-reg.css">
     <link rel="stylesheet" href="../assets/css/popupLog-Profile.css">
-    <link rel="stylesheet" href="../assets/css/profile.css">
     <link rel="stylesheet" href="../assets/css/checkout.css">
+    <link rel="stylesheet" href="../assets/css/profile.css">
     <link rel="stylesheet" href="../assets/css/history.css">
 </head>
 
@@ -91,6 +91,7 @@
                             </ul>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -486,123 +487,170 @@
                 </form>
             </div>
         </div>
+    </section>
 
-        <!-- ========== PROFILE ========== -->
-        <div class="hidden" id="profile">
-            <div class="profile-container">
-                <div class="avatar-section">
-                    <div class="avatar"><img src="../assets/images/defaultAvt.svg" style="width:150px; height:150px;">
-                    </div>
-                    <button id="change-avatar">Đổi ảnh đại diện</button>
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-left"></div>
+
+            <div class="footer-col">
+                <strong>Tên</strong>
+                <a href="#">Giới thiệu</a>
+                <a href="#">Tuyển dụng</a>
+            </div>
+
+            <div class="footer-col">
+                <strong>DỊCH VỤ</strong>
+                <a href="#">Trung tâm trợ giúp</a>
+                <a href="#">Hoạt động xã hội</a>
+                <a href="#">Hướng dẫn đặt hàng online</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Chính sách thanh toán, đổi trả - hoàn hàng</a>
+            </div>
+
+            <div class="footer-right">
+                <strong>THEO DÕI CHÚNG TÔI</strong>
+                <div class="socials">
+                    <div class="social-box"></div>
+                    <div class="social-box"></div>
+                    <div class="social-box"></div>
                 </div>
-                <form class="profile-form">
-                    <div class="form-group">
-                        <label for="profile-username">Tên đăng nhập</label>
-                        <input type="text" id="profile-username" value="Meo">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="profile-fullname">Tên</label>
-                        <input type="text" id="profile-fullname" placeholder="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="profile-email">Email</label>
-                        <input type="email" id="profile-email" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="profile-phone">Số điện thoại</label>
-                        <input type="text" id="profile-phone" value="********75">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Giới tính</label>
-                        <div class="gender-options">
-                            <label><input type="radio" name="gender" value="Nam"> Nam</label>
-                            <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
-                            <label><input type="radio" name="gender" value="Khác"> Khác</label>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Ngày sinh</label>
-                        <div class="birthday-select">
-                            <select id="year">
-                                <option>Năm</option>
-                            </select>
-                            <select id="month">
-                                <option>Tháng</option>
-                            </select>
-                            <select id="day">
-                                <option>Ngày</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" id="edit-profile">Chỉnh sửa</button>
-                        <button type="submit" id="save-profile" class="hidden">Lưu</button>
-                    </div>
-                </form>
             </div>
         </div>
 
-        <!-- ========== FOOTER ========== -->
-        <footer>
-            <div class="footer-inner">
-                <div class="footer-left"></div>
+        <div class="footer-bottom">
+            <div class="footer-col">© 2025</div>
+            <div class="footer-col">CHÍNH SÁCH BẢO MẬT</div>
+            <div class="footer-right">LIÊN HỆ</div>
+        </div>
+    </footer>
+    <!-- ========== PROFILE ========== -->
+    <div class="hidden" id="profile">
+        <div class="profile-container">
+            <!-- ===== MENU BÊN TRÁI ===== -->
+            <div class="profile-sidebar">
+                <button class="tab-btn active" id="tab-info">Hồ sơ</button>
+                <button class="tab-btn" id="tab-pass">Đổi mật khẩu</button>
+            </div>
 
-                <div class="footer-col">
-                    <strong>Tên</strong>
-                    <a href="#">Giới thiệu</a>
-                    <a href="#">Tuyển dụng</a>
-                </div>
-
-                <div class="footer-col">
-                    <strong>DỊCH VỤ</strong>
-                    <a href="#">Trung tâm trợ giúp</a>
-                    <a href="#">Hoạt động xã hội</a>
-                    <a href="#">Hướng dẫn đặt hàng online</a>
-                    <a href="#">Điều khoản sử dụng</a>
-                    <a href="#">Chính sách thanh toán, đổi trả - hoàn hàng</a>
-                </div>
-
-                <div class="footer-right">
-                    <strong>THEO DÕI CHÚNG TÔI</strong>
-                    <div class="socials">
-                        <div class="social-box"></div>
-                        <div class="social-box"></div>
-                        <div class="social-box"></div>
+            <!-- ===== NỘI DUNG BÊN PHẢI ===== -->
+            <div class="profile-content">
+                <!-- Hồ sơ -->
+                <div id="profile-info" class="tab-content">
+                    <div class="avatar-section">
+                        <div class="avatar"><img src="../assets/images/defaultAvt.png"></div>
+                        <div class="avatar-actions">
+                            <button id="change-avatar">Thay ảnh</button>
+                            <button id="delete-avatar">Xóa ảnh</button>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
                     </div>
+
+                    <form class="profile-form">
+                        <div class="form-group">
+                            <label for="profile-username">Tên đăng nhập</label>
+                            <input type="text" id="profile-username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-fullname">Tên</label>
+                            <input type="text" id="profile-fullname">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-email">Email</label>
+                            <input type="text" id="profile-email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profile-phone">Số điện thoại</label>
+                            <input type="text" id="profile-phone">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giới tính</label>
+                            <div class="gender-options">
+                                <label><input type="radio" name="gender" value="Nam"> Nam</label>
+                                <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                                <label><input type="radio" name="gender" value="Khác"> Khác</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ngày sinh</label>
+                            <div class="birthday-select">
+                                <select id="year">
+                                    <option>Năm</option>
+                                </select>
+                                <select id="month">
+                                    <option>Tháng</option>
+                                </select>
+                                <select id="day">
+                                    <option>Ngày</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" id="edit-profile">Chỉnh sửa</button>
+                            <button type="submit" id="save-profile" class="hidden">Lưu</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Đổi mật khẩu -->
+                <div id="change-password" class="tab-content hidden">
+                    <form class="password-form">
+                        <h3>Đổi mật khẩu</h3>
+
+                        <div class="form-group">
+                            <label for="old-password">Mật khẩu cũ</label>
+                            <div class="input-eye"><input type="password" id="old-password"
+                                    placeholder="Nhập mật khẩu hiện tại">
+                                <img src="../assets/images/eye.jpg" class="eye-profile">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-password">Mật khẩu mới</label>
+                            <div class="input-eye">
+                                <input type="password" id="new-password" placeholder="Nhập mật khẩu mới">
+                                <img src="../assets/images/eye.jpg" class="eye-profile">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Xác nhận mật khẩu</label>
+                            <div class="input-eye">
+                                <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu mới">
+                                <img src="../assets/images/eye.jpg" class="eye-profile">
+                            </div>
+                        </div>
+
+
+                        <div class="button-group">
+                            <button type="submit" id="save-password">Lưu mật khẩu</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="footer-bottom">
-                <div class="footer-col">© 2025</div>
-                <div class="footer-col">CHÍNH SÁCH BẢO MẬT</div>
-                <div class="footer-right">LIÊN HỆ</div>
-            </div>
-        </footer>
-
-        <!-- ========== JAVASCRIPT ========== -->
-        <script src="../assets/js/log-reg.js"></script>
-        <script src="../assets/js/products.js">
-        </script>
-        <script src="../assets/js/cart.js"></script>
-        <script src="../assets/js/search.js"></script>
-        <script src="../assets/js/productDetail.js"></script>
-        <script src="../assets/js/cartDetail.js"></script>
-        <script src="../assets/js/main.js"></script>
-        <script src="../assets/js/checkout.js"></script>
-        <script src="../assets/js/history.js"></script>
-        <script src="../assets/js/popupLog-Profile.js"></script>
-        <script src="../assets/js/profile.js"></script>
+        </div>
+    </div>
+    <!-- ========== JAVASCRIPT ========== -->
+    <script src="../assets/js/log-reg.js"></script>
+    <script src="../assets/js/products.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/search.js"></script>
+    <script src="../assets/js/productDetail.js"></script>
+    <script src="../assets/js/cartDetail.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/checkout.js"></script>
+    <script src="../assets/js/history.js"></script>
+    <script src="../assets/js/popupLog-Profile.js"></script>
+    <script src="../assets/js/profile.js"></script>
 
 
-    </section>
 </body>
 
 </html>
