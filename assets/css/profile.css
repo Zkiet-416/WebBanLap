@@ -15,10 +15,8 @@
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
     width: 100%;
     min-height: 80vh;
-    margin-top: 130px;
     background-color: #f3f7fa;
     z-index: 1;
 }
@@ -59,7 +57,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: 15px;
-    height: 150px;
+    height: 180px;
 }
 
 #profile .avatar {
@@ -70,7 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 10px rgba(125, 211, 192, 0.3);
+    box-shadow: 0 0 10px #7dd3c04d;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
@@ -86,25 +84,10 @@
     object-fit: cover;
 }
 
-/* Nút đổi ảnh */
-#change-avatar,
-#delete-avatar {
-    color: #2d5f54;
-    cursor: pointer;
-    font-weight: bold;
-    border: none;
-    background: transparent;
-    transition: color 0.3s ease, transform 0.2s ease;
-}
 
-#change-avatar:hover,
-#delete-avatar:hover {
-    color: #7dd3c0;
-    transform: scale(1.05);
-}
 
 #profile .avatar-actions {
-    margin-top: 12px;
+    margin: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,12 +112,27 @@
     border-radius: 2px;
 }
 
+#change-avatar,
+#delete-avatar {
+    color: #2d5f54;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#change-avatar:hover,
+#delete-avatar:hover {
+    color: #7dd3c0;
+    transform: scale(1.05);
+}
+
 /* ===== Form ===== */
 #profile .profile-form {
-    margin-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 15px;
     align-items: center;
 }
 
@@ -257,7 +255,6 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-top: 30px;
     height: auto;
     min-height: 100%;
 
@@ -266,9 +263,9 @@
 .profile-sidebar .tab-btn {
     background: none;
     border: none;
-    padding: 15px 20px;
+    padding: 20px 20px;
     text-align: left;
-    font-size: 15px;
+    font-size: 16px;
     color: #2d5f54;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -376,33 +373,76 @@
 
 
 /* ========= RESPONSIVE THEO MAIN ========= */
+/* ========= RESPONSIVE ========= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+    #profile .profile-container {
+        width: 85%;
+    }
+}
+
+/* MOBILE */
 @media (max-width: 768px) {
 
-    /* Tổng container vẫn là 2 cột, chỉ thu nhỏ lại */
-    .profile-container {
-        width: 90%;
+    #profile {
+        margin-top: 100px;
+        align-items: center;
+    }
+
+    #profile .profile-container {
+        width: 95%;
+        flex-direction: column;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    /* Sidebar chuyển sang menu ngang */
+    #profile .profile-sidebar {
+        width: 100%;
         flex-direction: row;
-        align-items: stretch;
-        margin-top: 80px;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px 0;
+        border-right: none;
+        border-bottom: 2px solid #b0d9d2;
+        gap: 0;
     }
 
-    /* Menu trái */
-    .profile-sidebar {
-        width: 140px;
-        padding-top: 20px;
-        border-right: 2px solid #b0d9d2;
-        border-bottom: none;
+    #profile .profile-sidebar .tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 12px 0;
+        font-size: 14px;
     }
 
-    .profile-sidebar .tab-btn {
-        font-size: 13px;
-        padding: 10px;
+    #profile .profile-sidebar .tab-btn.active {
+        border-left: none;
+        border-bottom: 4px solid #2d5f54;
     }
 
     /* Nội dung bên phải */
-    .profile-content {
-        padding: 15px 20px;
+    #profile .profile-content {
+        padding: 20px 18px;
     }
 
+    /* Form thu gọn vừa cho mobile */
+    #profile .profile-form .form-group {
+        width: 100%;
+    }
 
+    #profile .profile-form .form-group label {
+        flex-basis: 100%;
+        margin-bottom: 3px;
+    }
+
+    #profile .profile-form .form-group input,
+    .birthday-select,
+    .gender-options {
+        flex-basis: 100%;
+    }
+
+    #profile .profile-form .form-group small {
+        margin-left: 0;
+    }
 }

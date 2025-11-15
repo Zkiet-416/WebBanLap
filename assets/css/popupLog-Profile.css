@@ -24,6 +24,7 @@
     transition: box-shadow 0.3s ease, transform 0.2s ease;
     width: 24px;
     height: 24px;
+    object-fit: cover;
 }
 
 #avatarUser:hover {
