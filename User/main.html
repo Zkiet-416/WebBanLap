@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Cửa hàng Laptop & Phụ kiện</title>
+    <title>EighTech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/search.css">
@@ -27,7 +27,7 @@
             <div class="container-header">
                 <a href="#" class="logo">
                     <img src="../assets/images/logo.png" alt="">
-                    <span>EightTech</span>
+                    <span>EighTech</span>
                 </a>
 
                 <div class="search-container">
@@ -83,7 +83,8 @@
                     <div>
                         <div id="openLogin" class="user-infor">
                             <span id="loginText">Đăng nhập</span>
-                            <img id="avatarUser">
+                            <img id="avatarUser" src=""
+                                style="display:none; width:24px; height:24px; border-radius:50%;">
                         </div>
 
                         <div id="dropUser" class="hidden">
@@ -282,7 +283,7 @@
                         </div>
 
                         <!-- Phân trang -->
-                        <div class="pagination"></div>
+                        <div class="cart-pagination"></div>
                     </div>
                 </div>
 
@@ -348,95 +349,92 @@
 
         <!-- ========== CHECKOUT MODAL ========== -->
         <div id="checkoutModal" class="checkout-modal">
-            <div class="checkout-container">
-                <button class="close-modal-btn" onclick="closeCheckoutModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+            <button class="close-modal-btn" onclick="closeCheckoutModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="checkout-grid">
+                <!-- CỘT TRÁI: THÔNG TIN GIAO HÀNG -->
+                <div class="checkout-section">
+                    <h2 class="section-title">Thông tin giao hàng</h2>
 
-                <div class="checkout-grid">
-                    <!-- CỘT TRÁI: THÔNG TIN GIAO HÀNG -->
-                    <div class="checkout-section">
-                        <h2 class="section-title">Thông tin giao hàng</h2>
+                    <div class="form-group">
+                        <label class="form-label">Họ và tên khách hàng<span class="required">*</span></label>
+                        <input type="text" id="customerName" class="form-input" placeholder="Nhập họ và tên">
+                        <span class="error-msg" id="nameError"></span>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Họ và tên khách hàng<span class="required">*</span></label>
-                            <input type="text" id="customerName" class="form-input" placeholder="Nhập họ và tên">
-                            <span class="error-msg" id="nameError"></span>
+                    <div class="form-group">
+                        <label class="form-label">Số điện thoại<span class="required">*</span></label>
+                        <input type="text" id="customerPhone" class="form-input" placeholder="Nhập số điện thoại">
+                        <span class="error-msg" id="phoneError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Địa chỉ<span class="required">*</span></label>
+                        <input type="text" id="customerAddress" class="form-input" placeholder="Số nhà, tên đường">
+                        <span class="error-msg" id="addressError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tỉnh/Thành phố<span class="required">*</span></label>
+                        <select id="province" class="form-select" onchange="updateDistricts()">
+                            <option value="">Chọn Tỉnh/TP</option>
+                            <option value="hanoi">Hà Nội</option>
+                            <option value="hcm">TP. Hồ Chí Minh</option>
+                            <option value="danang">Đà Nẵng</option>
+                        </select>
+                        <span class="error-msg" id="provinceError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Quận/Huyện<span class="required">*</span></label>
+                        <select id="district" class="form-select">
+                            <option value="">Chọn Quận/Huyện</option>
+                        </select>
+                        <span class="error-msg" id="districtError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Ghi chú đơn hàng</label>
+                        <textarea id="orderNote" class="form-textarea" placeholder="Ghi chú đơn hàng"></textarea>
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI: PHƯƠNG THỨC THANH TOÁN & ĐỌN HÀNG -->
+                <div class="checkout-section">
+                    <h2 class="section-title">Phương thức thanh toán</h2>
+
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <input type="radio" name="payment" value="cod" id="payment-cod" checked>
+                            <label for="payment-cod">Thanh toán khi nhận hàng (COD)</label>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Số điện thoại<span class="required">*</span></label>
-                            <input type="text" id="customerPhone" class="form-input" placeholder="Nhập số điện thoại">
-                            <span class="error-msg" id="phoneError"></span>
+                        <div class="payment-option">
+                            <input type="radio" name="payment" value="bank" id="payment-bank">
+                            <label for="payment-bank">Chuyển khoản ngân hàng</label>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Địa chỉ<span class="required">*</span></label>
-                            <input type="text" id="customerAddress" class="form-input" placeholder="Số nhà, tên đường">
-                            <span class="error-msg" id="addressError"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Tỉnh/Thành phố<span class="required">*</span></label>
-                            <select id="province" class="form-select" onchange="updateDistricts()">
-                                <option value="">Chọn Tỉnh/TP</option>
-                                <option value="hanoi">Hà Nội</option>
-                                <option value="hcm">TP. Hồ Chí Minh</option>
-                                <option value="danang">Đà Nẵng</option>
-                            </select>
-                            <span class="error-msg" id="provinceError"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Quận/Huyện<span class="required">*</span></label>
-                            <select id="district" class="form-select">
-                                <option value="">Chọn Quận/Huyện</option>
-                            </select>
-                            <span class="error-msg" id="districtError"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Ghi chú đơn hàng</label>
-                            <textarea id="orderNote" class="form-textarea" placeholder="Ghi chú đơn hàng"></textarea>
+                        <div class="payment-option">
+                            <input type="radio" name="payment" value="ewallet" id="payment-ewallet">
+                            <label for="payment-ewallet">Ví điện tử</label>
                         </div>
                     </div>
 
-                    <!-- CỘT PHẢI: PHƯƠNG THỨC THANH TOÁN & ĐỌN HÀNG -->
-                    <div class="checkout-section">
-                        <h2 class="section-title">Phương thức thanh toán</h2>
+                    <h2 class="section-title" style="margin-top: 30px;">Đơn hàng của bạn</h2>
 
-                        <div class="payment-options">
-                            <div class="payment-option">
-                                <input type="radio" name="payment" value="cod" id="payment-cod" checked>
-                                <label for="payment-cod">Thanh toán khi nhận hàng (COD)</label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" name="payment" value="bank" id="payment-bank">
-                                <label for="payment-bank">Chuyển khoản ngân hàng</label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" name="payment" value="ewallet" id="payment-ewallet">
-                                <label for="payment-ewallet">Ví điện tử</label>
-                            </div>
+                    <div class="order-summary-box">
+                        <div id="orderSummary" class="order-items-list">
+                            <!-- Danh sách sản phẩm sẽ được render ở đây -->
                         </div>
 
-                        <h2 class="section-title" style="margin-top: 30px;">Đơn hàng của bạn</h2>
-
-                        <div class="order-summary-box">
-                            <div id="orderSummary" class="order-items-list">
-                                <!-- Danh sách sản phẩm sẽ được render ở đây -->
-                            </div>
-
-                            <div class="order-total">
-                                <span class="total-label">Tổng cộng:</span>
-                                <span id="checkoutTotal" class="total-value">0đ</span>
-                            </div>
+                        <div class="order-total">
+                            <span class="total-label">Tổng cộng:</span>
+                            <span id="checkoutTotal" class="total-value">0đ</span>
                         </div>
-
-                        <button type="button" class="btn-complete-order" onclick="completeOrder()">
-                            Hoàn tất đơn hàng
-                        </button>
                     </div>
+
+                    <button type="button" class="btn-complete-order" onclick="completeOrder()">
+                        Hoàn tất đơn hàng
+                    </button>
                 </div>
             </div>
         </div>
@@ -605,10 +603,12 @@
     <!-- ========== FOOTER ========== -->
     <footer>
         <div class="footer-inner">
-            <div class="footer-left"></div>
+            <div class="footer-left">
+                <img src="../assets/images/logo.png">
+            </div>
 
             <div class="footer-col">
-                <strong>Tên</strong>
+                <strong>EighTech</strong>
                 <a href="#">Giới thiệu</a>
                 <a href="#">Tuyển dụng</a>
             </div>
