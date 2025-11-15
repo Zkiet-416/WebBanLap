@@ -1,5 +1,5 @@
 // =======================
-// pricing.js (v5 - Hỗ trợ cấu trúc mới của laptop và phụ kiện)
+// pricing.js (v3 - styled modal + linked profit update + keep search state)
 // =======================
 
 function parsePriceString(price) {
@@ -16,24 +16,22 @@ function parsePriceString(price) {
   );
 }
 
-// Lưu vào localStorage với key "laptopProducts" để đồng bộ với user
 function savePricingToLocalStorage(data) {
   try {
-    localStorage.setItem("laptopProducts", JSON.stringify(data));
-    console.log("✅ laptopProducts saved to localStorage (sync with user).");
+    localStorage.setItem("adminProductData", JSON.stringify(data));
+    console.log("✅ adminProductData saved to localStorage.");
   } catch (e) {
-    console.error("❌ Failed saving laptopProducts:", e);
+    console.error("❌ Failed saving adminProductData:", e);
   }
 }
 
-// Đọc từ localStorage key "laptopProducts" 
 function loadPricingFromLocalStorage() {
   try {
-    const s = localStorage.getItem("laptopProducts");
+    const s = localStorage.getItem("adminProductData");
     if (!s) return null;
     return JSON.parse(s);
   } catch (e) {
-    console.error("❌ Failed reading laptopProducts:", e);
+    console.error("❌ Failed reading adminProductData:", e);
     return null;
   }
 }
@@ -43,131 +41,63 @@ function normalizeForSearch(s) {
   return s.toString()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/Đ/g, "d").replace(/Đ/g, "D")
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
     .toLowerCase();
+}
+
+function buildProductsFromAdminProduct(globalJsonData) {
+  const productTypes = ["laptop", "balo", "phukienkhac"];
+  const out = [];
+
+  if (!globalJsonData || !globalJsonData.product || !Array.isArray(globalJsonData.product.brand)) {
+    console.warn("AdminProduct data không hợp lệ hoặc không tồn tại.");
+    return out;
+  }
+
+  globalJsonData.product.brand.forEach((brandObj) => {
+    const brandName = brandObj.name || "Không rõ";
+    productTypes.forEach((type) => {
+      const arr = Array.isArray(brandObj[type]) ? brandObj[type] : [];
+      arr.forEach((p) => {
+        const rawPrice = parsePriceString(p.price);
+        const sellPrice = rawPrice;
+        // ✅ giá nhập mặc định = 90% giá bán
+        const importPrice = Math.round(sellPrice * 0.9);
+        const profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
+
+        out.push({
+          id: p.id || `${brandName}-${type}-${Math.random().toString(36).slice(2,8)}`,
+          name: p.model || p.name || "Unknown",
+          brand: brandName,
+          type: brandName,
+          importPrice,
+          sellPrice,
+          profit: parseFloat(profit.toFixed(1)),
+        });
+      });
+    });
+  });
+
+  return out;
 }
 
 async function loadPricing() {
   const content = document.getElementById("content");
   if (!content) return;
 
-  // Đọc dữ liệu từ localStorage (đồng bộ với user)
   let products = loadPricingFromLocalStorage();
-  
-  if (!products || !Array.isArray(products) || products.length === 0) {
-    console.error("❌ Không tìm thấy dữ liệu laptopProducts trong localStorage.");
-    content.innerHTML = `
-      <h1 class="page-title">Giá bán</h1>
-      <p style="text-align:center; margin-top:50px;">
-        Không có dữ liệu sản phẩm. Vui lòng kiểm tra lại.
-      </p>`;
-    return;
+  if (!products || !products.length) {
+    if (window.globalJsonData) {
+      console.log("ℹ️ Lấy dữ liệu từ globalJsonData (AdminProduct.js).");
+      products = buildProductsFromAdminProduct(window.globalJsonData);
+      savePricingToLocalStorage(products);
+    } else {
+      console.error("❌ Không tìm thấy dữ liệu AdminProduct.");
+      return;
+    }
   }
 
-  // Chuyển đổi dữ liệu từ format user sang format admin
-  let needsUpdate = false;
-  products = products.map(p => {
-    const sellPrice = p.priceValue || 0;
-    let importPrice = p.importPrice;
-    let profit = p.profit;
-
-    // Nếu chưa có importPrice thì tự tạo mặc định
-    if (!importPrice || importPrice === 0) {
-      importPrice = Math.round(sellPrice * 0.9);
-      needsUpdate = true;
-    }
-
-    // Nếu chưa có profit, mới tính lại
-    if (profit === undefined || profit === null || isNaN(profit)) {
-      profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
-      needsUpdate = true;
-    }
-
-    return {
-      id: p.id,
-      name: p.name || "Unknown",
-      brand: p.type || "Khác",
-      type: p.type || "Khác",
-      category: p.category || "laptop",
-      importPrice,
-      sellPrice,
-      profit: parseFloat(profit.toFixed(1)),
-      image: p.image,
-      // Thuộc tính laptop
-      ram: p.ram,
-      manHinh: p.manHinh,
-      cardManHinh: p.cardManHinh,
-      cpu: p.cpu,
-      pin: p.pin,
-      heDieuHanh: p.heDieuHanh,
-      oCung: p.oCung,
-      // Thuộc tính phụ kiện
-      trongLuong: p.trongLuong,
-      kichCo: p.kichCo,
-      congKetNoi: p.congKetNoi,
-      tocDoQuat: p.tocDoQuat,
-      daiTanSo: p.daiTanSo,
-      ketNoi: p.ketNoi,
-      jackCam: p.jackCam,
-      doPhanGiai: p.doPhanGiai,
-      khoangCachKetNoi: p.khoangCachKetNoi,
-      denLED: p.denLED,
-      hangSanXuat: p.hangSanXuat,
-      soPhim: p.soPhim,
-      day: p.day
-    };
-  });
-
-  // ✅ Nếu có sản phẩm chưa có importPrice, lưu lại ngay
-  if (needsUpdate) {
-    const userFormatProducts = products.map(p => {
-      const baseProduct = {
-        id: p.id,
-        type: p.type,
-        name: p.name,
-        priceValue: p.sellPrice,
-        image: p.image,
-        category: p.category,
-        importPrice: p.importPrice,
-        profit: p.profit
-      };
-
-      // Thêm thuộc tính theo category
-      if (p.category === "laptop") {
-        return {
-          ...baseProduct,
-          ram: p.ram,
-          manHinh: p.manHinh,
-          cardManHinh: p.cardManHinh,
-          cpu: p.cpu,
-          pin: p.pin,
-          heDieuHanh: p.heDieuHanh,
-          oCung: p.oCung
-        };
-      } else {
-        return {
-          ...baseProduct,
-          trongLuong: p.trongLuong,
-          kichCo: p.kichCo,
-          congKetNoi: p.congKetNoi,
-          tocDoQuat: p.tocDoQuat,
-          daiTanSo: p.daiTanSo,
-          ketNoi: p.ketNoi,
-          jackCam: p.jackCam,
-          doPhanGiai: p.doPhanGiai,
-          khoangCachKetNoi: p.khoangCachKetNoi,
-          denLED: p.denLED,
-          hangSanXuat: p.hangSanXuat,
-          soPhim: p.soPhim,
-          day: p.day
-        };
-      }
-    });
-    savePricingToLocalStorage(userFormatProducts);
-    console.log("✅ Đã tự động thêm importPrice cho các sản phẩm chưa có");
-  }
-
-  // Tạo danh sách loại
+  // tạo danh sách loại
   function getCategories() {
     const categoryMap = {};
     products.forEach((p) => {
@@ -189,10 +119,10 @@ async function loadPricing() {
   let searchKeyword = "";
 
   function formatProfit(value) {
-    const n = Number(value);
-    if (Number.isInteger(n)) return n + "%";
-    return n.toFixed(1) + "%";
-  }
+  const n = Number(value);
+  if (Number.isInteger(n)) return n + "%";
+  return n.toFixed(1) + "%";
+}
 
   function renderTable(data) {
     const start = (currentPage - 1) * itemsPerPage;
@@ -327,9 +257,7 @@ async function loadPricing() {
     modal.querySelector(".cancel-btn").onclick = () => overlay.remove();
     modal.querySelector(".save-btn").onclick = () => {
       const newProfit = parseFloat(document.getElementById("newProfit").value) || 0;
-      
       if (isCategory) {
-        // Cập nhật tất cả sản phẩm trong loại
         products.forEach(p => {
           if (p.brand === item.name) {
             p.profit = parseFloat(newProfit.toFixed(1));
@@ -337,67 +265,15 @@ async function loadPricing() {
           }
         });
       } else {
-        // Cập nhật sản phẩm đơn lẻ
         item.profit = parseFloat(newProfit.toFixed(1));
         item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
         products[index] = item;
       }
-      
-      // Chuyển đổi lại về format user và lưu
-      const userFormatProducts = products.map(p => {
-        const baseProduct = {
-          id: p.id,
-          type: p.type,
-          name: p.name,
-          priceValue: p.sellPrice,
-          image: p.image,
-          category: p.category,
-          importPrice: p.importPrice,
-          profit: p.profit
-        };
-
-        // Thêm thuộc tính theo category
-        if (p.category === "laptop") {
-          return {
-            ...baseProduct,
-            ram: p.ram,
-            manHinh: p.manHinh,
-            cardManHinh: p.cardManHinh,
-            cpu: p.cpu,
-            pin: p.pin,
-            heDieuHanh: p.heDieuHanh,
-            oCung: p.oCung
-          };
-        } else {
-          return {
-            ...baseProduct,
-            trongLuong: p.trongLuong,
-            kichCo: p.kichCo,
-            congKetNoi: p.congKetNoi,
-            tocDoQuat: p.tocDoQuat,
-            daiTanSo: p.daiTanSo,
-            ketNoi: p.ketNoi,
-            jackCam: p.jackCam,
-            doPhanGiai: p.doPhanGiai,
-            khoangCachKetNoi: p.khoangCachKetNoi,
-            denLED: p.denLED,
-            hangSanXuat: p.hangSanXuat,
-            soPhim: p.soPhim,
-            day: p.day
-          };
-        }
-      });
-      
       // Cập nhật danh mục trung bình
       categories = getCategories();
-      
-      // Lưu vào localStorage với format user
-      savePricingToLocalStorage(userFormatProducts);
-      
+      savePricingToLocalStorage(products);
       overlay.remove();
       render(filterData(searchKeyword));
-      
-      console.log("✅ Đã cập nhật và đồng bộ với user!");
     };
   }
 

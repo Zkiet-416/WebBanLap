@@ -226,16 +226,14 @@ window.loadStockPage = function() {
 
     return receiptTransactions;
 }
-
-    // --- HÀM MỚI ĐƯỢC CẬP NHẬT ĐỂ ĐỌC ĐỊNH DẠNG ADMINPRODUCTDATA CỦA BẠN ---
     /**
-     * Tải và chuyển đổi dữ liệu sản phẩm từ Local Storage ('adminproductdata')
-     * thành các giao dịch 'nhap' ban đầu.
+     * Tải và chuyển đổi dữ liệu sản phẩm từ Local Storage ('adminproductdata')      new ver->doc proudcts.js
+     * thành các giao dịch 'ton kho' ban đầu.
      * * ĐÃ SỬA: Key và Logic duyệt cấu trúc lồng nhau.
      * LƯU Ý: Dữ liệu không có trường 'stockQuantity', nên QTY mặc định = 1.
      */
     function loadAdminProductsAsInitialStock(transactionsForIdCheck) {
-        const PRODUCT_STORAGE_KEY = 'adminProductData'; // Sửa key theo yêu cầu mới
+        const PRODUCT_STORAGE_KEY = 'laptopProducts'; // Sửa key theo yêu cầu mới
         let initialStockTransactions = [];
         
         // Tìm ID lớn nhất hiện có để đảm bảo ID giao dịch mới không bị trùng
@@ -289,7 +287,21 @@ window.loadStockPage = function() {
 
         return initialStockTransactions;
     }
-    // --- KẾT THÚC HÀM ĐÃ SỬA ---
+    
+    const SALE_TRANSACTION_KEY = 'saleTransactions'; 
+            function loadSaleTransactions() {
+                try {
+                    const rawData = localStorage.getItem(SALE_TRANSACTION_KEY);
+                    if (rawData) {
+                        const data = JSON.parse(rawData);
+                        // Chỉ lấy những giao dịch có type là 'xuat' để đảm bảo
+                        return Array.isArray(data) ? data.filter(t => t.type === 'xuat') : [];
+                    }
+                } catch (error) {
+                    console.error("Lỗi khi tải giao dịch bán hàng:", error);
+                }
+                return [];
+            }
 
 
     //  CÁC HÀM TÍNH TOÁN VÀ HIỂN THỊ
@@ -603,9 +615,11 @@ window.loadStockPage = function() {
 
             // 2. Tải và chuyển đổi dữ liệu phiếu nhập từ Local Storage (receiptData)
             const receiptTransactions = loadReceiptsFromLocalStorage(staticTransactions);
+            const saleTransactions = loadSaleTransactions();
             
             // 3. Chuẩn bị dữ liệu cho việc tìm Max ID
             const transactionsForIdCheck = [...staticTransactions, ...receiptTransactions];
+            
 
             // 4. Tải và chuyển đổi dữ liệu sản phẩm ban đầu từ Local Storage (adminproductdata)
             const adminProductInitialTransactions = loadAdminProductsAsInitialStock(transactionsForIdCheck);
@@ -614,7 +628,8 @@ window.loadStockPage = function() {
             allTransactions = [
                 ...staticTransactions, 
                 ...adminProductInitialTransactions,
-                ...receiptTransactions
+                ...receiptTransactions,
+                ...saleTransactions
             ];
             
             // 6. Sắp xếp lại theo ngày để đảm bảo tính toán tồn kho chính xác
