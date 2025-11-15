@@ -49,13 +49,23 @@ window.addEventListener("load", () => {
     })
 
     //XEM PROFILE
-    const mainContainer = document.querySelector(".container");
+    const suggestions = document.getElementById('suggestions');
+    const accessories = document.getElementById('accessories');
+    const slider = document.querySelector('.slider');
+    const productDetail = document.getElementById('productDetail');
+    const cartDetail = document.getElementById("cartDetail");
     const openProfile = document.getElementById("openProfile");
     const profile = document.getElementById("profile");
-    openProfile.addEventListener("click", function () {
-        mainContainer.classList.add("hidden");
-        profile.classList.remove("hidden");
+
+    openProfile.addEventListener("click", function openProfile() {
+        suggestions.classList.add("hidden");
+        accessories.classList.add("hidden");
+        slider.classList.add("hidden");
+        productDetail.classList.add("hidden");
         dropUser.classList.add("hidden");
+        cartDetail.classList.add("hidden");
+
+        profile.classList.remove("hidden");
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -63,20 +73,23 @@ window.addEventListener("load", () => {
     });
 
 
-
+    //click về trang chủ
     document.addEventListener('click', function (e) {
-        // Kiểm tra click vào logo (kể cả bị che)
         if (e.target.closest('.logo') || e.target.closest('li')?.textContent.trim() === 'Trang chủ') {
-            // Ẩn profile
-            if (profile) profile.classList.add("hidden");
-            // Hiện container chính
-            if (mainContainer) mainContainer.classList.remove("hidden");
+            profile.classList.add("hidden");
 
+            suggestions.classList.remove("hidden");
+            accessories.classList.remove("hidden");
+            slider.classList.remove("hidden");
+            productDetail.classList.remove("hidden");
             window.resetToHomePage();
 
             e.preventDefault();
             e.stopPropagation();
         }
     });
+
+//click vào giỏ hàng
+
 
 });
