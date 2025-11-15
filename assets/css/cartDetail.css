@@ -1,7 +1,7 @@
 /* CART DETAIL */
 .cart-detail-page .container {
-    max-width: 1200px;
-    margin: 120px auto;
+    max-width: 100%;
+    margin-top: 28px;
     padding: 0 20px;
     display: grid;
     grid-template-columns: 2fr 1fr;
