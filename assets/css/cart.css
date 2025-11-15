@@ -17,10 +17,6 @@
     transition: background-color 0.3s ease;
 }
 
-.cart-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
 .cart-dropdown {
     position: absolute;
     top: 100%;
@@ -65,8 +61,7 @@
 }
 
 .cart-items {
-    max-height: 250px;
-    overflow-y: auto;
+    max-height: auto;
     margin-bottom: 10px;
     padding-right: 5px;
 }
@@ -138,12 +133,12 @@
 }
 
 .btn-pay {
-    background: #4CAF50;
-    color: white;
+    background: #ffed4e;
+    color: black;
 }
 
 .btn-pay:hover {
-    background: #45a049;
+    background: #ffd700;
 }
 
 /* Tam giác chỉ thị popup */
@@ -167,20 +162,19 @@
 .login-btn {
     margin-top: 10px;
     padding: 8px 16px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: #68bad0;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
 .login-btn:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
+    background: #087a99;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(56, 98, 111, 0.4);
 }
 
 /* Cart item styles */
