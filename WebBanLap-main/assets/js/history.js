@@ -8,6 +8,7 @@ window.showHistoryPage = function() {
     const accessories = document.getElementById('accessories');
     const slider = document.querySelector('.slider');
     const historyPage = document.getElementById('historyPage');
+    const profile = document.getElementById('profile');
     
     // Ẩn các trang khác
     if (cartDetail) cartDetail.style.display = 'none';
@@ -15,6 +16,7 @@ window.showHistoryPage = function() {
     if (suggestions) suggestions.style.display = 'none';
     if (accessories) accessories.style.display = 'none';
     if (slider) slider.style.display = 'none';
+    profile.classList.add("hidden");
     
     // Hiển thị trang history
     if (historyPage) historyPage.style.display = 'block';

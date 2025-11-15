@@ -1,4 +1,4 @@
-.poupupLogin {
+#popupLogin .poupupLogin {
     margin: 0;
     font-family: "Inter", sans-serif;
     display: flex;
@@ -6,7 +6,7 @@
     background: none;
 }
 
-.logreg-container {
+#popupLogin .logreg-container {
     position: relative;
     width: 700px;
     border-radius: 25px;
@@ -15,7 +15,7 @@
     overflow: hidden;
 }
 
-.tab-header {
+#popupLogin .tab-header {
     position: relative;
     margin-top: 0px;
     display: flex;
@@ -23,7 +23,7 @@
     height: 60px;
 }
 
-.tab {
+#popupLogin .tab {
     flex: 1;
     display: flex;
     align-items: center;
@@ -34,19 +34,19 @@
     font-size: 16px;
 }
 
-.tab.active {
+#popupLogin .tab.active {
     background-color: #142650;
     color: #FFFFFF;
 }
 
-label {
+#popupLogin label {
     display: block;
     font-size: 16px;
     margin: 10px 0;
 }
 
-input[type=text],
-input[type=password] {
+#popupLogin input[type=text],
+#popupLogin input[type=password] {
     padding: 10px;
     width: 100%;
     height: 40px;
@@ -55,7 +55,7 @@ input[type=password] {
     outline: none;
 }
 
-input[type=checkbox] {
+#popupLogin input[type=checkbox] {
     appearance: auto;
     margin: 5px;
     border: none;
@@ -66,16 +66,16 @@ input[type=checkbox] {
     box-shadow: 0px 4px 4px rgb(0, 0, 0, 0.1);
 }
 
-input:focus {
+#popupLogin input:focus {
     box-shadow: 0 0 5px #142650;
 }
 
-.input-eye {
+#popupLogin .input-eye {
     position: relative;
     width: 100%;
 }
 
-.eye {
+#popupLogin .eye {
     position: absolute;
     width: 16px;
     height: 16px;
@@ -85,30 +85,30 @@ input:focus {
     opacity: 0.5;
 }
 
-form {
+#popupLogin form {
     padding: 15px 40px;
     top: 50px;
 }
 
-.red {
+#popupLogin .red {
     color: red;
 }
 
-.hidden {
+#popupLogin .hidden {
     display: none;
 }
 
-#forgotpsw {
+#popupLogin #forgotpsw {
     text-align: right;
     font-size: 14px;
     margin-bottom: 5px
 }
 
-#forgotpsw a {
+#popupLogin #forgotpsw a {
     color: black;
 }
 
-.logreg-button {
+#popupLogin .logreg-button {
     width: 100%;
     background-color: #F3EA28;
     padding: 12px;
@@ -118,13 +118,13 @@ form {
     font-size: 16px;
 }
 
-#chooseLogin {
+#popupLogin #chooseLogin {
     text-align: center;
     padding: 10px;
     font-size: 14px;
 }
 
-#chooseLogin a {
+#popupLogin #chooseLogin a {
     color: black;
     font-weight: bold;
 }
