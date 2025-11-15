@@ -53,15 +53,19 @@ window.addEventListener("load", () => {
     const accessories = document.getElementById('accessories');
     const slider = document.querySelector('.slider');
     const productDetail = document.getElementById('productDetail');
+    const historyPage = document.getElementById('historyPage');
+    const cartDetail = document.getElementById("cartDetail");
     const openProfile = document.getElementById("openProfile");
     const profile = document.getElementById("profile");
 
     openProfile.addEventListener("click", function openProfile() {
-        suggestions.classList.add("hidden");
-        accessories.classList.add("hidden");
-        slider.classList.add("hidden");
-        productDetail.classList.add("hidden");
+        if (suggestions) suggestions.style.display = 'none';
+        if (accessories) accessories.style.display = 'none';
+        if (slider) slider.style.display = 'none';
+        if (productDetail) productDetail.style.display = 'none';
+        if (historyPage) historyPage.style.display = 'none';
         dropUser.classList.add("hidden");
+        if (cartDetail) productDetail.style.display = 'none';
 
         profile.classList.remove("hidden");
         window.scrollTo({
