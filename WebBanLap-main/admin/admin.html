@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link rel="stylesheet" href="../assets/css/pricing.css" />
+  <link rel="stylesheet" href="../assets/css/logout.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="menu-item active" data-page="dashboard">
+      <i class="fas fa-chart-line"></i>
+      <span class="menu-text">Dashboard</span>
+    </div>
+    <div class="menu-item" data-page="customers">
+      <i class="fas fa-users"></i>
+      <span class="menu-text">Khách hàng</span>
+    </div>
+    <div class="menu-item" data-page="products">
+      <i class="fas fa-box"></i>
+      <span class="menu-text">Sản phẩm</span>
+    </div>
+    <div class="menu-item" data-page="orders">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="menu-text">Đơn hàng</span>
+    </div>
+    <div class="menu-item" data-page="warehouse">
+      <i class="fas fa-warehouse"></i>
+      <span class="menu-text">Kho</span>
+    </div>
+    <div class="menu-item" data-page="pricing">
+      <i class="fas fa-tags"></i>
+      <span class="menu-text">Giá bán</span>
+    </div>
+    <div class="menu-item" data-page="complaints">
+      <i class="fas fa-file-alt"></i>
+      <span class="menu-text">Phiếu nhập hàng</span>
+    </div>
+    <!-- Nút đăng xuất -->
+    <div class="menu-item logout-item" id="logout-menu">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="menu-text">Đăng xuất</span>
+    </div>
+  </aside>
+
+  <!-- Main layout -->
+  <div class="main-wrapper">
+    <!-- Header -->
+    <header class="header">
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm..." />
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="user-info">
+        <div class="user-text">
+          <span class="greeting">Hi, <strong>Meo</strong></span>
+          <span class="role">Admin</span>
+        </div>
+        <div class="avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content" id="content">
+      <!-- Dashboard sẽ được load bằng innerHTML -->
+    </main>
+  </div>
+
+  <!-- Modal đăng xuất -->
+  <div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+      <h3><i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> Xác nhận đăng xuất</h3>
+      <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+      <div class="logout-modal-buttons">
+        <button class="logout-cancel-btn" onclick="closeLogoutModal()">Hủy</button>
+        <button class="logout-confirm-btn" onclick="confirmLogout()">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/admin.js"></script>
+  <script src="../assets/js/logout.js"></script>
+  <script src="../assets/js/products.js"></script>
+  <script src="../assets/js/pricing.js"></script>
+  <script src="../assets/js/stock.js"></script>
+  <script src="../assets/js/receipt.js"></script>
+</body>
+
+</html>

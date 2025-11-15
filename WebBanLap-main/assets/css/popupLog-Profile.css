@@ -1,0 +1,92 @@
+.hidden {
+    display: none;
+}
+
+/* ===== Nút mở đăng nhập ===== */
+#openLogin {
+    position: relative;
+    cursor: pointer;
+    align-items: center;
+    color: #2d5f54;
+    transition: color 0.3s ease;
+}
+
+#openLogin:hover {
+    color: #7dd3c0;
+}
+
+/* ===== Ảnh đại diện ===== */
+#avatarUser {
+    position: absolute;
+    margin-left: 5px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.3);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+#avatarUser:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(125, 211, 192, 0.5);
+}
+
+/* ===== POPUP ĐĂNG NHẬP ===== */
+#popupLogin.hidden {
+    display: none;
+}
+
+#popupLogin {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    backdrop-filter: blur(3px);
+}
+
+#popupLogin iframe {
+    top: 0px;
+    width: 420px;
+    height: 700px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(125, 211, 192, 0.35);
+}
+
+/* ===== DROPDOWN NGƯỜI DÙNG ===== */
+#dropUser {
+    position: fixed;
+    top: 65px;
+    right: 150px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    width: 160px;
+    z-index: 2001;
+    border: 1px solid #cde8e5;
+    overflow: hidden;
+}
+
+/* Danh sách item */
+#dropUser ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Mỗi item */
+#dropUser li {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    color: #2d5f54;
+    font-weight: 500;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Hover mượt & đồng bộ màu */
+#dropUser li:hover {
+    background-color: #e6f9f4;
+    color: #01614b;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Order Page</title>
+<link rel="stylesheet" href="Order.css">
+</head>
+<body>
+    <h1>Danh sách sản phẩm</h1>
+    <div id="product-list" ></div>
+    <h1>Giỏ hàng của bạn</h1>
+    <table id="cart-table">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Cart items sẽ render bằng JS -->
+        </tbody>
+    </table>
+
+    <div class="cart-summary">
+    <h3 id="cart-items">Tổng số sản phẩm: 0</h3>
+    <h3 id="cart-total">Tổng cộng: 0đ</h3>
+    </div>
+    <!-- Nút mở Checkout modal -->
+    <!-- <button style="right: 0px;" onclick="openCheckout()">Thanh toán</button> -->
+    <script src="order_addproduct.js"></script>
+    <script src="order.js"></script>
+</body>
+</html>
