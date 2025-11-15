@@ -1,7 +1,7 @@
 /* ====== LỊCH SỬ MUA HÀNG ====== */
-.history-page {
+.history-page .container {
     max-width: 100%;
-    padding: 0 20px;
+    margin-top: 28px;
 }
 
 .history-header {
