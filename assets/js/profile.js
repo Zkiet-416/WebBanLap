@@ -65,26 +65,26 @@ window.addEventListener("load", () => {
     });
 
     // ========= LẤY DỮ LIỆU NGƯỜI DÙNG =========
-    const userProfile = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const usernameInput = document.getElementById("profile-username");
     const fullnameInput = document.getElementById("profile-fullname");
     const emailInput = document.getElementById("profile-email");
     const phoneInput = document.getElementById("profile-phone");
 
-    if (userProfile) {
-        if (userProfile.image) avatar.src = userProfile.image;
-        usernameInput.value = userProfile.username || "";
-        fullnameInput.value = userProfile.fullname || "";
-        emailInput.value = userProfile.email || "";
-        phoneInput.value = userProfile.phone || "";
+    if (currentUser) {
+        if (currentUser.image) avatar.src = currentUser.image;
+        usernameInput.value = currentUser.username || "";
+        fullnameInput.value = currentUser.fullname || "";
+        emailInput.value = currentUser.email || "";
+        phoneInput.value = currentUser.phone || "";
 
-        if (userProfile.gender) {
-            const genderRadio = document.querySelector(`input[name="gender"][value="${userProfile.gender}"]`);
+        if (currentUser.gender) {
+            const genderRadio = document.querySelector(`input[name="gender"][value="${currentUser.gender}"]`);
             if (genderRadio) genderRadio.checked = true;
         }
 
-        if (userProfile.birthday) {
-            const [year, month, day] = userProfile.birthday.split("-");
+        if (currentUser.birthday) {
+            const [year, month, day] = currentUser.birthday.split("-");
             yearSelect.value = year;
             monthSelect.value = month;
             updateDays();
@@ -115,8 +115,13 @@ window.addEventListener("load", () => {
             return;
         }
 
-        if (!email && !phone) {
-            alert("Vui lòng nhập ít nhất email hoặc số điện thoại!");
+        if (!email) {
+            alert("Vui lòng nhập email!");
+            return;
+        }
+
+        if (!phone) {
+            alert("Vui lòng nhập số điện thoại!");
             return;
         }
 
@@ -137,7 +142,7 @@ window.addEventListener("load", () => {
         // --- KIỂM TRA TRÙNG EMAIL / SĐT ---
         let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
         const isEmailExist = accounts.some(acc => acc.email === email && acc.email !== currentUser.email);
-        const isPhoneExist = accounts.some(acc => acc.phone === phone && acc.email !== currentUser.email);
+        const isPhoneExist = accounts.some(acc => acc.phone === phone && acc.phone !== currentUser.phone);
 
         if (isEmailExist) {
             alert("Email này đã được sử dụng cho tài khoản khác!");
@@ -147,6 +152,9 @@ window.addEventListener("load", () => {
             alert("Số điện thoại này đã được sử dụng cho tài khoản khác!");
             return;
         }
+
+        let oldEmail = currentUser.email;
+        let oldPhone = currentUser.phone;
 
         // --- CẬP NHẬT THÔNG TIN ---
         currentUser.username = username;
@@ -164,8 +172,7 @@ window.addEventListener("load", () => {
         }
 
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
-        accounts = accounts.map(acc => acc.email === currentUser.email ? currentUser : acc);
+        accounts = accounts.map(acc => acc.email === oldEmail || acc.phone === oldPhone ? currentUser : acc);
         localStorage.setItem("accounts", JSON.stringify(accounts));
         //cập nhật avatarUser (góc đăng nhập)
         const avatarUser = document.getElementById("avatarUser");
@@ -178,6 +185,7 @@ window.addEventListener("load", () => {
         deleteAvatar.disabled = true;
         save.classList.add("hidden");
         edit.classList.remove("hidden");
+        cancel.classList.add("hidden");
 
 
         alert("Lưu thông tin thành công!");
@@ -202,12 +210,48 @@ window.addEventListener("load", () => {
         deleteAvatar.disabled = false;
         edit.classList.add("hidden");
         save.classList.remove("hidden");
+        cancel.classList.remove("hidden");
 
 
         setupValidation(phoneInput, window.phonePattern, "Số điện thoại không hợp lệ! Phải có 10 chữ số và bắt đầu bằng 0."
         );
         setupValidation(emailInput, window.emailPattern, "Email không hợp lệ! Vui lòng nhập đúng định dạng (vd: ten@gmail.com)."
         );
+    });
+
+    const cancel = document.getElementById("cancel-profile");
+
+    cancel.addEventListener("click", () => {
+        if (currentUser) {
+            usernameInput.value = currentUser.username || "";
+            fullnameInput.value = currentUser.fullname || "";
+            emailInput.value = currentUser.email || "";
+            phoneInput.value = currentUser.phone || "";
+
+            if (currentUser.gender) {
+                const genderRadio = document.querySelector(`input[name="gender"][value="${currentUser.gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+            }
+
+            if (currentUser.birthday) {
+                const [year, month, day] = currentUser.birthday.split("-");
+                yearSelect.value = year;
+                monthSelect.value = month;
+                updateDays();
+                daySelect.value = day;
+            }
+
+            avatar.src = currentUser.image || "../assets/images/defaultAvt.png";
+        }
+
+        // Về chế độ chỉ xem
+        profileInputs.forEach(i => i.disabled = true);
+        changeAvatar.disabled = true;
+        deleteAvatar.disabled = true;
+
+        save.classList.add("hidden");
+        edit.classList.remove("hidden");
+        cancel.classList.add("hidden"); // ẩn nút Hủy
     });
 
     // ========= CHUYỂN TAB =========

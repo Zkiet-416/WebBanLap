@@ -9,17 +9,12 @@ window.addEventListener("DOMContentLoaded", function () {
         const errorEl = document.createElement("small");
         errorEl.style.color = "red";
         errorEl.style.fontSize = "13px";
-        inputEl.insertAdjacentElement("afterend", errorEl);
+        inputEl.after(errorEl);
+
 
         inputEl.addEventListener("input", () => {
             const value = inputEl.value.trim();
-            if (value === "") {
-                errorEl.textContent = "";
-                inputEl.style.borderColor = "";
-                inputEl.style.boxShadow = "";
-                return;
-            }
-            if (!pattern.test(value)) {
+            if (!pattern.test(value) || value == "") {
                 errorEl.textContent = errorMsg;
                 inputEl.style.borderColor = "#e74c3c";
                 inputEl.style.boxShadow = "0 0 5px #f5b7b1";
@@ -30,13 +25,7 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        inputEl.addEventListener("blur", () => {
-            if (inputEl.value.trim() === "") {
-                errorEl.textContent = "";
-                inputEl.style.borderColor = "";
-                inputEl.style.boxShadow = "";
-            }
-        });
+
     };
 
 
@@ -104,7 +93,7 @@ window.addEventListener("DOMContentLoaded", function () {
         if (user.password !== pass) return alert("Sai mật khẩu!");
 
         alert("Đăng nhập thành công!");
-        if (document.getElementById("rememberMe").checked) {
+        if (document.getElementById("rememberMe").checked == true) {
             localStorage.setItem("rememberAcc", acc);
             localStorage.setItem("rememberPass", pass);
         } else {
