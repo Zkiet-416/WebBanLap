@@ -65,7 +65,7 @@ window.addEventListener("load", () => {
         if (productDetail) productDetail.style.display = 'none';
         if (historyPage) historyPage.style.display = 'none';
         dropUser.classList.add("hidden");
-        if (cartDetail) productDetail.style.display = 'none';
+        if (cartDetail) cartDetail.style.display = 'none';
 
         profile.classList.remove("hidden");
         window.scrollTo({
