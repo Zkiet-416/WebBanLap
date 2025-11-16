@@ -25,7 +25,7 @@
 /* ===== BỐ CỤC 2 CỘT ===== */
 #profile .profile-container {
     position: relative;
-    width: 80%;
+    width: 60%;
     display: flex;
     overflow: hidden;
     align-items: stretch;
