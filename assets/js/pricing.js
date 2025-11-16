@@ -97,12 +97,36 @@ async function loadPricing() {
       needsUpdate = true;
     }
 
-    // Xác định brand/type cho hiển thị dựa vào cấu trúc mới
-    let displayBrand = p.type || "Khác";
+    // ✅ XÁC ĐỊNH "LOẠI" THEO LOGIC CỦA ADMINPRODUCT.JS
+    let displayBrand = "Khác";
     
-    if (p.category === "laptop") {
-      displayBrand = p.type || "Khác";
+    // Lấy prefix 2 ký tự đầu của ID để xác định loại
+    const idPrefix = p.id ? p.id.substring(0, 2).toUpperCase() : "";
+    
+    if (idPrefix === 'AC') {
+      displayBrand = "Laptop"; // Acer
+    } else if (idPrefix === 'AS') {
+      displayBrand = "Laptop"; // Asus
+    } else if (idPrefix === 'HP') {
+      displayBrand = "Laptop"; // HP
+    } else if (idPrefix === 'LE') {
+      displayBrand = "Laptop"; // Lenovo
+    } else if (idPrefix === 'DE') {
+      displayBrand = "Laptop"; // Dell
+    } else if (p.id && p.id.toLowerCase().includes('balo')) {
+      displayBrand = "Balo";
+    } else if (p.id && p.id.toLowerCase().includes('de-tan-nhiet')) {
+      displayBrand = "Đế tản nhiệt";
+    } else if (p.id && p.id.toLowerCase().includes('tai-nghe')) {
+      displayBrand = "Tai nghe";
+    } else if (p.id && p.id.toLowerCase().includes('chuot')) {
+      displayBrand = "Chuột";
+    } else if (p.id && p.id.toLowerCase().includes('ban-phim')) {
+      displayBrand = "Bàn phím";
+    } else if (p.category === "laptop") {
+      displayBrand = "Laptop";
     } else if (p.category === "phukien") {
+      // Fallback: dựa vào type nếu không match ID
       const typeDisplayMap = {
         "balo": "Balo",
         "de-tan-nhiet": "Đế tản nhiệt",
@@ -110,14 +134,14 @@ async function loadPricing() {
         "chuot": "Chuột",
         "ban-phim": "Bàn phím"
       };
-      displayBrand = typeDisplayMap[p.type] || p.type || "Phụ kiện";
+      displayBrand = typeDisplayMap[p.type] || "Phụ kiện";
     }
 
     return {
       id: p.id,
       name: p.model || p.name || "Unknown",
-      brand: displayBrand,
-      type: p.type,
+      brand: displayBrand, // ✅ Loại sản phẩm (Laptop, Balo, Đế tản nhiệt...)
+      type: p.type, // Type gốc (Acer, Asus, balo, de-tan-nhiet...)
       category: p.category || "laptop",
       importPrice,
       sellPrice,
