@@ -52,7 +52,7 @@ function LoadReceipt() {
     }
 
     const allProducts = [];
-    const productTypes = ['laptop', 'balo', 'phukienkhac'];
+    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','tai-nghe','chuot','ban-phim'];
 
     globalJsonData.product.brand.forEach(brand => {
         productTypes.forEach(type => {
@@ -101,14 +101,14 @@ function LoadReceipt() {
       products: [
         // *************** ĐÃ SỬA: Dùng đường dẫn giả định nhưng theo cấu trúc AdminProduct *******************
         { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "3150000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
-        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15", imagePath: "../assets/images/mouse1.jpg" },
+        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
       ],
     },
     {
       id: "PN002",
       date: "2025-10-30",
       // *************** ĐÃ SỬA: Dùng đường dẫn chính xác của Laptop Acer *******************
-      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5", imagePath: "../assets//images/Acer1.png" }],
+      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5", imagePath: "../assets/images/Acer1.png" }],
     },
   ];
 
