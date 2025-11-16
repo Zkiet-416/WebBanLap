@@ -28,9 +28,51 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "customers":
+          pageStyle.href="../assets/css/customers.css";
           content.innerHTML = `
+          <div>
             <h1 class="page-title">Khách hàng</h1>
-            <p>Quản lý danh sách khách hàng tại đây.</p>`;
+            <p>Quản lý danh sách khách hàng tại đây.</p>
+            <div class="search-user">
+                <input type="text" id="search" placeholder="Tìm kiếm theo tên,sdt,email... " oninput="searchUser()">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="edit-add">
+                <select id="mode" onclick="edit()">
+                <option value="see">&#128065; Chỉ xem</option>
+                <option value="edit">&#128395; Chỉnh sửa</option>  
+                </select>
+                <button onclick="openADD()">+ Thêm khách hàng</button>
+            </div>  
+            <div class="add-user">
+                <tr>
+                <td><input type="text" id="name" placeholder="Họ tên"></td>
+                <td><input type="email" id="email" placeholder="Email"></td>
+                <td><input type="text" id="phone" placeholder="Số điện thoại"  maxlength="10"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
+                <td><input type="text" id="acc" placeholder="Tài khoản"></td>
+                <td><input type="text" id="pass" placeholder="Mật khẩu"></td>
+                <td><button onclick="addUser()">Thêm khách hàng</button></td>
+                <td><button onclick="closeADD()">Hủy</button></td>
+                </tr>
+            </div>
+            <table id="userTable">
+                <thead>
+                <tr >
+                    <th>STT</th>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Tài khoản</th>
+                    <th>Mật khẩu</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody id="userBody">
+                </tbody>
+            </table>
+        </div>`;
+            loadUsers();
           break;
           
         case "products":
