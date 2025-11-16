@@ -10,9 +10,11 @@
 
     if (email === validEmail && password === validPassword) {
       errorMsg.style.display = "none";
+      localStorage.setItem("isAdminLoggedIn", "true");
       window.location.href = "admin.html"; // gắn tên miền để chuyển tab
     } else {
       errorMsg.textContent = "Sai tài khoản hoặc mật khẩu!";
       errorMsg.style.display = "block";
     }
   }
+
