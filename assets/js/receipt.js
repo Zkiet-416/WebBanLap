@@ -45,7 +45,6 @@ function LoadReceipt() {
 
   // Hàm tiện ích để trích xuất danh sách sản phẩm phẳng từ globalJsonData
   function getAllProductsFromAdminData() {
-    // globalJsonData được giả định là đã được định nghĩa và có sẵn từ AdminProduct.js
     if (typeof globalJsonData === 'undefined' || !globalJsonData?.product?.brand) {
         console.error("Lỗi: Không tìm thấy globalJsonData hoặc dữ liệu không hợp lệ. Đảm bảo AdminProduct.js đã được tải trước.");
         return [];
@@ -64,7 +63,7 @@ function LoadReceipt() {
                     allProducts.push({
                         name: product.model,
                         price: cleanedPrice,
-                        imagePath: product.imagePath
+                        imagePath: product.image
                     });
                 });
             }
@@ -99,7 +98,6 @@ function LoadReceipt() {
       id: "PN001",
       date: "2025-10-28",
       products: [
-        // *************** ĐÃ SỬA: Dùng đường dẫn giả định nhưng theo cấu trúc AdminProduct *******************
         { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "3150000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
         { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
       ],
@@ -107,7 +105,6 @@ function LoadReceipt() {
     {
       id: "PN002",
       date: "2025-10-30",
-      // *************** ĐÃ SỬA: Dùng đường dẫn chính xác của Laptop Acer *******************
       products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5", imagePath: "../assets/images/Acer1.png" }],
     },
   ];

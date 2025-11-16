@@ -287,6 +287,19 @@ window.completeOrder = function() {
     
     // Hiển thị xác nhận đơn hàng
     showOrderConfirmation(orderInfo);
+    const orderId = saveOrder(orderInfo); 
+    
+    // 5. GHI GIAO DỊCH XUẤT KHO VÀ TRỪ TỒN KHO
+    // Kiểm tra xem hàm recordSaleTransaction có sẵn không (từ stock.js)
+    if (window.recordSaleTransaction) {
+        // Gọi hàm trừ kho, sử dụng selectedItems và orderInfo
+        window.recordSaleTransaction(selectedItems, orderId, orderInfo.date); 
+    } else {
+        console.warn("Lỗi: Hàm recordSaleTransaction không khả dụng. Không thể trừ kho.");
+    }
+
+    // 6. IN PHIẾU XUẤT KHO
+    printSaleReceipt(orderInfo);
 };
 
 /* ===========================
@@ -300,9 +313,9 @@ function showOrderConfirmation(orderInfo) {
     });
     
     const confirmMessage = `
-                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                                          XÁC NHẬN ĐƠN HÀNG
-                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    XÁC NHẬN ĐƠN HÀNG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📦 SẢN PHẨM:
 ${itemsList}

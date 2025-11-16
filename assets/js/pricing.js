@@ -46,7 +46,7 @@ function normalizeForSearch(s) {
 }
 
 function buildProductsFromAdminProduct(globalJsonData) {
-  const productTypes = ["laptop", "balo", "phukienkhac"];
+  const productTypes = ["laptop", "balo", "de-tan-nhiet",'tai-nghe','chuot','ban-phim'];
   const out = [];
 
   if (!globalJsonData || !globalJsonData.product || !Array.isArray(globalJsonData.product.brand)) {

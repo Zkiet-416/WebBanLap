@@ -1,3 +1,66 @@
+// ========== HÀM CHUẨN HÓA DỮ LIỆU (Copy từ products.js) ==========
+// Hàm này BẮT BUỘC phải đồng bộ với hàm trong products.js
+// Đây là hàm được yêu cầu thêm vào để chuyển đổi cấu trúc khi lưu
+function normalizeData(data) {
+    if (!data || !data.product || !data.product.brand) return [];
+
+    let result = [];
+    data.product.brand.forEach(brandGroup => {
+        const groupName = brandGroup.name; 
+        const subProducts = brandGroup[groupName];
+        
+        if (Array.isArray(subProducts)) {
+            subProducts.forEach(product => {
+                // Xử lý giá, loại bỏ dấu chấm
+                const priceValue = parseInt(String(product.price).replace(/\./g, '').replace(/\.0+$/, ''), 10);
+                
+                let productCategory = groupName === 'laptop' ? 'laptop' : 'phukien';
+                let productType = '';
+                
+                if (productCategory === 'laptop') {
+                    // Xác định type/brand laptop từ ID prefix
+                    const idPrefix = product.id.substring(0, 2);
+                    if (idPrefix === 'AC') productType = 'Acer';
+                    else if (idPrefix === 'AS') productType = 'Asus';
+                    else if (idPrefix === 'HP') productType = 'HP';
+                    else if (idPrefix === 'LE') productType = 'Lenovo';
+                    else if (idPrefix === 'DE') productType = 'Dell';
+                    else productType = 'Khac';
+                } else {
+                    // Đối với phụ kiện/balo, type chính là tên nhóm
+                    if (groupName === 'balo') {
+                        productType = 'balo';
+                    } else if (groupName === 'de-tan-nhiet') {
+                        productType = 'de-tan-nhiet';
+                    } else if (groupName === 'tai-nghe') {
+                        productType = 'tai-nghe';
+                    } else if (groupName === 'ban-phim') {
+                        productType = 'ban-phim';
+                    } else if (groupName === 'chuot') {
+                        productType = 'chuot'; 
+                    } else {
+                        // Fallback
+                        productType = product.id.split('-')[0];
+                }}
+                
+                // Sử dụng ID + Model để tạo key duy nhất (Định dạng của products.js)
+                const id = `${product.id}-${product.model.replace(/\s/g, '_')}`;
+                
+                result.push({
+                    ...product,
+                    id: product.id,
+                    priceValue: priceValue,
+                    category: productCategory,
+                    type: productType 
+                });
+            });
+        }
+    });
+    return result;
+}
+// ========== KẾT THÚC HÀM CHUẨN HÓA ==========
+
+
 let editingRow = null;
 let currentOfferContent = "Ưu đãi đặc biệt: Tặng chuột không dây và túi chống sốc cao cấp!";
 let currentViewingBrandName = null;
@@ -29,7 +92,8 @@ window.loadAdminProductPage = () => {
     // --- CÁC HÀM TIỆN ÍCH DỮ LIỆU JSON ---
     const findBrandByName = (name) => globalJsonData.product.brand.find(b => b.name === name);
     const findBrandIndexByName = (name) => globalJsonData.product.brand.findIndex(b => b.name === name);
-    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
+    // Giữ nguyên logic 'brand' (loại sản phẩm)
+    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe']; 
 
     // Tính tổng số lượng sản phẩm
     const calculateProductCount = (brand) => {
@@ -52,36 +116,68 @@ const updatePageTitle = (newTitle) => {
 };
     
 
-    // --- CÁC HÀM LOCAL STORAGE---
-    const LOCAL_STORAGE_KEY = 'laptopProducts';
+    // --- CÁC HÀM LOCAL STORAGE (ĐÃ CẬP NHẬT) ---
+    // Key cho trang products.js (dùng mảng flat đã chuẩn hóa)
+    const MAIN_PRODUCTS_KEY = 'laptopProducts'; 
+    // Key riêng cho trang Admin (dùng object nested gốc)
+    const ADMIN_DATA_KEY = 'adminProductData'; 
+
+    /**
+     * Lưu dữ liệu vào Local Storage.
+     * 1. Lưu cấu trúc object NESTED (globalJsonData) vào ADMIN_DATA_KEY cho trang admin.
+     * 2. Chuyển đổi sang cấu trúc mảng FLAT (dùng normalizeData) và lưu vào MAIN_PRODUCTS_KEY cho trang products.js.
+     */
     function saveDataToLocalStorage() {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(globalJsonData));
+        try {
+            // 1. Lưu dữ liệu NESTED (dạng object) cho trang Admin
+            localStorage.setItem(ADMIN_DATA_KEY, JSON.stringify(globalJsonData));
+            
+            // 2. Chuẩn hóa và lưu dữ liệu FLAT (dạng mảng) cho trang products.js
+            const normalizedProducts = normalizeData(globalJsonData);
+            localStorage.setItem(MAIN_PRODUCTS_KEY, JSON.stringify(normalizedProducts));
+
+            console.log("✅ Đã lưu dữ liệu (Nested) vào Admin và (Flat) vào Main Products.");
+
+        } catch (error) {
+            console.error("❌ Lỗi khi lưu dữ liệu vào Local Storage:", error);
+        }
     }
     
+    /**
+     * Tải dữ liệu từ Local Storage.
+     * Chỉ tải dữ liệu NESTED từ ADMIN_DATA_KEY để trang admin hoạt động.
+     * Trang products.js sẽ tự tải từ MAIN_PRODUCTS_KEY.
+     */
     function loadDataFromLocalStorage() {
         try {
-            const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+            // Chỉ tải dữ liệu NESTED của Admin
+            const savedData = localStorage.getItem(ADMIN_DATA_KEY);
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
+                // Kiểm tra cấu trúc dữ liệu
                 if (parsedData?.product?.brand) {
                     globalJsonData = parsedData;
-                    console.log("✅ Tải dữ liệu từ Local Storage thành công.");
+                    console.log("✅ Tải dữ liệu (Nested) từ Admin Storage thành công.");
                     return true;
                 }
             }
         } catch (error) {
-            console.error("❌ Lỗi khi tải dữ liệu từ Local Storage:", error);
+            console.error("❌ Lỗi khi tải dữ liệu (Nested) từ Admin Storage:", error);
         }
+        console.log("Không tìm thấy dữ liệu Admin, sử dụng dữ liệu tĩnh.");
         return false;
     }
 
     // --- HÀM TẢI DỮ LIỆU TĨNH ---
     function loadStaticData() {
         try {
+            // Thử tải từ ADMIN_DATA_KEY
             if (loadDataFromLocalStorage()) {
+                // Tải thành công
             } else {
                 console.log("Sử dụng dữ liệu tĩnh (static).");
                 // Lưu dữ liệu tĩnh vào Local Storage lần đầu
+                // saveDataToLocalStorage() giờ sẽ lưu vào cả 2 key
                 saveDataToLocalStorage();
             }
 
@@ -278,7 +374,7 @@ const updatePageTitle = (newTitle) => {
             if (currentBrandPage > totalPages && totalBrands > 0) currentBrandPage = totalPages;
             else if (totalBrands === 0) currentBrandPage = 1;
             renderBrands();
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -286,7 +382,7 @@ const updatePageTitle = (newTitle) => {
         const brand = findBrandByName(brandName);
         if (brand) {
             brand.status = isChecked ? 'active' : 'inactive';
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -321,13 +417,14 @@ const updatePageTitle = (newTitle) => {
                 editingRow.dataset.brandName = ten;
             }
         } else {
+            // Giữ nguyên logic tạo "brand" (loại sản phẩm)
             const newBrand = { "name": ten, "status": "active", "laptop": [], "balo": [], "de-tan-nhiet":[], "chuot":[], "ban-phim":[], "tai-nghe": [] };
             globalJsonData.product.brand.push(newBrand);
             currentBrandPage = Math.ceil(globalJsonData.product.brand.length / brandsPerPage);
             renderBrands();
         }
         resetForm();
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     });
 
     // --- CÁC HÀM KHÁC ---
@@ -361,7 +458,7 @@ const updatePageTitle = (newTitle) => {
         if (product && confirm(`Bạn có chắc muốn xóa Sản phẩm "${product.model}" không?`)) {
             brand[type].splice(index, 1);
             recompileProductList(brand);
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -384,7 +481,7 @@ const updatePageTitle = (newTitle) => {
         product.description = newDescription.trim();
 
         recompileProductList(brand);
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     };
 
     window.toggleProductStatus = (brandName, type, index, btn) => {
@@ -401,7 +498,7 @@ const updatePageTitle = (newTitle) => {
             row.querySelector('.sp-status').textContent = statusText;
             row.querySelector('.sp-status').className = `sp-status ${product.status === 'hien' ? 'sp-in-stock' : 'sp-out-of-stock'}`;
             btn.querySelector('i').className = product.status === 'hien' ? 'fas fa-eye' : 'fas fa-eye-slash';
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -411,14 +508,32 @@ const updatePageTitle = (newTitle) => {
         const brand = findBrandByName(currentViewingBrandName);
         if (!brand) return;
 
+        // currentViewingBrandName chính là "loại" (ví dụ: 'laptop', 'balo')
+        // Tuy nhiên, logic code đang coi đó là "brand". Ta cần hỏi loại SP.
         const productTypeInput = prompt(`Nhập Loại SP (${productTypes.join(', ')}):`);
         if (!productTypeInput) return;
         const type = productTypeInput.trim().toLowerCase();
-        if (!productTypes.includes(type)) return alert(`Loại SP không hợp lệ. Vui lòng chọn: ${productTypes.join(', ')}.`);
+        
+        // Kiểm tra xem 'brand' (loại sản phẩm) này có hỗ trợ 'type' (mảng con) này không
+        // Logic này đang bị ngược. 'currentViewingBrandName' *chính là* loại sản phẩm.
+        // Ví dụ: currentViewingBrandName = 'laptop' hoặc 'balo'.
+        // Chúng ta nên thêm trực tiếp vào mảng con có tên trùng với currentViewingBrandName.
+        
+        // *** SỬA LOGIC: ***
+        // 'type' chính là 'currentViewingBrandName' (ví dụ: 'laptop', 'balo')
+        // 'brand' là object chứa các mảng này
+        const targetTypeArrayKey = currentViewingBrandName; 
+        if (!productTypes.includes(targetTypeArrayKey)) {
+             return alert(`Loại SP "${targetTypeArrayKey}" không hợp lệ. Vui lòng chọn từ: ${productTypes.join(', ')}.`);
+        }
 
-        const id = prompt(`Nhập Mã SP (ID) cho loại ${type}:`);
+        const id = prompt(`Nhập Mã SP (ID) cho loại ${targetTypeArrayKey}:`);
         if (!id) return;
-        if (brand[type] && brand[type].some(p => p.id === id)) return alert("Lỗi: Mã SP này đã tồn tại!");
+        
+        // Kiểm tra ID trùng lặp trong mảng con
+        if (brand[targetTypeArrayKey] && brand[targetTypeArrayKey].some(p => p.id === id)) {
+            return alert("Lỗi: Mã SP này đã tồn tại!");
+        }
 
         const model = prompt("Nhập Model SP:");
         if (!model) return;
@@ -434,15 +549,15 @@ const updatePageTitle = (newTitle) => {
 
         const newProduct = { "id": id, "model": model, "price": price, "image": image, "description": description, "status": "hien" };
 
-        if (!brand[type]) brand[type] = [];
-        brand[type].push(newProduct);
+        if (!brand[targetTypeArrayKey]) brand[targetTypeArrayKey] = [];
+        brand[targetTypeArrayKey].push(newProduct);
 
         currentProductPage = Math.ceil((currentProductsList.length + 1) / productsPerPage);
         recompileProductList(brand);
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     };
 
-    // HÀM LỌC BRAND
+    // HÀM LỌC BRAND (Loại sản phẩm)
     function filterBrands(searchTerm) {
         const term = searchTerm.toLowerCase().trim();
         const filtered = [];
