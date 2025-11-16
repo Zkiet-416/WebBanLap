@@ -297,12 +297,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // === Hàm load Dashboard ===
   function loadDashboard() {
+    // Lấy số lượng khách hàng từ localStorage
+    const STORAGE_KEY = 'accounts';
+    const customersData = localStorage.getItem(STORAGE_KEY);
+    let customerCount = 0;
+    
+    if (customersData) {
+        try {
+        const customers = JSON.parse(customersData);
+        if (Array.isArray(customers)) {
+            customerCount = customers.length;
+        }
+        } catch (err) {
+        console.error('Lỗi đọc dữ liệu khách hàng:', err);
+        customerCount = 0;
+        }
+    }
     content.innerHTML = `
       <h1 class="page-title">Dashboard</h1>
       <div class="stats">
         <div class="stat-box">
           <h3>Khách hàng</h3>
-          <div class="number">2,006</div>
+          <div class="number">${customerCount}</div>
         </div>
         <div class="stat-box">
           <h3>Đơn hàng</h3>
