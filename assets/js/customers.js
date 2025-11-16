@@ -11,10 +11,10 @@ function addUser() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
-    const account=document.getElementById('acc').value;
+    const username=document.getElementById('acc').value;
     const password=document.getElementById('pass').value;
-    if (name && email && phone && account && password) {
-    users.push({ name, email, phone, account, password, status: false }); //them doi tuong vao mang
+    if (name && email && phone && username && password) {
+    users.push({ name, email, phone, username, password, status: false }); //them doi tuong vao mang
     saveUsersToLocal(); 
     renderTable(users);//cap nhat bang hien thi( tu dinh nghia)
     document.getElementById('name').value = '';//xoa thong tin tai o nhap lieu
@@ -54,7 +54,7 @@ function renderTable(data) {
       <td>${user.name}</td>
       <td>${user.email}</td>
       <td>${user.phone}</td>
-      <td>${user.account}</td>
+      <td>${user.username}</td>
       <td style="position:relative;">
         <span onclick="editPassword(${index}, this.nextElementSibling)"
               style="cursor:pointer;color:blue;position:absolute;top:50%;transform:translateY(-50%);"
@@ -80,7 +80,7 @@ function renderTable(data) {
           <td>${user.name}</td>
           <td>${user.email}</td>
           <td>${user.phone}</td>
-          <td>${user.account}</td>
+          <td>${user.username}</td>
           <td>${user.password}</td>
           <td>
             <input type="checkbox" class="switch" ${user.status ? 'checked' : ''} disabled>
@@ -146,13 +146,37 @@ function edit(){
   renderTable(users);
 }
 
+
+// Key dùng chung trong localStorage
+const STORAGE_KEY = 'accounts'; 
+
+// Load users từ localStorage, gán vào window.users, render và trả về mảng
 function loadUsers() {
-    const data = localStorage.getItem('users');
-    if (data) users = JSON.parse(data);
-    else users = []; // nếu chưa có dữ liệu mặc định
-    renderTable(users);
+  const data = localStorage.getItem(STORAGE_KEY);
+  let users;
+  if (data) {
+    try {
+      users = JSON.parse(data);
+      if (!Array.isArray(users)) users = [];
+    } catch (err) {
+      console.error('Invalid JSON in localStorage for', STORAGE_KEY, err);
+      users = [];
+    }
+  } else {
+    users = []; 
+  }
+  window.users = users;
+  if (typeof renderTable === 'function') renderTable(users);
+  return users;
 }
 
+// Lưu window.users vào localStorage (an toàn với JSON)
 function saveUsersToLocal() {
-    localStorage.setItem('users', JSON.stringify(users));
+  const usersToSave = Array.isArray(window.users) ? window.users : [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(usersToSave));
+}
+
+// Helper: lấy users trực tiếp (không phụ thuộc window.users)
+function getUsers() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 }
