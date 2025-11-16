@@ -1,7 +1,6 @@
-// productDetail.js - Đồng bộ với localStorage "laptopProducts"
-// Hỗ trợ cấu trúc mới cho laptop và phụ kiện
+// productDetail.js - Đồng bộ với localStorage "laptopProducts" (v2 - Fix giá)
 
-// ========== HÀM LẤY DỮ LIỆU TỪ LOCALSTORAGE (GIỮ NGUYÊN) ==========
+// ========== HÀM LẤY DỮ LIỆU TỪ LOCALSTORAGE ==========
 function getLocalProducts() {
   try {
     // Ưu tiên sử dụng dữ liệu đã được xử lý và export từ products.js
@@ -13,7 +12,6 @@ function getLocalProducts() {
     const data = localStorage.getItem("laptopProducts");
     if (data) {
       const parsedData = JSON.parse(data);
-      // Giả định dữ liệu trong LS là mảng phẳng (nhưng sẽ không có originalProductId)
       if (Array.isArray(parsedData) && parsedData.length > 0) {
         return parsedData;
       }
@@ -27,9 +25,13 @@ function getLocalProducts() {
   }
 }
 
-// ========== HÀM FORMAT GIÁ (GIỮ NGUYÊN) ==========
+// ========== HÀM FORMAT GIÁ ==========
 function formatPrice(price) {
-  // Đảm bảo giá là số trước khi format
+  // ✅ Nếu price là string có dấu chấm (vd: "16.390.000"), chuyển thành số
+  if (typeof price === 'string') {
+    price = price.replace(/\./g, '').replace(/[^\d]/g, '');
+  }
+  
   const priceNumber = parseInt(price, 10);
   if (isNaN(priceNumber)) return 'Liên hệ';
   
@@ -38,24 +40,21 @@ function formatPrice(price) {
     currency: 'VND'
   }).format(priceNumber);
 }
+
 function parseDescriptionToSpecsHTML(description) {
   if (!description) {
     return '<div class="spec-item"><span class="spec-label">Thông số:</span><span class="spec-value">Đang cập nhật</span></div>';
   }
   
   let specsHTML = '';
-  // Tách chuỗi theo dấu '|'
   const specs = description.split('|');
   
   specs.forEach(spec => {
     const trimmedSpec = spec.trim();
     if (trimmedSpec) {
-      // Tách chuỗi theo dấu ':'
       const parts = trimmedSpec.split(':');
       
-      // Đảm bảo có ít nhất label và value
       if (parts.length >= 2) {
-        // Lấy phần đầu là label, phần còn lại là value (phòng trường hợp value có dấu ':')
         const label = parts[0].trim();
         const value = parts.slice(1).join(':').trim();
         
@@ -74,8 +73,9 @@ function parseDescriptionToSpecsHTML(description) {
   return specsHTML || '<div class="spec-item"><span class="spec-label">Thông số:</span><span class="spec-value">Không có thông số chi tiết.</span></div>';
 }
 
-// ========== HÀM HIỂN THỊ CHI TIẾT SẢN PHẨM (ĐÃ SỬA) ==========
+// ========== HÀM HIỂN THỊ CHI TIẾT SẢN PHẨM ==========
 function showProductDetail(productId) {
+  // ✅ LUÔN ĐỌC LẠI DỮ LIỆU TỪ LOCALSTORAGE ĐỂ CÓ GIÁ MỚI NHẤT
   const allProducts = getLocalProducts();
   const product = allProducts.find(p => p.id === productId);
   
@@ -120,24 +120,31 @@ function showProductDetail(productId) {
     };
   }
   
-  // SỬA: Chuyển đổi giá từ chuỗi có dấu chấm (vd: "16.390.000") sang số
-  const rawPrice = product.price ? product.price.replace(/\./g, '').replace(/[^\d]/g, '').trim() : 0;
-  if (detailPrice) detailPrice.textContent = formatPrice(rawPrice);
+  // ✅ ƯU TIÊN priceValue (số), nếu không có thì dùng price (string)
+  let displayPrice = product.priceValue || product.price || 0;
   
-  // Thông tin sản phẩm - Luôn hiển thị dòng cố định
+  console.log("📊 Product detail:", {
+    id: product.id,
+    model: product.model,
+    priceValue: product.priceValue,
+    price: product.price,
+    displayPrice: displayPrice
+  });
+  
+  if (detailPrice) detailPrice.textContent = formatPrice(displayPrice);
+  
+  // Thông tin sản phẩm
   if (detailInfo) {
     detailInfo.textContent = "Sản phẩm chất lượng, giá cả phải chăng.";
   }
   
-  // SỬA ĐỔI QUAN TRỌNG: Cập nhật thông số kỹ thuật (Spec) bằng cách gọi hàm phân tích description
+  // Cập nhật thông số kỹ thuật
   const specsSection = document.querySelector('.specs-section');
   const specsContent = document.querySelector('.specs-content');
   
   if (specsSection && specsContent) {
-    // Gọi hàm mới để phân tích chuỗi description và tạo HTML spec
     specsContent.innerHTML = parseDescriptionToSpecsHTML(product.description);
     
-    // Đảm bảo section tiêu đề vẫn hiển thị đúng
     const specsTitle = specsSection.querySelector('h2');
     if (specsTitle) {
       specsTitle.textContent = "THÔNG SỐ KỸ THUẬT";
@@ -173,7 +180,7 @@ function showProductDetail(productId) {
   }
 }
 
-// ========== HÀM THÊM VÀO GIỎ HÀNG TỪ TRANG CHI TIẾT (GIỮ NGUYÊN) ==========
+// ========== HÀM THÊM VÀO GIỎ HÀNG TỪ TRANG CHI TIẾT ==========
 function addToCartFromDetail(productId) {
   if (typeof addToCart === 'function') {
     addToCart(productId);
@@ -183,8 +190,17 @@ function addToCartFromDetail(productId) {
   }
 }
 
-// ========== XỬ LÝ KHI CLICK VÀO SẢN PHẨM (GIỮ NGUYÊN) ==========
+// ========== XỬ LÝ KHI CLICK VÀO SẢN PHẨM ==========
 document.addEventListener('DOMContentLoaded', function() {
+  // ✅ LẮNG NGHE SỰ KIỆN CẬP NHẬT GIÁ TỪ PRICING.JS
+  window.addEventListener('productsUpdated', function() {
+    console.log("🔄 Phát hiện giá đã được cập nhật, reload window.allProducts...");
+    // Cập nhật lại window.allProducts từ localStorage
+    if (window.productsAPI && typeof window.productsAPI.refreshData === 'function') {
+      window.productsAPI.refreshData();
+    }
+  });
+  
   // Gắn sự kiện cho các product card
   document.addEventListener('click', function(e) {
     const productCard = e.target.closest('.product-card');
