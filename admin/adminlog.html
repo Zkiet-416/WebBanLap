@@ -4,25 +4,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login</title>
+  <title>Đăng nhập Admin</title>
   <link rel="stylesheet" href="../assets/css/adminlog.css" />
 </head>
 
 <body>
   <div class="login-container">
-    <h2>Welcome back,</h2>
-    <p>Please sign in to your admin account below.</p>
+    <h2>Chào mừng trở lại</h2>
+    <p>Vui lòng đăng nhập vào tài khoản admin của bạn.</p>
 
     <form id="loginForm" onsubmit="login(event)">
-      <input type="email" id="email" placeholder="Email here..." required>
-      <input type="password" id="password" placeholder="Password here..." required>
+      <input type="email" id="email" placeholder="Nhập email..." required>
+      <input type="password" id="password" placeholder="Nhập mật khẩu..." required>
 
       <div class="remember">
         <input type="checkbox" id="remember" style="margin-right:6px;">
-        <label for="remember">Keep me logged in</label>
+        <label for="remember">Lưu mật khẩu đăng nhập</label>
       </div>
 
-      <button type="submit" class="login-btn">Login to Dashboard</button>
+      <button type="submit" class="login-btn">Đăng nhập</button>
       <div id="errorMsg" class="error-message"></div>
     </form>
   </div>
