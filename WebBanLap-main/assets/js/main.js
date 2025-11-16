@@ -29,7 +29,7 @@
 })();
 
 /* ===========================
-   TABS NHỎ UI
+   TABS NHỎ UI - GIỮ NGUYÊN
    =========================== */
 document.querySelectorAll('.tabs').forEach(tabWrap=>{
   const buttons = tabWrap.querySelectorAll('button');
@@ -42,7 +42,17 @@ document.querySelectorAll('.tabs').forEach(tabWrap=>{
 });
 
 /* ===========================
-   ESC ĐỂ ẨN DROPDOWN
+   DROPDOWN HEADER TAB - GIỮ NGUYÊN
+   =========================== */
+document.querySelectorAll('.dropdown-header .tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.dropdown-header .tab').forEach(t=> t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+/* ===========================
+   ESC ĐỂ ẨN DROPDOWN - GIỮ NGUYÊN
    =========================== */
 document.addEventListener('keydown', (e)=>{
   if(e.key === 'Escape'){
@@ -54,13 +64,24 @@ document.addEventListener('keydown', (e)=>{
 });
 
 /* ===========================
-   HÀM RESET VỀ TRANG CHỦ
+   HÀM RESET VỀ TRANG CHỦ - GIỮ NGUYÊN
    =========================== */
 window.resetToHomePage = function() {
-    // Gọi trực tiếp hàm từ products.js
-    if (window.resetToHomePageFromProducts) {
-        window.resetToHomePageFromProducts();
-    }
+    const cartDetail = document.getElementById('cartDetail');
+    const productDetail = document.getElementById('productDetail');
+    
+    if (cartDetail) cartDetail.style.display = 'none';
+    if (productDetail) productDetail.style.display = 'none';
+    
+    const suggestions = document.getElementById('suggestions');
+    const accessories = document.getElementById('accessories');
+    const slider = document.querySelector('.slider');
+    
+    if (suggestions) suggestions.style.display = 'block';
+    if (accessories) accessories.style.display = 'block';
+    if (slider) slider.style.display = 'block';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // ========== CART TOGGLE ==========
@@ -84,4 +105,35 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
         });
     }
+
+    // ========== HÀM HIỂN THỊ TRANG LỊCH SỬ ==========
+  window.showHistoryPage = function() {
+    console.log('📜 Hiển thị trang lịch sử');
+    
+    // Ẩn tất cả section khác
+    const sectionsToHide = [
+        'suggestions', 'accessories', 'productDetail', 'cartDetail'
+    ];
+    
+    sectionsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.display = 'none';
+    });
+    
+    const slider = document.querySelector('.slider');
+    if (slider) slider.style.display = 'none';
+    
+    // Hiển thị trang lịch sử
+    const historyPage = document.getElementById('historyPage');
+    if (historyPage) {
+        historyPage.style.display = 'block';
+        
+        // Load lịch sử đơn hàng
+        if (typeof loadOrderHistory === 'function') {
+            loadOrderHistory();
+        }
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 });

@@ -38,7 +38,6 @@ header {
     padding: 0 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 30px;
 }
 
@@ -48,22 +47,7 @@ header {
     font-weight: bold;
     font-size: 18px;
     white-space: nowrap;
-    background-color: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
-
-.logo img {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-}
-
-.logo span {
-    margin-left: 10px;
-}
-
 
 .header-right {
     display: flex;
@@ -210,7 +194,6 @@ nav.main-menu {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    pointer-events: none;
     color: black;
 }
 
@@ -512,6 +495,11 @@ section.products h2 {
     justify-content: center;
 }
 
+.pagination button:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #999;
+}
+
 .pagination button.active {
     background: #d6453b;
     color: #fff;
@@ -637,14 +625,10 @@ footer {
 }
 
 .footer-left {
-    width: 100px;
-    overflow: hidden;
-}
-
-.footer-left img {
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
+    width: 120px;
+    height: 72px;
+    background: #ddd;
+    border-radius: 6px;
 }
 
 .footer-col {
@@ -678,14 +662,8 @@ footer {
 .social-box {
     width: 28px;
     height: 28px;
-    background-color: transparent !important;
+    background: #ddd;
     border-radius: 6px;
-    overflow: hidden;
-}
-
-.social-box img {
-    width: 100%;
-    height: 100%;
 }
 
 .footer-bottom {

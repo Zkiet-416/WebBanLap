@@ -1,40 +1,13 @@
 // history.js - Quản lý lịch sử mua hàng
 
-// ========== HÀM HIỂN THỊ TRANG LỊCH SỬ ==========
-window.showHistoryPage = function() {
-    const cartDetail = document.getElementById('cartDetail');
-    const productDetail = document.getElementById('productDetail');
-    const suggestions = document.getElementById('suggestions');
-    const accessories = document.getElementById('accessories');
-    const slider = document.querySelector('.slider');
-    const historyPage = document.getElementById('historyPage');
-    const profile = document.getElementById('profile');
-    
-    // Ẩn các trang khác
-    if (cartDetail) cartDetail.style.display = 'none';
-    if (productDetail) productDetail.style.display = 'none';
-    if (suggestions) suggestions.style.display = 'none';
-    if (accessories) accessories.style.display = 'none';
-    if (slider) slider.style.display = 'none';
-    profile.classList.add("hidden");
-    
-    // Hiển thị trang history
-    if (historyPage) historyPage.style.display = 'block';
-    
-    // Load dữ liệu
-    loadOrderHistory();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 history.js đang tải...');
     loadOrderHistory();
     
     // Gắn sự kiện filter
     const statusFilter = document.getElementById('statusFilter');
     const dateFilter = document.getElementById('dateFilter');
     
-    // Gắn sự kiện change cho 2 dropdown lọc (trạng thái và thời gian)
-    // Khi user chọn giá trị mới thì gọi hàm filterOrders
     if (statusFilter) {
         statusFilter.addEventListener('change', filterOrders);
     }
@@ -46,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Hàm tải lịch sử đơn hàng
 function loadOrderHistory() {
     const orders = getOrderHistory();
+    console.log('📦 Lịch sử đơn hàng:', orders);
     renderOrders(orders);
 }
 
@@ -54,7 +28,7 @@ function getOrderHistory() {
     try {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) {
-            console.log('Chưa đăng nhập');
+            console.log('❌ Chưa đăng nhập');
             return [];
         }
         
@@ -64,7 +38,7 @@ function getOrderHistory() {
         if (orderHistory) {
             return JSON.parse(orderHistory);
         } else {
-            console.log('Chưa có lịch sử đơn hàng');
+            console.log('📝 Chưa có lịch sử đơn hàng');
             return [];
         }
     } catch (error) {
@@ -106,11 +80,6 @@ function createOrderHTML(order) {
     
     return `
         <div class="order-card" data-order-id="${order.orderId}" data-status="${order.status}">
-            <!-- THÊM NÚT XÓA Ở GÓC TRÊN PHẢI -->
-            <button class="btn-delete-order" onclick="deleteOrder('${order.orderId}')" title="Xóa đơn hàng">
-                <i class="fas fa-times"></i>
-            </button>
-            
             <div class="order-header">
                 <div class="order-info">
                     <h3>Đơn hàng #${order.orderId}</h3>
@@ -144,98 +113,18 @@ function createOrderHTML(order) {
                     Tổng cộng: ${formatCurrency(order.totalAmount)}
                 </div>
                 <div class="order-actions">
+                    <button class="btn-action" onclick="viewOrderDetail('${order.orderId}')">
+                        <i class="fas fa-eye"></i> Chi tiết
+                    </button>
                     ${order.status === 'completed' ? `
-                        <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
-                            <i class="fas fa-cart-plus"></i> Mua tiếp ngay
-                        </button>
-                        <button class="btn-action btn-cancel" onclick="cancelOrder('${order.orderId}')">
-                            <i class="fas fa-times"></i> Hủy đơn hàng
-                        </button>
-                    ` : ''}
-                    ${order.status === 'cancelled' ? `
-                        <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
-                            <i class="fas fa-cart-plus"></i> Mua tiếp ngay
+                        <button class="btn-action btn-reorder" onclick="reorder('${order.orderId}')">
+                            <i class="fas fa-redo"></i> Mua lại
                         </button>
                     ` : ''}
                 </div>
             </div>
         </div>
     `;
-}
-
-// Hàm xóa đơn hàng (x)
-function deleteOrder(orderId) {   
-    if (confirm('Bạn có chắc muốn xóa vĩnh viễn đơn hàng này?')) {
-        const orders = getOrderHistory();
-        const orderIndex = orders.findIndex(o => o.orderId === orderId);
-        
-        if (orderIndex > -1) {
-            // Xóa đơn hàng khỏi mảng
-            orders.splice(orderIndex, 1);
-            
-            // Lưu lại
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                const user = JSON.parse(currentUser);
-                const orderHistoryKey = `orderHistory_${user.email}`;
-                localStorage.setItem(orderHistoryKey, JSON.stringify(orders));
-            }
-            
-            // Reload lại danh sách
-            loadOrderHistory();
-            alert('Đã xóa đơn hàng thành công!');
-        }
-    }
-}
-
-// Hàm mua tiếp ngay
-function continueShopping(orderId) {
-    const orders = getOrderHistory();
-    const order = orders.find(o => o.orderId === orderId);
-    
-    if (order) {
-        // Thêm tất cả sản phẩm vào giỏ hàng
-        order.items.forEach(item => {
-            if (typeof window.addToCart === 'function') {
-                // Thêm từng sản phẩm với số lượng
-                for (let i = 0; i < item.quantity; i++) {
-                    window.addToCart(item.id);
-                }
-            }
-        });
-        
-        alert('Đã thêm tất cả sản phẩm vào giỏ hàng!');
-        
-        // Chuyển đến trang giỏ hàng
-        if (typeof window.showCartDetail === 'function') {
-            window.showCartDetail();
-        }
-    }
-}
-
-// Hàm hủy đơn hàng
-function cancelOrder(orderId) {    
-    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-        const orders = getOrderHistory();
-        const orderIndex = orders.findIndex(o => o.orderId === orderId);
-        
-        if (orderIndex > -1) {
-            // Đổi trạng thái thành cancelled
-            orders[orderIndex].status = 'cancelled';
-            
-            // Lưu lại
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                const user = JSON.parse(currentUser);
-                const orderHistoryKey = `orderHistory_${user.email}`;
-                localStorage.setItem(orderHistoryKey, JSON.stringify(orders));
-            }
-            
-            // Reload lại danh sách
-            loadOrderHistory();
-            alert('Đã hủy đơn hàng thành công!');
-        }
-    }
 }
 
 // Lọc đơn hàng
@@ -303,12 +192,77 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
+// Xem chi tiết đơn hàng
+function viewOrderDetail(orderId) {
+    console.log('🔍 Xem chi tiết đơn hàng:', orderId);
+    const orders = getOrderHistory();
+    const order = orders.find(o => o.orderId === orderId);
+    
+    if (order) {
+        // Tạo modal hoặc hiển thị chi tiết
+        const detailHTML = `
+            <div class="order-detail-modal">
+                <h3>Chi tiết đơn hàng #${order.orderId}</h3>
+                <div class="order-info">
+                    <p><strong>Ngày đặt:</strong> ${new Date(order.orderDate).toLocaleString('vi-VN')}</p>
+                    <p><strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress}</p>
+                    <p><strong>Trạng thái:</strong> ${getStatusText(order.status)}</p>
+                    <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
+                </div>
+                <div class="order-items-detail">
+                    <h4>Sản phẩm:</h4>
+                    ${order.items.map(item => `
+                        <div class="order-item-detail">
+                            <img src="${item.image}" alt="${item.name}" width="50">
+                            <span>${item.name}</span>
+                            <span>${formatCurrency(item.price)} x ${item.quantity}</span>
+                            <span>${formatCurrency(item.price * item.quantity)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="order-total-detail">
+                    <strong>Tổng cộng: ${formatCurrency(order.totalAmount)}</strong>
+                </div>
+            </div>
+        `;
+        
+        // Hiển thị modal (có thể dùng alert tạm thời)
+        alert(`Chi tiết đơn hàng #${orderId}\nTổng tiền: ${formatCurrency(order.totalAmount)}\nTrạng thái: ${getStatusText(order.status)}`);
+    }
+}
+
+// Mua lại đơn hàng
+function reorder(orderId) {
+    console.log('🔄 Mua lại đơn hàng:', orderId);
+    const orders = getOrderHistory();
+    const order = orders.find(o => o.orderId === orderId);
+    
+    if (order && confirm('Bạn có muốn mua lại đơn hàng này?')) {
+        // Thêm sản phẩm vào giỏ hàng
+        order.items.forEach(item => {
+            if (typeof window.addToCart === 'function') {
+                // Thêm từng sản phẩm với số lượng
+                for (let i = 0; i < item.quantity; i++) {
+                    window.addToCart(item.id);
+                }
+            }
+        });
+        
+        alert('Đã thêm sản phẩm vào giỏ hàng!');
+        
+        // Chuyển đến trang giỏ hàng
+        if (typeof window.showCartDetail === 'function') {
+            window.showCartDetail();
+        }
+    }
+}
+
 // Hàm lưu đơn hàng mới (gọi từ checkout.js)
 window.saveOrderToHistory = function(orderData) {
     try {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) {
-            console.error('Không thể lưu đơn hàng: chưa đăng nhập');
+            console.error('❌ Không thể lưu đơn hàng: chưa đăng nhập');
             return false;
         }
         
@@ -338,11 +292,11 @@ window.saveOrderToHistory = function(orderData) {
         // Lưu lại
         localStorage.setItem(orderHistoryKey, JSON.stringify(orderHistory));
         
-        console.log('Đã lưu đơn hàng vào lịch sử:', newOrder);
+        console.log('✅ Đã lưu đơn hàng vào lịch sử:', newOrder);
         return true;
         
     } catch (error) {
-        console.error('Lỗi khi lưu đơn hàng:', error);
+        console.error('❌ Lỗi khi lưu đơn hàng:', error);
         return false;
     }
 };

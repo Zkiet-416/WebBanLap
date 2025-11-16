@@ -27,12 +27,19 @@ document.addEventListener("DOMContentLoaded", () => {
           loadDashboard();
           break;
 
+        case "customers":
+          content.innerHTML = `
+            <h1 class="page-title">Khách hàng</h1>
+            <p>Quản lý danh sách khách hàng tại đây.</p>`;
+          break;
+          
         case "products":
+          // Gán CSS riêng cho trang sản phẩm
           pageStyle.href = "../assets/css/AdminProduct.css";
           content.innerHTML = `
-            <div class="container-simple">
+          <div class="container-simple">
         <div>
-            <h1 class="page-title" id="main-page-title">Loại sản phẩm</h1>
+            <h1 class="page-title">Sản phẩm</h1>
         </div>
 
         <div class="search-box" style="margin-bottom:20px;">
@@ -49,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <thead >
                                     <tr>
                                         <th>ID</th>
-                                        <th>Tên loại sản phẩm</th>
+                                        <th>Tên / Thương hiệu</th>
                                         <th>Số lượng</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th> 
@@ -150,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "orders":
+            
           content.innerHTML = `
             <h1 class="page-title">Đơn hàng</h1>
             <p>Danh sách đơn hàng hiển thị ở đây.</p>`;
@@ -157,7 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         case "warehouse":
           pageStyle.href = "../assets/css/stock.css";
-          content.innerHTML = `<div> 
+          content.innerHTML = `
+            <div> 
             <h1 class="page-title" style="margin-bottom:-10px">Kho</h1> 
 
         <main class="main-content">

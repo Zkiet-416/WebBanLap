@@ -28,7 +28,7 @@ window.loadStockPage = function() {
           "img": "../assets/images/acer1.png",
           "date": "2024-09-15",
           "type": "nhap",
-          "qty": 50
+          "qty": 200
         },
         {
           "id": 2,
@@ -46,7 +46,7 @@ window.loadStockPage = function() {
           "img": "../assets/images/mouse1.jpg",
           "date": "2024-09-25",
           "type": "nhap",
-          "qty": 70
+          "qty": 80
         },
         {
           "id": 4,
@@ -226,100 +226,162 @@ window.loadStockPage = function() {
 
     return receiptTransactions;
 }
-
-    // --- HÀM MỚI ĐƯỢC CẬP NHẬT ĐỂ ĐỌC ĐỊNH DẠNG ADMINPRODUCTDATA CỦA BẠN ---
     /**
-     * Tải và chuyển đổi dữ liệu sản phẩm từ Local Storage ('adminproductdata')
-     * thành các giao dịch 'nhap' ban đầu.
+     * Tải và chuyển đổi dữ liệu sản phẩm từ Local Storage ('adminproductdata')      new ver->doc proudcts.js
+     * thành các giao dịch 'ton kho' ban đầu.
      * * ĐÃ SỬA: Key và Logic duyệt cấu trúc lồng nhau.
      * LƯU Ý: Dữ liệu không có trường 'stockQuantity', nên QTY mặc định = 1.
      */
     function loadAdminProductsAsInitialStock(transactionsForIdCheck) {
-        const PRODUCT_STORAGE_KEY = 'adminProductData'; // Sửa key theo yêu cầu mới
+        const PRODUCT_STORAGE_KEY = 'laptopProducts'; // Key đúng: Chứa mảng các sản phẩm đã chuẩn hóa
         let initialStockTransactions = [];
         
-        // Tìm ID lớn nhất hiện có để đảm bảo ID giao dịch mới không bị trùng
-        let maxExistingId = findMaxId(transactionsForIdCheck);
-        let transactionIdCounter = maxExistingId + 1; 
+        // Không cần dùng transactionIdCounter vì ta sẽ dùng product.id (ID đã chuẩn hóa) làm ID giao dịch
+        // để đảm bảo tính toán tồn kho cho từng mẫu sản phẩm chi tiết.
 
         try {
             const rawData = localStorage.getItem(PRODUCT_STORAGE_KEY);
             if (!rawData) return [];
 
-            const data = JSON.parse(rawData);
+            const productsArray = JSON.parse(rawData);
             
-            // 1. Kiểm tra cấu trúc lồng nhau: { "product": { "brand": [...] } }
-            if (!data.product || !data.product.brand || !Array.isArray(data.product.brand)) return [];
+            // 1. SỬA LỖI KIỂM TRA CẤU TRÚC: Phải là mảng các sản phẩm đã chuẩn hóa
+            if (!Array.isArray(productsArray)) {
+                console.warn("Dữ liệu sản phẩm không phải là mảng chuẩn hóa. Bỏ qua khởi tạo tồn kho ban đầu.");
+                return [];
+            }
 
             // 2. Đặt ngày rất cũ để đảm bảo nó là giao dịch sớm nhất (TỒN BAN ĐẦU)
-            const initialDate = '2000-01-01'; 
-
-            data.product.brand.forEach(brandItem => {
-                if (brandItem.status === 'inactive') return;
-                const categoryKeys = Object.keys(brandItem).filter(key => Array.isArray(brandItem[key]));
-
-                categoryKeys.forEach(categoryName => {
-                    const products = brandItem[categoryName];
-                    
-                    if (Array.isArray(products)) {
-                        products.forEach(product => {
-                            if (product.status === 'an') return;
-                            const initialQty = 1; // Giả định tồn ban đầu là 1 để hiện trên bảng Tồn kho
-                            
-                            if (initialQty > 0) {
-                                initialStockTransactions.push({
-                                    id: transactionIdCounter++, 
-                                    name: product.model || product.id || 'Sản phẩm không tên', // Dùng 'model' hoặc 'id' làm tên
-                                    brand: categoryName.toUpperCase() || 'Chưa rõ (Admin)', 
-                                    img: product.image || 'https://via.placeholder.com/50/FF9800/FFFFFF?text=P', 
-                                    date: initialDate, 
-                                    type: 'nhap',
-                                    qty: initialQty
-                                });
-                            }
-                        });
-                    }
-                });
+            const initialDate = '2000-01-01';
+            
+            // Lặp qua MẢNG CÁC SẢN PHẨM ĐÃ CHUẨN HÓA
+            productsArray.forEach(product => {
+                
+                // Bỏ qua sản phẩm bị ẩn (status: 'an')
+                if (product.status === 'an') return; 
+                
+                const initialQty = 1; // Giả định tồn ban đầu là 1
+                
+                if (initialQty > 0) {
+                    initialStockTransactions.push({
+                        // Sử dụng ID ĐÃ CHUẨN HÓA làm ID giao dịch để tính toán tồn kho chi tiết
+                        id: product.id, 
+                        name: product.model || product.id || 'Sản phẩm không tên',
+                        // Dùng 'type' (categoryName đã chuẩn hóa: 'laptop', 'de-tan-nhiet'...)
+                        brand: product.type.toUpperCase() || 'CHƯA RÕ (LS)',
+                        img: product.image || 'https://via.placeholder.com/50/FF9800/FFFFFF?text=P',
+                        date: initialDate,
+                        type: 'nhap',
+                        qty: product.qty
+                    });
+                }
             });
 
         } catch (error) {
-            console.error("Lỗi khi đọc Local Storage của sản phẩm (adminproductdata):", error);
+            console.error("Lỗi khi đọc Local Storage của sản phẩm ('laptopProducts'):", error);
             return [];
         }
 
         return initialStockTransactions;
     }
-    // --- KẾT THÚC HÀM ĐÃ SỬA ---
+    
+        function loadSaleTransactionsFromOrderHistory(transactionsForIdCheck) {
+        const ORDER_HISTORY_KEY = 'orderHistory'; 
+        let orderSaleTransactions = [];
 
+        // Tìm ID lớn nhất hiện có để đảm bảo ID giao dịch mới không bị trùng
+        let maxExistingId = findMaxId(transactionsForIdCheck);
+        let transactionIdCounter = maxExistingId + 1; 
 
-    //  CÁC HÀM TÍNH TOÁN VÀ HIỂN THỊ
-    function calculateStock(transactions) {
-        const stock = new Map(); 
+        try {
+            const rawData = localStorage.getItem(ORDER_HISTORY_KEY);
+            if (!rawData) return [];
 
-        transactions.forEach(t => {
-            // Dùng tên sản phẩm làm key phụ nếu ID không khớp/không tồn tại, đảm bảo tính toán tồn kho dựa trên tên
-            const key = t.name; 
+            const orderHistory = JSON.parse(rawData);
 
-            if (!stock.has(key)) {
-                stock.set(key, {
-                    id: t.id,
-                    name: t.name,
-                    brand: t.brand,
-                    img: t.img,
-                    qty: 0
-                });
-            }
+            // Giả sử 'orderHistory' là một mảng các đơn hàng
+            if (!Array.isArray(orderHistory)) return [];
 
-            const product = stock.get(key);
-            if (t.type === 'nhap') {
-                product.qty += t.qty;
-            } else if (t.type === 'xuat') {
-                product.qty -= t.qty;
-            }
-        });
+            orderHistory.forEach(order => {
+                // Chỉ xử lý các đơn hàng đã thanh toán/hoàn thành (tùy thuộc vào cấu trúc dữ liệu của bạn, tôi giả định trạng thái là 'paid' hoặc 'completed')
+                // Nếu không có trường status, bạn có thể bỏ qua điều kiện này.
+                // if (order.status !== 'completed' && order.status !== 'paid') return; 
 
-        return Array.from(stock.values()); 
+                const saleDate = order.date || new Date().toISOString().slice(0, 10);
+
+                if (order.items && Array.isArray(order.items)) {
+                    order.items.forEach((item) => {
+                        // Gán ID mới tăng dần và tạo giao dịch xuất
+                        orderSaleTransactions.push({
+                            id: transactionIdCounter++, // Gán ID mới
+                            name: item.name || 'Sản phẩm bán ra',
+                            brand: 'Đã bán (LS)', // Ghi rõ nguồn gốc
+                            img: item.image || 'https://via.placeholder.com/50/DC3545/FFFFFF?text=O', // Ảnh đại diện cho Xuất
+                            date: saleDate,
+                            type: 'xuat', // Loại giao dịch là XUẤT
+                            qty: parseInt(item.qty) || 0 // Số lượng bán
+                        });
+                    });
+                }
+            });
+
+        } catch (error) {
+            console.error("Lỗi khi đọc Local Storage của lịch sử đơn hàng:", error);
+            return [];
+        }
+
+        return orderSaleTransactions;
     }
+    //  CÁC HÀM TÍNH TOÁN VÀ HIỂN THỊ
+    /**
+ * Tính toán số lượng tồn kho cuối cùng cho mỗi sản phẩm.
+ */
+function calculateStock(transactions) {
+    const stock = new Map();
+
+    transactions.forEach(t => {
+        // 1. Dùng t.name làm key để nhóm sản phẩm (như cấu trúc hiện tại của bạn)
+        // LƯU Ý: Nếu bạn có nhiều sản phẩm cùng tên (nhưng khác SKU/ID), chúng sẽ bị gộp.
+        // Nếu muốn tồn kho chính xác theo SKU, hãy đổi thành const key = t.id;
+        const key = t.name; 
+
+        // 2. ÉP KIỂU SỐ LƯỢNG (QUAN TRỌNG)
+        // Đây là bước khắc phục lỗi "2" + 2 = "22"
+        const quantity = parseInt(t.qty); 
+
+        // Bỏ qua giao dịch nếu số lượng không hợp lệ hoặc không phải là số
+        if (isNaN(quantity) || quantity < 0) return; 
+
+        // 3. Khởi tạo đối tượng tồn kho nếu chưa có
+        if (!stock.has(key)) {
+            stock.set(key, {
+                id: t.id,
+                name: t.name,
+                brand: t.brand,
+                img: t.img,
+                // Khởi tạo qty là số 0
+                qty: 0 
+            });
+        }
+
+        let currentStockItem = stock.get(key);
+        let currentQty = currentStockItem.qty;
+
+        // 4. Cập nhật số lượng tồn kho (SỬ DỤNG PHÉP CỘNG SỐ)
+        if (t.type === 'nhap') {
+            currentQty += quantity; // Cộng số
+        } else if (t.type === 'xuat') {
+            currentQty -= quantity; // Trừ số
+        }
+
+        // Cập nhật lại đối tượng trong Map
+        currentStockItem.qty = currentQty;
+        stock.set(key, currentStockItem);
+    });
+
+    // Trả về một mảng chứa tất cả các đối tượng tồn kho
+    return Array.from(stock.values());
+}
 
     /**
      * Cập nhật tiêu đề bảng dựa trên loại tra cứu (Tồn, Nhập, Xuất)
@@ -606,15 +668,18 @@ window.loadStockPage = function() {
             
             // 3. Chuẩn bị dữ liệu cho việc tìm Max ID
             const transactionsForIdCheck = [...staticTransactions, ...receiptTransactions];
+            
 
             // 4. Tải và chuyển đổi dữ liệu sản phẩm ban đầu từ Local Storage (adminproductdata)
             const adminProductInitialTransactions = loadAdminProductsAsInitialStock(transactionsForIdCheck);
+            const orderHistorySaleTransactions = loadSaleTransactionsFromOrderHistory([...transactionsForIdCheck, ...adminProductInitialTransactions]);
             
             // 5. Kết hợp tất cả: Dữ liệu tĩnh + Sản phẩm ban đầu (adminproductdata) + Phiếu nhập (receiptData)
             allTransactions = [
                 ...staticTransactions, 
                 ...adminProductInitialTransactions,
-                ...receiptTransactions
+                ...receiptTransactions,
+                ...orderHistorySaleTransactions
             ];
             
             // 6. Sắp xếp lại theo ngày để đảm bảo tính toán tồn kho chính xác

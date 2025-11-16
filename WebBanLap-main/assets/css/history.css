@@ -1,7 +1,8 @@
 /* ====== LỊCH SỬ MUA HÀNG ====== */
-.history-page .container {
-    max-width: 100%;
-    margin-top: 28px;
+.history-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .history-header {
@@ -250,31 +251,6 @@
 .btn-shopping:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(214, 69, 59, 0.3);
-}
-
-/* NÚT XÓA ĐƠN HÀNG */
-.btn-delete-order {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: red;
-    border: none;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    transition: all 0.3s;
-    opacity: 100%;
-    background: transparent;
-}
-
-.order-card {
-    position: relative;
-    /* Quan trọng: để nút xóa định vị đúng */
 }
 
 /* Responsive */

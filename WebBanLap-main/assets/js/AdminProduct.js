@@ -1,635 +1,65 @@
-window.globalJsonData = {
-  "product": {
-    "brand": [
-      {
-        "name": "laptop",
-        "status": "active",
-        "laptop": [
-          {
-            "id": "AC-AS5-i5-R2UP",
-            "model": "Laptop Acer Gaming Nitro V ANV15-41-R2UP",
-            "price": "16.390.000",
-            "status": "an",
-            "image": "../assets//images/Acer1.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-i5-R0FE",
-            "model": "Laptop Gaming Acer Nitro V 15 ProPanel ANV15-41-R0FE",
-            "price": "21.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer2.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-i5-R7CR",
-            "model": "Laptop gaming Acer Nitro V 15 ProPanel ANV15 41 R7CR",
-            "price": "24.490.000",
-            "status": "hien",
-            "image": "../assets//images/Acer3.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R0Y4",
-            "model": "Laptop gaming Acer Nitro V 15 ProPanel ANV15 41 R0Y4",
-            "price": "24.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer4.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R5F4",
-            "model": "Laptop Gaming Acer Nitro 16 AI ProPanel AN16S 61 R5F4",
-            "price": "39.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer5.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-56WQ",
-            "model": "Laptop Gaming Acer Nitro Lite 16 NL16 71G 56WQ",
-            "price": "19.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer6.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-78BG",
-            "model": "Laptop gaming Acer Nitro V ANV15 51 78BG",
-            "price": "29.590.000",
-            "status": "hien",
-            "image": "../assets//images/Acer7.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AP-93P0",
-            "model": "Laptop Gaming Acer Predator Helios 18 PH18 73 93P0",
-            "price": "97.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer8.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AP-757W",
-            "model": "Laptop Gaming Acer Predator Helios Neo 16 AI PHN16 73 757W",
-            "price": "50.890.000",
-            "status": "hien",
-            "image": "../assets//images/Acer9.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-59AA",
-            "model": "Laptop gaming Acer Nitro V ProPanel ANV15 52 59AA",
-            "price": "26.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer10.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R9M1",
-            "model": "Laptop Gaming Acer Nitro V ANV15 41 R9M1",
-            "price": "19.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer11.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-500A",
-            "model": "Laptop Gaming Acer Nitro V 15 ANV15 51 500A",
-            "price": "19.290.000",
-            "status": "hien",
-            "image": "../assets//images/Acer12.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R6NA",
-            "model": "Laptop Gaming Acer Nitro V ANV16 41 R6NA",
-            "price": "29.890.000",
-            "status": "hien",
-            "image": "../assets//images/Acer13.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R36Y",
-            "model": "Laptop Gaming Acer Nitro V ANV16 41 R36Y",
-            "price": "27.390.000",
-            "status": "hien",
-            "image": "../assets//images/Acer14.png",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AC-AS5-R7EN",
-            "model": "Laptop Gaming Acer Nitro V ANV16 41 R7EN",
-            "price": "23.990.000",
-            "status": "hien",
-            "image": "../assets//images/Acer15.jpg",
-            "description": "CPU: Intel Core i5-1335U | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: Intel Iris Xe Graphics"
-          },
-          {
-            "id": "AS-TUF-RL151W",
-            "model": "Laptop Gaming Asus TUF F16 FX607VJB-RL151W",
-            "price": "21.990.000",
-            "status": "hien",
-            "image": "../assets//images/Asus1.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-TUF-SA193W",
-            "model": "Laptop Gaming Asus ROG Strix SCAR 18 G835LW-SA193W",
-            "price": "79.890.000",
-            "status": "hien",
-            "image": "../assets//images/Asus2.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-TUF-RP216W",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216W",
-            "price": "24.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus3.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-VVB15-RP216Q",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216Q",
-            "price": "15.444.000",
-            "status": "hien",
-            "image": "../assets//images/Asus1.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-VVB15-i7",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216E",
-            "price": "24.000.000",
-            "status": "hien",
-            "image": "../assets//images/Asus2.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-VVB15-i7",
-            "model": "Laptop Gaming Asus IA V16 V3607VU-RP216W",
-            "price": "23.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus3.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-VVB15-i7",
-            "model": "Laptop Gaming Asus AO V16 V3607VU-RP216W",
-            "price": "22.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus1.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-i7",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP226W",
-            "price": "21.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus2.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AP-RP216W",
-            "model": "Laptop Gaming Asus AP V16 V3607VU-RP216W",
-            "price": "20.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus3.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216W",
-            "model": "Laptop Gaming Asus AI V10 V3607VU-RP216W",
-            "price": "19.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus1.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216W",
-            "model": "Laptop Gaming Asus AI V16 V3607VP-RP216W",
-            "price": "29.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus2.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216C",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216C",
-            "price": "28.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus3.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216R",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216R",
-            "price": "30.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus1.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216A",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216A",
-            "price": "31.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus2.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "AS-AI-RP216D",
-            "model": "Laptop Gaming Asus AI V16 V3607VU-RP216D",
-            "price": "17.190.000",
-            "status": "hien",
-            "image": "../assets//images/Asus3.png",
-            "description": "CPU: Intel Core i7-12700H | RAM: 8GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX 4050"
-          },
-          {
-            "id": "HP-VT-AZ0C6PA",
-            "model": "Laptop Gaming HP Victus 16-s1141AX AZ0C6PA",
-            "price": "27.990.000",
-            "status": "hien",
-            "image": "../assets//images/HP1.jpg",
-            "description": "CPU: Intel Core i7 (Thế hệ mới) | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 30/40)"
-          },
-          {
-            "id": "HP-VT-AZ0D1PA",
-            "model": "Laptop Gaming HP Victus 16-s1146AX AZ0D1PA",
-            "price": "24.990.000",
-            "status": "hien",
-            "image": "../assets//images/HP2.jpg",
-            "description": "CPU: Intel Core i7 (Thế hệ mới) | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 30/40)"
-          },
-          {
-            "id": "HP-VT-AZ0C6PA",
-            "model": "Laptop Gaming HP Victus 16-s1041AX AZ0C6PA",
-            "price": "28.990.000",
-            "status": "hien",
-            "image": "../assets//images/HP1.jpg",
-            "description": "CPU: Intel Core i7 (Thế hệ mới) | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 30/40)"
-          },
-          {
-            "id": "HP-VT-AZ0D1PA",
-            "model": "Laptop Gaming HP Victus 16-s1156AX AZ0D1PA",
-            "price": "25.990.000",
-            "status": "hien",
-            "image": "../assets//images/HP2.jpg",
-            "description": "CPU: Intel Core i7 (Thế hệ mới) | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 30/40)"
-          },
-          {
-            "id": "HP-VT",
-            "model": "Laptop Gaming HP Victus 16-s141AX AZ0C6PA",
-            "price": "29.990.000",
-            "status": "hien",
-            "image": "../assets//images/HP1.jpg",
-            "description": "CPU: Intel Core i7 (Thế hệ mới) | RAM: 16GB DDR4 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 30/40)"
-          },
-          {
-            "id": "LE-VT",
-            "model": "Laptop Gaming Lenovo LOQ Essential 15IRX11 83SC003TVN",
-            "price": "30.490.000",
-            "status": "hien",
-            "image": "../assets//images/Lenovo1.png",
-            "description": "CPU: Intel Core i5/i7 (Thế hệ mới) | RAM: 16GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 40)"
-          },
-          {
-            "id": "LE-VT",
-            "model": "Laptop Gaming Lenovo LOQ Essential 14IRX11 83SC003RVN",
-            "price": "26.990.000",
-            "status": "hien",
-            "image": "../assets//images/Lenovo2.png",
-            "description": "CPU: Intel Core i5/i7 (Thế hệ mới) | RAM: 16GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 40)"
-          },
-          {
-            "id": "LE-VT",
-            "model": "Laptop Gaming Lenovo LOQ Essential 15IRX12 83SC003TVN",
-            "price": "30.999.000",
-            "status": "hien",
-            "image": "../assets//images/Lenovo1.png",
-            "description": "CPU: Intel Core i5/i7 (Thế hệ mới) | RAM: 16GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 40)"
-          },
-          {
-            "id": "LE-VT",
-            "model": "Laptop Gaming Lenovo LOQ Essential 13IRX11 83SC003RVN",
-            "price": "28.990.000",
-            "status": "hien",
-            "image": "../assets//images/Lenovo2.png",
-            "description": "CPU: Intel Core i5/i7 (Thế hệ mới) | RAM: 16GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 40)"
-          },
-          {
-            "id": "LE-VT",
-            "model": "Laptop Gaming Lenovo LOQ Essential 15IRX10 83SC003TVN",
-            "price": "30.000.000",
-            "status": "hien",
-            "image": "../assets//images/Lenovo1.png",
-            "description": "CPU: Intel Core i5/i7 (Thế hệ mới) | RAM: 16GB DDR5 | Ổ cứng: 512GB SSD | VGA: NVIDIA GeForce RTX (Series 40)"
-          },
-          {
-            "id": "DELL-XPS-i9",
-            "model": "Dell Latitude 3420 Laptop",
-            "price": "9.000.560",
-            "status": "hien",
-            "image": "../assets//images/Dell1.webp",
-            "description": "CPU: Intel Core i9-13900H | RAM: 32GB DDR5 | Ổ cứng: 1TB SSD | VGA: NVIDIA GeForce RTX 4070"
-          },
-          {
-            "id": "DELL-XPS-i9",
-            "model": "Dell Latitude 3419 Laptop",
-            "price": "9.500.560",
-            "status": "hien",
-            "image": "../assets//images/Dell1.webp",
-            "description": "CPU: Intel Core i9-13900H | RAM: 32GB DDR5 | Ổ cứng: 1TB SSD | VGA: NVIDIA GeForce RTX 4070"
-          },
-          {
-            "id": "DELL-XPS-i9",
-            "model": "Dell Latitude 3418 Laptop",
-            "price": "10.000.560",
-            "status": "hien",
-            "image": "../assets//images/Dell1.webp",
-            "description": "CPU: Intel Core i9-13900H | RAM: 32GB DDR5 | Ổ cứng: 1TB SSD | VGA: NVIDIA GeForce RTX 4070"
-          },
-          {
-            "id": "DELL-XPS-i9",
-            "model": "Dell Latitude 3417 Laptop",
-            "price": "11.000.560",
-            "status": "hien",
-            "image": "../assets//images/Dell1.webp",
-            "description": "CPU: Intel Core i9-13900H | RAM: 32GB DDR5 | Ổ cứng: 1TB SSD | VGA: NVIDIA GeForce RTX 4070"
-          },
-          {
-            "id": "DELL-XPS-i9",
-            "model": "Dell Latitude 3416 Laptop",
-            "price": "12.000.560",
-            "status": "hien",
-            "image": "../assets//images/Dell1.webp",
-            "description": "CPU: Intel Core i9-13900H | RAM: 32GB DDR5 | Ổ cứng: 1TB SSD | VGA: NVIDIA GeForce RTX 4070"
-          }
-        ]
-      },
-      {
-        "name": "phu-kien-khac",
-        "status": "active",
-        "phu-kien-khac": [
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master Ergostand Air",
-            "price": "690.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn1.jpg",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master NOTEPAL CMC2",
-            "price": "100.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn2.png",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master Ergostand Air",
-            "price": "590.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn1.jpg",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master NOTEPAL CMC3",
-            "price": "200.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn2.png",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master Ergostand Air",
-            "price": "790.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn1.jpg",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "de-tan-nhiet",
-            "model": "Đế tản nhiệt Cooler Master NOTEPAL CMC4",
-            "price": "300.000",
-            "status": "hien",
-            "image": "../assets//images/Dtn2.png",
-            "description": "Chất liệu: Nhôm/Nhựa cao cấp | Tính năng: Tản nhiệt hiệu quả, điều chỉnh độ cao | Tương thích: Laptop 14-17 inch"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe Gaming Logitech G335",
-            "price": "1.250.000",
-            "status": "hien",
-            "image": "../assets//images/Ear1.jpg",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe gaming Rapoo VH520C",
-            "price": "420.000",
-            "status": "hien",
-            "image": "../assets//images/Ear2.png",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe gaming Rapoo VH650 (USB, 7.2 Led RGB)",
-            "price": "350.000",
-            "status": "hien",
-            "image": "../assets//images/Ear3.jpg",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe Gaming Logitech G333",
-            "price": "1.550.000",
-            "status": "hien",
-            "image": "../assets//images/Ear1.jpg",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe gaming Rapoo VH520D",
-            "price": "450.000",
-            "status": "hien",
-            "image": "../assets//images/Ear2.png",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "tai-nghe",
-            "model": "Tai nghe gaming Rapoo VH650 (USB, 7.1 Led RGB)",
-            "price": "850.000",
-            "status": "hien",
-            "image": "../assets//images/Ear3.jpg",
-            "description": "Kiểu kết nối: USB/3.5mm | Tính năng: Âm thanh vòm 7.1, mic khử tiếng ồn | Dành cho: Gaming/Làm việc"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột Razer Cobra - Zenless Zone One Edition",
-            "price": "1.369.000",
-            "status": "hien",
-            "image": "../assets//images/mouse1.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột Logitech G501 Hero RGB",
-            "price": "960.0.000",
-            "status": "hien",
-            "image": "../assets//images/Mouse2.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột quang USB Logitech B100",
-            "price": "79.000",
-            "status": "hien",
-            "image": "../assets//images/Mouse3.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột Razer Cobra - Zenless Zone Zero Edition",
-            "price": "1.100.000",
-            "status": "hien",
-            "image": "../assets//images/mouse1.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột Logitech G502 Hero RGB",
-            "price": "1.000.000",
-            "status": "hien",
-            "image": "../assets//images/Mouse2.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "chuot",
-            "model": "Chuột quang USB Logitech B101",
-            "price": "100.000",
-            "status": "hien",
-            "image": "../assets//images/Mouse3.jpg",
-            "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night",
-            "price": "3.150.000",
-            "status": "hien",
-            "image": "../assets//images/BP1.png",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V3 Horizon Blue",
-            "price": "3.050.000",
-            "status": "hien",
-            "image": "../assets//images/BP2.jpg",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V3 Lilac Purple",
-            "price": "3.150.000",
-            "status": "hien",
-            "image": "../assets//images/BP3.png",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V4 Dark Night",
-            "price": "3.550.000",
-            "status": "hien",
-            "image": "../assets//images/BP1.png",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V5 Horizon Blue",
-            "price": "4.050.000",
-            "status": "hien",
-            "image": "../assets//images/BP2.jpg",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          },
-          {
-            "id": "ban-phim",
-            "model": "Bàn phím Akko MonsGeek M1W HE-SP V5 Lilac Purple",
-            "price": "3.650.000",
-            "status": "hien",
-            "image": "../assets//images/BP3.png",
-            "description": "Loại: Bàn phím cơ | Switch: Red/Brown/Blue | Layout: Fullsize/TKL | Tính năng: LED RGB, Anti-Ghosting"
-          }
-        ]
-      },
-      {
-        "name": "balo",
-        "status": "active",
-        "balo": [
-          {
-            "id": "DELL-BP-GAMING",
-            "model": "Balo Dell Gaming",
-            "price": "900.000",
-            "status": "hien",
-            "image": "../assets//images/Balo2.png",
-            "description": "Loại sản phẩm: Balo | Kích thước: 17 inch | Chất liệu: Vải chống mài mòn"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo Predator SUV",
-            "price": "300.000",
-            "status": "hien",
-            "image": "../assets//images/Balo1.png",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo Predator Utility",
-            "price": "990.000",
-            "status": "hien",
-            "image": "../assets//images/Balo2.png",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo ROG Archer BP1505",
-            "price": "2.490.000",
-            "status": "hien",
-            "image": "../assets//images/Balo3.jpg",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo ROG Archer BP2702",
-            "price": "5.490.000",
-            "status": "an",
-            "image": "../assets//images/Balo4.jpg",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo ROG Archer Weekender BP2703",
-            "price": "4.990.000",
-            "status": "an",
-            "image": "../assets//images/Balo5.jpg",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          },
-          {
-            "id": "BA-BALO",
-            "model": "Balo ROG Archer Weekender BP2703",
-            "price": "5.990.000",
-            "status": "hien",
-            "image": "../assets//images/Balo1.png",
-            "description": "Chất liệu: Bền, chống nước, chống va đập | Tương thích: Laptop 15.6 - 17 inch | Thiết kế: Đa ngăn, chuyên dụng cho Gaming"
-          }
-        ]
-      }
-    ]
-  }
-};
+// ========== HÀM CHUẨN HÓA DỮ LIỆU (Copy từ products.js) ==========
+// Hàm này BẮT BUỘC phải đồng bộ với hàm trong products.js
+// Đây là hàm được yêu cầu thêm vào để chuyển đổi cấu trúc khi lưu
+function normalizeData(data) {
+    if (!data || !data.product || !data.product.brand) return [];
+
+    let result = [];
+    data.product.brand.forEach(brandGroup => {
+        const groupName = brandGroup.name; 
+        const subProducts = brandGroup[groupName];
+        
+        if (Array.isArray(subProducts)) {
+            subProducts.forEach(product => {
+                // Xử lý giá, loại bỏ dấu chấm
+                const priceValue = parseInt(String(product.price).replace(/\./g, '').replace(/\.0+$/, ''), 10);
+                
+                let productCategory = groupName === 'laptop' ? 'laptop' : 'phukien';
+                let productType = '';
+                
+                if (productCategory === 'laptop') {
+                    // Xác định type/brand laptop từ ID prefix
+                    const idPrefix = product.id.substring(0, 2);
+                    if (idPrefix === 'AC') productType = 'Acer';
+                    else if (idPrefix === 'AS') productType = 'Asus';
+                    else if (idPrefix === 'HP') productType = 'HP';
+                    else if (idPrefix === 'LE') productType = 'Lenovo';
+                    else if (idPrefix === 'DE') productType = 'Dell';
+                    else productType = 'Khac';
+                } else {
+                    // Đối với phụ kiện/balo, type chính là tên nhóm
+                    if (groupName === 'balo') {
+                        productType = 'balo';
+                    } else if (groupName === 'de-tan-nhiet') {
+                        productType = 'de-tan-nhiet';
+                    } else if (groupName === 'tai-nghe') {
+                        productType = 'tai-nghe';
+                    } else if (groupName === 'ban-phim') {
+                        productType = 'ban-phim';
+                    } else if (groupName === 'chuot') {
+                        productType = 'chuot'; 
+                    } else {
+                        // Fallback
+                        productType = product.id.split('-')[0];
+                }}
+                
+                // Sử dụng ID + Model để tạo key duy nhất (Định dạng của products.js)
+                const id = `${product.id}-${product.model.replace(/\s/g, '_')}`;
+                
+                result.push({
+                    ...product,
+                    id: product.id,
+                    priceValue: priceValue,
+                    category: productCategory,
+                    type: productType 
+                });
+            });
+        }
+    });
+    return result;
+}
+// ========== KẾT THÚC HÀM CHUẨN HÓA ==========
+
 
 let editingRow = null;
 let currentOfferContent = "Ưu đãi đặc biệt: Tặng chuột không dây và túi chống sốc cao cấp!";
@@ -662,7 +92,8 @@ window.loadAdminProductPage = () => {
     // --- CÁC HÀM TIỆN ÍCH DỮ LIỆU JSON ---
     const findBrandByName = (name) => globalJsonData.product.brand.find(b => b.name === name);
     const findBrandIndexByName = (name) => globalJsonData.product.brand.findIndex(b => b.name === name);
-    const productTypes = ['laptop', 'balo', 'phu-kien-khac'];
+    // Giữ nguyên logic 'brand' (loại sản phẩm)
+    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe']; 
 
     // Tính tổng số lượng sản phẩm
     const calculateProductCount = (brand) => {
@@ -685,36 +116,68 @@ const updatePageTitle = (newTitle) => {
 };
     
 
-    // --- CÁC HÀM LOCAL STORAGE---
-    const LOCAL_STORAGE_KEY = 'adminProductData';
+    // --- CÁC HÀM LOCAL STORAGE (ĐÃ CẬP NHẬT) ---
+    // Key cho trang products.js (dùng mảng flat đã chuẩn hóa)
+    const MAIN_PRODUCTS_KEY = 'laptopProducts'; 
+    // Key riêng cho trang Admin (dùng object nested gốc)
+    const ADMIN_DATA_KEY = 'adminProductData'; 
+
+    /**
+     * Lưu dữ liệu vào Local Storage.
+     * 1. Lưu cấu trúc object NESTED (globalJsonData) vào ADMIN_DATA_KEY cho trang admin.
+     * 2. Chuyển đổi sang cấu trúc mảng FLAT (dùng normalizeData) và lưu vào MAIN_PRODUCTS_KEY cho trang products.js.
+     */
     function saveDataToLocalStorage() {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(globalJsonData));
+        try {
+            // 1. Lưu dữ liệu NESTED (dạng object) cho trang Admin
+            localStorage.setItem(ADMIN_DATA_KEY, JSON.stringify(globalJsonData));
+            
+            // 2. Chuẩn hóa và lưu dữ liệu FLAT (dạng mảng) cho trang products.js
+            const normalizedProducts = normalizeData(globalJsonData);
+            localStorage.setItem(MAIN_PRODUCTS_KEY, JSON.stringify(normalizedProducts));
+
+            console.log("✅ Đã lưu dữ liệu (Nested) vào Admin và (Flat) vào Main Products.");
+
+        } catch (error) {
+            console.error("❌ Lỗi khi lưu dữ liệu vào Local Storage:", error);
+        }
     }
     
+    /**
+     * Tải dữ liệu từ Local Storage.
+     * Chỉ tải dữ liệu NESTED từ ADMIN_DATA_KEY để trang admin hoạt động.
+     * Trang products.js sẽ tự tải từ MAIN_PRODUCTS_KEY.
+     */
     function loadDataFromLocalStorage() {
         try {
-            const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+            // Chỉ tải dữ liệu NESTED của Admin
+            const savedData = localStorage.getItem(ADMIN_DATA_KEY);
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
+                // Kiểm tra cấu trúc dữ liệu
                 if (parsedData?.product?.brand) {
                     globalJsonData = parsedData;
-                    console.log("✅ Tải dữ liệu từ Local Storage thành công.");
+                    console.log("✅ Tải dữ liệu (Nested) từ Admin Storage thành công.");
                     return true;
                 }
             }
         } catch (error) {
-            console.error("❌ Lỗi khi tải dữ liệu từ Local Storage:", error);
+            console.error("❌ Lỗi khi tải dữ liệu (Nested) từ Admin Storage:", error);
         }
+        console.log("Không tìm thấy dữ liệu Admin, sử dụng dữ liệu tĩnh.");
         return false;
     }
 
     // --- HÀM TẢI DỮ LIỆU TĨNH ---
     function loadStaticData() {
         try {
+            // Thử tải từ ADMIN_DATA_KEY
             if (loadDataFromLocalStorage()) {
+                // Tải thành công
             } else {
                 console.log("Sử dụng dữ liệu tĩnh (static).");
                 // Lưu dữ liệu tĩnh vào Local Storage lần đầu
+                // saveDataToLocalStorage() giờ sẽ lưu vào cả 2 key
                 saveDataToLocalStorage();
             }
 
@@ -911,7 +374,7 @@ const updatePageTitle = (newTitle) => {
             if (currentBrandPage > totalPages && totalBrands > 0) currentBrandPage = totalPages;
             else if (totalBrands === 0) currentBrandPage = 1;
             renderBrands();
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -919,7 +382,7 @@ const updatePageTitle = (newTitle) => {
         const brand = findBrandByName(brandName);
         if (brand) {
             brand.status = isChecked ? 'active' : 'inactive';
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -954,13 +417,14 @@ const updatePageTitle = (newTitle) => {
                 editingRow.dataset.brandName = ten;
             }
         } else {
-            const newBrand = { "name": ten, "status": "active", "laptop": [], "balo": [], "phu-kien-khac": [] };
+            // Giữ nguyên logic tạo "brand" (loại sản phẩm)
+            const newBrand = { "name": ten, "status": "active", "laptop": [], "balo": [], "de-tan-nhiet":[], "chuot":[], "ban-phim":[], "tai-nghe": [] };
             globalJsonData.product.brand.push(newBrand);
             currentBrandPage = Math.ceil(globalJsonData.product.brand.length / brandsPerPage);
             renderBrands();
         }
         resetForm();
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     });
 
     // --- CÁC HÀM KHÁC ---
@@ -994,7 +458,7 @@ const updatePageTitle = (newTitle) => {
         if (product && confirm(`Bạn có chắc muốn xóa Sản phẩm "${product.model}" không?`)) {
             brand[type].splice(index, 1);
             recompileProductList(brand);
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -1017,7 +481,7 @@ const updatePageTitle = (newTitle) => {
         product.description = newDescription.trim();
 
         recompileProductList(brand);
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     };
 
     window.toggleProductStatus = (brandName, type, index, btn) => {
@@ -1034,7 +498,7 @@ const updatePageTitle = (newTitle) => {
             row.querySelector('.sp-status').textContent = statusText;
             row.querySelector('.sp-status').className = `sp-status ${product.status === 'hien' ? 'sp-in-stock' : 'sp-out-of-stock'}`;
             btn.querySelector('i').className = product.status === 'hien' ? 'fas fa-eye' : 'fas fa-eye-slash';
-            saveDataToLocalStorage();
+            saveDataToLocalStorage(); // Lưu thay đổi
         }
     };
 
@@ -1044,14 +508,32 @@ const updatePageTitle = (newTitle) => {
         const brand = findBrandByName(currentViewingBrandName);
         if (!brand) return;
 
+        // currentViewingBrandName chính là "loại" (ví dụ: 'laptop', 'balo')
+        // Tuy nhiên, logic code đang coi đó là "brand". Ta cần hỏi loại SP.
         const productTypeInput = prompt(`Nhập Loại SP (${productTypes.join(', ')}):`);
         if (!productTypeInput) return;
         const type = productTypeInput.trim().toLowerCase();
-        if (!productTypes.includes(type)) return alert(`Loại SP không hợp lệ. Vui lòng chọn: ${productTypes.join(', ')}.`);
+        
+        // Kiểm tra xem 'brand' (loại sản phẩm) này có hỗ trợ 'type' (mảng con) này không
+        // Logic này đang bị ngược. 'currentViewingBrandName' *chính là* loại sản phẩm.
+        // Ví dụ: currentViewingBrandName = 'laptop' hoặc 'balo'.
+        // Chúng ta nên thêm trực tiếp vào mảng con có tên trùng với currentViewingBrandName.
+        
+        // *** SỬA LOGIC: ***
+        // 'type' chính là 'currentViewingBrandName' (ví dụ: 'laptop', 'balo')
+        // 'brand' là object chứa các mảng này
+        const targetTypeArrayKey = currentViewingBrandName; 
+        if (!productTypes.includes(targetTypeArrayKey)) {
+             return alert(`Loại SP "${targetTypeArrayKey}" không hợp lệ. Vui lòng chọn từ: ${productTypes.join(', ')}.`);
+        }
 
-        const id = prompt(`Nhập Mã SP (ID) cho loại ${type}:`);
+        const id = prompt(`Nhập Mã SP (ID) cho loại ${targetTypeArrayKey}:`);
         if (!id) return;
-        if (brand[type] && brand[type].some(p => p.id === id)) return alert("Lỗi: Mã SP này đã tồn tại!");
+        
+        // Kiểm tra ID trùng lặp trong mảng con
+        if (brand[targetTypeArrayKey] && brand[targetTypeArrayKey].some(p => p.id === id)) {
+            return alert("Lỗi: Mã SP này đã tồn tại!");
+        }
 
         const model = prompt("Nhập Model SP:");
         if (!model) return;
@@ -1067,15 +549,15 @@ const updatePageTitle = (newTitle) => {
 
         const newProduct = { "id": id, "model": model, "price": price, "image": image, "description": description, "status": "hien" };
 
-        if (!brand[type]) brand[type] = [];
-        brand[type].push(newProduct);
+        if (!brand[targetTypeArrayKey]) brand[targetTypeArrayKey] = [];
+        brand[targetTypeArrayKey].push(newProduct);
 
         currentProductPage = Math.ceil((currentProductsList.length + 1) / productsPerPage);
         recompileProductList(brand);
-        saveDataToLocalStorage();
+        saveDataToLocalStorage(); // Lưu thay đổi
     };
 
-    // HÀM LỌC BRAND
+    // HÀM LỌC BRAND (Loại sản phẩm)
     function filterBrands(searchTerm) {
         const term = searchTerm.toLowerCase().trim();
         const filtered = [];

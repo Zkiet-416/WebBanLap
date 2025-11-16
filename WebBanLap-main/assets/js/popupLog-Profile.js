@@ -49,25 +49,13 @@ window.addEventListener("load", () => {
     })
 
     //XEM PROFILE
-    const suggestions = document.getElementById('suggestions');
-    const accessories = document.getElementById('accessories');
-    const slider = document.querySelector('.slider');
-    const productDetail = document.getElementById('productDetail');
-    const historyPage = document.getElementById('historyPage');
-    const cartDetail = document.getElementById("cartDetail");
+    const mainContainer = document.querySelector(".container");
     const openProfile = document.getElementById("openProfile");
     const profile = document.getElementById("profile");
-
-    openProfile.addEventListener("click", function openProfile() {
-        if (suggestions) suggestions.style.display = 'none';
-        if (accessories) accessories.style.display = 'none';
-        if (slider) slider.style.display = 'none';
-        if (productDetail) productDetail.style.display = 'none';
-        if (historyPage) historyPage.style.display = 'none';
-        dropUser.classList.add("hidden");
-        if (cartDetail) cartDetail.style.display = 'none';
-
+    openProfile.addEventListener("click", function () {
+        mainContainer.classList.add("hidden");
         profile.classList.remove("hidden");
+        dropUser.classList.add("hidden");
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -75,22 +63,20 @@ window.addEventListener("load", () => {
     });
 
 
-    //click về trang chủ
-    document.addEventListener('click', function (e) {
-        if (e.target.closest('.logo') || e.target.closest('li')?.textContent.trim() === 'Trang chủ') {
-            profile.classList.add("hidden");
 
-            suggestions.classList.remove("hidden");
-            accessories.classList.remove("hidden");
-            slider.classList.remove("hidden");
-            productDetail.classList.remove("hidden");
+    document.addEventListener('click', function (e) {
+        // Kiểm tra click vào logo (kể cả bị che)
+        if (e.target.closest('.logo') || e.target.closest('li')?.textContent.trim() === 'Trang chủ') {
+            // Ẩn profile
+            if (profile) profile.classList.add("hidden");
+            // Hiện container chính
+            if (mainContainer) mainContainer.classList.remove("hidden");
+
             window.resetToHomePage();
 
             e.preventDefault();
             e.stopPropagation();
         }
     });
-
-
 
 });
