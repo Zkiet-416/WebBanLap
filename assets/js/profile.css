@@ -1,0 +1,450 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#profile:not(.hidden) {
+    pointer-events: auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 75vh;
+    background-color: #f3f7fa;
+    z-index: 1;
+}
+
+
+/* ===== BỐ CỤC 2 CỘT ===== */
+#profile .profile-container {
+    position: relative;
+    width: 60%;
+    display: flex;
+    overflow: hidden;
+    align-items: stretch;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 2px solid #b0d9d2;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    color: #2d5f54;
+    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+#profile .profile-container:hover {
+    transform: translateY(-3px);
+    border-color: #7dd3c0;
+    /* hiệu ứng hover nhẹ nhàng */
+    box-shadow: 0 10px 25px rgba(125, 211, 192, 0.35);
+}
+
+
+/* Nội dung bên phải */
+#profile .profile-content {
+    flex: 1;
+    padding: 10px 40px;
+}
+
+/* ===== Ảnh đại diện ===== */
+#profile .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    height: 180px;
+}
+
+#profile .avatar {
+    width: 130px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #7dd3c04d;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#profile .avatar:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 18px rgba(125, 211, 192, 0.45);
+}
+
+#profile .avatar img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+#profile .avatar-actions {
+    margin: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    position: relative;
+}
+
+#profile .avatar-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#profile .avatar-actions::after {
+    content: "";
+    width: 1px;
+    height: 15px;
+    background-color: rgb(45, 95, 84, 0.5);
+    position: absolute;
+    left: 50%;
+    margin: auto;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+#change-avatar,
+#delete-avatar {
+    color: #2d5f54;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#change-avatar:hover,
+#delete-avatar:hover {
+    color: #7dd3c0;
+    transform: scale(1.05);
+}
+
+/* ===== Form ===== */
+#profile .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    align-items: center;
+}
+
+#profile .profile-form .form-group {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    position: relative;
+    flex-wrap: wrap;
+    /* cho phép ptu con xún dòng nếu hết chỗ*/
+}
+
+#profile .profile-form .form-group label {
+    flex: 1;
+    text-align: left;
+    font-size: 14px;
+    color: #01342a;
+    letter-spacing: 0.3px;
+}
+
+/* Ô nhập liệu */
+#profile .profile-form .form-group input {
+    flex: 2;
+    padding: 9px;
+    border: 1px solid #cde8e5;
+    background-color: #fff;
+    color: #01342a;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+
+
+#profile .profile-form .form-group input:focus {
+    border-color: #7dd3c0;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
+}
+
+
+
+#profile .profile-form .form-group small {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 4px;
+    margin-left: 33.3%;
+    flex-basis: 100%;
+    text-align: left;
+}
+
+/* Giới tính */
+.gender-options {
+    flex: 2;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.gender-options label {
+    color: #2d5f54;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.gender-options label:hover {
+    color: #7dd3c0;
+}
+
+/* Ngày sinh */
+.birthday-select {
+    display: flex;
+    flex: 2;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.birthday-select select {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #2d5f54;
+    border: 1px solid #cde8e5;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.birthday-select select:focus {
+    border-color: #7dd3c0;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
+}
+
+
+
+/* ===== Nút lưu ===== */
+.profile-form .button-group button {
+    background: linear-gradient(135deg, #7dd3c0, #bfeaf5);
+    border: none;
+    color: #2d5f54;
+    padding: 12px 45px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(125, 211, 192, 0.25);
+    transition: all 0.25s ease;
+}
+
+.profile-form .button-group button:hover {
+    background: linear-gradient(135deg, #9fe5d4, #d0f3fa);
+    box-shadow: 0 0 15px rgba(125, 211, 192, 0.4);
+    transform: translateY(-2px);
+}
+
+
+
+/* Sidebar bên trái */
+.profile-sidebar {
+    width: 180px;
+    background: #e8f6f3;
+    border-right: 2px solid #b0d9d2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    min-height: 100%;
+
+}
+
+.profile-sidebar .tab-btn {
+    background: none;
+    border: none;
+    padding: 20px 20px;
+    text-align: left;
+    font-size: 16px;
+    color: #2d5f54;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.profile-sidebar .tab-btn:hover {
+    background-color: #d0f3ea;
+    color: #01614b;
+}
+
+.profile-sidebar .tab-btn.active {
+    background: linear-gradient(135deg, #7dd3c0, #bfeaf5);
+    color: #01342a;
+    font-weight: bold;
+    border-left: 5px solid #2d5f54;
+}
+
+/* ===== STYLE CHO PASSWORD FORM ===== */
+#profile .password-form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+
+
+#profile .password-form .form-group {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    position: relative;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#profile .password-form .form-group label {
+    flex: 1;
+    text-align: left;
+    font-size: 14px;
+    color: #01342a;
+    letter-spacing: 0.3px;
+    margin-bottom: 5px;
+}
+
+#profile .password-form .form-group .input-eye {
+    flex: 2;
+    position: relative;
+}
+
+#profile .password-form .form-group input {
+    width: 100%;
+    padding: 9px 35px 9px 12px;
+    border: 1px solid #cde8e5;
+    background-color: #fff;
+    color: #01342a;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#profile .password-form .form-group input:focus {
+    border-color: #7dd3c0;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
+}
+
+#profile .password-form .eye-profile {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+#profile .password-form .eye-profile:hover {
+    opacity: 0.3;
+}
+
+/* Nút lưu mật khẩu */
+#profile .password-form .button-group {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#profile .password-form .button-group button {
+    background: linear-gradient(135deg, #7dd3c0, #bfeaf5);
+    border: none;
+    color: #2d5f54;
+    padding: 12px 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(125, 211, 192, 0.25);
+    transition: all 0.25s ease;
+}
+
+#profile .password-form .button-group button:hover {
+    background: linear-gradient(135deg, #9fe5d4, #d0f3fa);
+    box-shadow: 0 0 15px rgba(125, 211, 192, 0.4);
+    transform: translateY(-2px);
+}
+
+
+/* ========= RESPONSIVE THEO MAIN ========= */
+/* ========= RESPONSIVE ========= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+    #profile .profile-container {
+        width: 85%;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    #profile {
+        margin-top: 100px;
+        align-items: center;
+    }
+
+    #profile .profile-container {
+        width: 95%;
+        flex-direction: column;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    /* Sidebar chuyển sang menu ngang */
+    #profile .profile-sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px 0;
+        border-right: none;
+        border-bottom: 2px solid #b0d9d2;
+        gap: 0;
+    }
+
+    #profile .profile-sidebar .tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 12px 0;
+        font-size: 14px;
+    }
+
+    #profile .profile-sidebar .tab-btn.active {
+        border-left: none;
+        border-bottom: 4px solid #2d5f54;
+    }
+
+    /* Nội dung bên phải */
+    #profile .profile-content {
+        padding: 20px 18px;
+    }
+
+    /* Form thu gọn vừa cho mobile */
+    #profile .profile-form .form-group {
+        width: 100%;
+    }
+
+    #profile .profile-form .form-group label {
+        flex-basis: 100%;
+        margin-bottom: 3px;
+    }
+
+    #profile .profile-form .form-group input,
+    .birthday-select,
+    .gender-options {
+        flex-basis: 100%;
+    }
+
+    #profile .profile-form .form-group small {
+        margin-left: 0;
+    }
+}
