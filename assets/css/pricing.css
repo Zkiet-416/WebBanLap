@@ -156,3 +156,25 @@
 .modal-overlay.show .modal {
   transform: scale(1);
 }
+
+/* ===== Pricing Search Box ===== */
+.pricing-search {
+  width: 60%;
+  margin: 0 auto 20px auto;
+}
+
+.pricing-search input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  outline: none;
+}
+
+.pricing-search input:focus {
+  border-color: #7dd3c0;
+  box-shadow: 0 0 5px rgba(125, 211, 192, 0.6);
+}
