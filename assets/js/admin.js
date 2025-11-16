@@ -203,10 +203,61 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "orders":
-            
+          pageStyle.href="../assets/css/orders.css";
           content.innerHTML = `
             <h1 class="page-title">Đơn hàng</h1>
-            <p>Danh sách đơn hàng hiển thị ở đây.</p>`;
+            <div>
+
+            <main>
+                <section id="ordersContainer" aria-live="polite"></section>
+            </main>
+
+            <!-- Modal chỉnh sửa -->
+            <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+                <div class="modal" role="document" aria-labelledby="modalTitle">
+                <form id="editForm">
+                    <h2 id="modalTitle">Chỉnh sửa đơn hàng</h2>
+
+                    <div class="form-row">
+                    <label for="editId">Mã đơn</label>
+                    <input id="editId" type="text" required />
+                    </div>
+
+                    <div class="form-row">
+                    <label for="editCustomer">Khách hàng</label>
+                    <input id="editCustomer" type="text" readonly />
+                    </div>
+
+                    <div class="form-row">
+                    <label for="editStatus">Trạng thái</label>
+                    <select id="editStatus">
+                        <option>Đang xử lý</option>
+                        <option>Đã giao</option>
+                        <option>Đã hủy</option>
+                    </select>
+                    </div>
+
+                    <div style="margin-top:12px">
+                    <div class="small">Chỉnh sửa số lượng các món (đổi số lượng rồi nhấn Lưu). Có thể xóa từng món.</div>
+                    <table class="items-edit-table" id="editItemsTable" aria-label="Danh sách món hàng">
+                        <thead>
+                        <tr><th>Sản phẩm</th><th>Số lượng</th><th>Hành động</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    </div>
+
+                    <div class="modal-actions">
+                    <button type="button" id="deleteBtn" class="btn delete">Xóa đơn</button>
+                    <button type="button" id="cancelBtn" class="btn cancel">Hủy</button>
+                    <button type="submit" class="btn save">Lưu</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+            <script src="order.js"></script>
+            </div>`;
+        renderOrdersManagement();
           break;
 
         case "warehouse":
