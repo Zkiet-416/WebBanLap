@@ -1,5 +1,5 @@
 // =======================
-// pricing.js (v3 - styled modal + linked profit update + keep search state)
+// pricing.js (v8 - Fix giá format và search index)
 // =======================
 
 function parsePriceString(price) {
@@ -16,22 +16,38 @@ function parsePriceString(price) {
   );
 }
 
+// ✅ HÀM FORMAT GIÁ VỀ DẠNG CÓ DẤU CHẤM (16.390.000)
+function formatPriceToString(price) {
+  const priceNum = Math.round(Number(price) || 0);
+  return priceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Lưu vào localStorage với key "laptopProducts"
 function savePricingToLocalStorage(data) {
   try {
-    localStorage.setItem("adminProductData", JSON.stringify(data));
-    console.log("✅ adminProductData saved to localStorage.");
+    localStorage.setItem("laptopProducts", JSON.stringify(data));
+    console.log("✅ laptopProducts saved to localStorage.");
+    
+    // Cập nhật window.allProducts nếu có
+    if (window.allProducts) {
+      window.allProducts = data;
+    }
+    
+    // Thông báo cập nhật để các trang khác reload
+    window.dispatchEvent(new Event('productsUpdated'));
   } catch (e) {
-    console.error("❌ Failed saving adminProductData:", e);
+    console.error("❌ Failed saving laptopProducts:", e);
   }
 }
 
+// Đọc từ localStorage key "laptopProducts" 
 function loadPricingFromLocalStorage() {
   try {
-    const s = localStorage.getItem("adminProductData");
+    const s = localStorage.getItem("laptopProducts");
     if (!s) return null;
     return JSON.parse(s);
   } catch (e) {
-    console.error("❌ Failed reading adminProductData:", e);
+    console.error("❌ Failed reading laptopProducts:", e);
     return null;
   }
 }
@@ -41,63 +57,94 @@ function normalizeForSearch(s) {
   return s.toString()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .replace(/Đ/g, "d").replace(/Đ/g, "D")
     .toLowerCase();
-}
-
-function buildProductsFromAdminProduct(globalJsonData) {
-  const productTypes = ["laptop", "balo", "de-tan-nhiet",'tai-nghe','chuot','ban-phim'];
-  const out = [];
-
-  if (!globalJsonData || !globalJsonData.product || !Array.isArray(globalJsonData.product.brand)) {
-    console.warn("AdminProduct data không hợp lệ hoặc không tồn tại.");
-    return out;
-  }
-
-  globalJsonData.product.brand.forEach((brandObj) => {
-    const brandName = brandObj.name || "Không rõ";
-    productTypes.forEach((type) => {
-      const arr = Array.isArray(brandObj[type]) ? brandObj[type] : [];
-      arr.forEach((p) => {
-        const rawPrice = parsePriceString(p.price);
-        const sellPrice = rawPrice;
-        // ✅ giá nhập mặc định = 90% giá bán
-        const importPrice = Math.round(sellPrice * 0.9);
-        const profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
-
-        out.push({
-          id: p.id || `${brandName}-${type}-${Math.random().toString(36).slice(2,8)}`,
-          name: p.model || p.name || "Unknown",
-          brand: brandName,
-          type: brandName,
-          importPrice,
-          sellPrice,
-          profit: parseFloat(profit.toFixed(1)),
-        });
-      });
-    });
-  });
-
-  return out;
 }
 
 async function loadPricing() {
   const content = document.getElementById("content");
   if (!content) return;
 
+  // Đọc dữ liệu từ localStorage
   let products = loadPricingFromLocalStorage();
-  if (!products || !products.length) {
-    if (window.globalJsonData) {
-      console.log("ℹ️ Lấy dữ liệu từ globalJsonData (AdminProduct.js).");
-      products = buildProductsFromAdminProduct(window.globalJsonData);
-      savePricingToLocalStorage(products);
-    } else {
-      console.error("❌ Không tìm thấy dữ liệu AdminProduct.");
-      return;
-    }
+  
+  if (!products || !Array.isArray(products) || products.length === 0) {
+    console.error("❌ Không tìm thấy dữ liệu laptopProducts trong localStorage.");
+    content.innerHTML = `
+      <h1 class="page-title">Giá bán</h1>
+      <p style="text-align:center; margin-top:50px;">
+        Không có dữ liệu sản phẩm. Vui lòng kiểm tra lại.
+      </p>`;
+    return;
   }
 
-  // tạo danh sách loại
+  // Chuẩn hóa dữ liệu: đảm bảo có đủ trường cần thiết
+  let needsUpdate = false;
+  products = products.map(p => {
+    const sellPrice = p.priceValue || 0;
+    let importPrice = p.importPrice;
+    let profit = p.profit;
+
+    // Nếu chưa có importPrice thì tự tạo mặc định (90% giá bán)
+    if (!importPrice || importPrice === 0) {
+      importPrice = Math.round(sellPrice * 0.9);
+      needsUpdate = true;
+    }
+
+    // Nếu chưa có profit, tính lại
+    if (profit === undefined || profit === null || isNaN(profit)) {
+      profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
+      needsUpdate = true;
+    }
+
+    // Xác định brand/type cho hiển thị dựa vào cấu trúc mới
+    let displayBrand = p.type || "Khác";
+    
+    if (p.category === "laptop") {
+      displayBrand = p.type || "Khác";
+    } else if (p.category === "phukien") {
+      const typeDisplayMap = {
+        "balo": "Balo",
+        "de-tan-nhiet": "Đế tản nhiệt",
+        "tai-nghe": "Tai nghe",
+        "chuot": "Chuột",
+        "ban-phim": "Bàn phím"
+      };
+      displayBrand = typeDisplayMap[p.type] || p.type || "Phụ kiện";
+    }
+
+    return {
+      id: p.id,
+      name: p.model || p.name || "Unknown",
+      brand: displayBrand,
+      type: p.type,
+      category: p.category || "laptop",
+      importPrice,
+      sellPrice,
+      profit: parseFloat(profit.toFixed(1)),
+      image: p.image,
+      description: p.description,
+      status: p.status,
+      qty: p.qty,
+      originalProduct: p
+    };
+  });
+
+  // ✅ Nếu có sản phẩm chưa có importPrice, lưu lại ngay
+  if (needsUpdate) {
+    const updatedProducts = products.map(p => {
+      return {
+        ...p.originalProduct,
+        importPrice: p.importPrice,
+        profit: p.profit,
+        priceValue: p.sellPrice
+      };
+    });
+    savePricingToLocalStorage(updatedProducts);
+    console.log("✅ Đã tự động thêm importPrice cho các sản phẩm chưa có");
+  }
+
+  // Tạo danh sách loại (theo brand/type - name của branch trong products.js)
   function getCategories() {
     const categoryMap = {};
     products.forEach((p) => {
@@ -117,12 +164,13 @@ async function loadPricing() {
   let currentPage = 1;
   const itemsPerPage = 10;
   let searchKeyword = "";
+  let filteredProducts = []; // ✅ Lưu danh sách đã filter
 
   function formatProfit(value) {
-  const n = Number(value);
-  if (Number.isInteger(n)) return n + "%";
-  return n.toFixed(1) + "%";
-}
+    const n = Number(value);
+    if (Number.isInteger(n)) return n + "%";
+    return n.toFixed(1) + "%";
+  }
 
   function renderTable(data) {
     const start = (currentPage - 1) * itemsPerPage;
@@ -130,21 +178,30 @@ async function loadPricing() {
     const totalPages = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
     const tableRows = mode === "product"
-      ? pageData.map((item, i) => `
-        <tr>
-          <td>${item.brand}</td>
-          <td>${item.name}</td>
-          <td>${(item.importPrice || 0).toLocaleString("vi-VN")}</td>
-          <td>${(item.sellPrice || 0).toLocaleString("vi-VN")}</td>
-          <td>${formatProfit(item.profit || 0)}</td>
-          <td><button class="edit-btn" data-index="${start + i}">Sửa</button></td>
-        </tr>`).join("")
-      : pageData.map((cat, i) => `
-        <tr>
-          <td>${cat.name}</td>
-          <td>${formatProfit(cat.profit)}</td>
-          <td><button class="edit-btn" data-index="${start + i}">Sửa</button></td>
-        </tr>`).join("");
+      ? pageData.map((item, i) => {
+          // ✅ LƯU ORIGINAL INDEX để tìm đúng sản phẩm khi edit
+          const originalIndex = products.findIndex(p => p.id === item.id);
+          return `
+            <tr>
+              <td>${item.brand}</td>
+              <td>${item.name}</td>
+              <td>${(item.importPrice || 0).toLocaleString("vi-VN")}</td>
+              <td>${(item.sellPrice || 0).toLocaleString("vi-VN")}</td>
+              <td>${formatProfit(item.profit || 0)}</td>
+              <td><button class="edit-btn" data-original-index="${originalIndex}">Sửa</button></td>
+            </tr>
+          `;
+        }).join("")
+      : pageData.map((cat, i) => {
+          const originalIndex = categories.findIndex(c => c.name === cat.name);
+          return `
+            <tr>
+              <td>${cat.name}</td>
+              <td>${formatProfit(cat.profit)}</td>
+              <td><button class="edit-btn" data-original-index="${originalIndex}">Sửa</button></td>
+            </tr>
+          `;
+        }).join("");
 
     const pagination = Array.from({ length: totalPages }, (_, idx) => {
       const pageNum = idx + 1;
@@ -173,20 +230,32 @@ async function loadPricing() {
   }
 
   function filterData(keyword) {
-    if (!keyword) return mode === "product" ? products : categories;
+    if (!keyword) {
+      filteredProducts = [];
+      return mode === "product" ? products : categories;
+    }
     const kw = normalizeForSearch(keyword);
-    return (mode === "product" ? products : categories).filter((item) => {
-      const txt = mode === "product"
-        ? `${item.name} ${item.brand} ${item.importPrice} ${item.sellPrice} ${item.profit}`
-        : `${item.name} ${item.profit}`;
-      return normalizeForSearch(txt).includes(kw);
-    });
+    
+    if (mode === "product") {
+      filteredProducts = products.filter((item) => {
+        const txt = `${item.name} ${item.brand} ${item.importPrice} ${item.sellPrice} ${item.profit}`;
+        return normalizeForSearch(txt).includes(kw);
+      });
+      return filteredProducts;
+    } else {
+      return categories.filter((item) => {
+        const txt = `${item.name} ${item.profit}`;
+        return normalizeForSearch(txt).includes(kw);
+      });
+    }
   }
 
   function attachEvents() {
     document.getElementById("modeSwitch").onclick = () => {
       mode = mode === "product" ? "category" : "product";
       currentPage = 1;
+      searchKeyword = "";
+      filteredProducts = [];
       categories = getCategories();
       render(filterData(searchKeyword));
     };
@@ -201,9 +270,10 @@ async function loadPricing() {
     document.querySelector(".pricing-table").onclick = (e) => {
       const btn = e.target.closest(".edit-btn");
       if (!btn) return;
-      const index = parseInt(btn.dataset.index);
-      if (mode === "product") openEditModal(products[index], index, false);
-      else openEditModal(categories[index], index, true);
+      // ✅ SỬ DỤNG ORIGINAL INDEX thay vì index hiển thị
+      const originalIndex = parseInt(btn.dataset.originalIndex);
+      if (mode === "product") openEditModal(products[originalIndex], originalIndex, false);
+      else openEditModal(categories[originalIndex], originalIndex, true);
     };
 
     const headerSearch = document.querySelector(".search-box input");
@@ -232,7 +302,7 @@ async function loadPricing() {
       <label>% Lợi nhuận cũ</label>
       <input type="text" value="${item.profit}" disabled>
       <label>% Lợi nhuận mới</label>
-      <input type="number" id="newProfit" value="${item.profit}">
+      <input type="text" id="newProfit" placeholder="Nhập % lợi nhuận mới (chỉ số)">
       <div class="modal-buttons">
         <button class="save-btn">Save</button>
         <button class="cancel-btn">Cancel</button>
@@ -245,7 +315,7 @@ async function loadPricing() {
       <label>% Lợi nhuận cũ</label>
       <input type="text" value="${item.profit}" disabled>
       <label>% Lợi nhuận mới</label>
-      <input type="number" id="newProfit" value="${item.profit}">
+      <input type="text" id="newProfit" placeholder="Nhập % lợi nhuận mới (chỉ số)">
       <div class="modal-buttons">
         <button class="save-btn">Save</button>
         <button class="cancel-btn">Cancel</button>
@@ -254,10 +324,46 @@ async function loadPricing() {
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
+    // ✅ THÊM VALIDATION CHO INPUT - CHỈ NHẬP SỐ
+    const profitInput = document.getElementById("newProfit");
+    profitInput.addEventListener("input", function(e) {
+      this.value = this.value.replace(/[^0-9.]/g, '');
+      const parts = this.value.split('.');
+      if (parts.length > 2) {
+        this.value = parts[0] + '.' + parts.slice(1).join('');
+      }
+    });
+
+    profitInput.addEventListener("paste", function(e) {
+      e.preventDefault();
+      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      const numbersOnly = pastedText.replace(/[^0-9.]/g, '');
+      this.value = numbersOnly;
+    });
+
     modal.querySelector(".cancel-btn").onclick = () => overlay.remove();
     modal.querySelector(".save-btn").onclick = () => {
-      const newProfit = parseFloat(document.getElementById("newProfit").value) || 0;
+      const newProfitValue = document.getElementById("newProfit").value.trim();
+      
+      if (!newProfitValue) {
+        alert("Vui lòng nhập % lợi nhuận mới!");
+        return;
+      }
+      
+      const newProfit = parseFloat(newProfitValue);
+      
+      if (isNaN(newProfit)) {
+        alert("Giá trị không hợp lệ! Vui lòng chỉ nhập số.");
+        return;
+      }
+      
+      if (newProfit < 0 || newProfit > 100) {
+        alert("% Lợi nhuận phải từ 0 đến 100!");
+        return;
+      }
+      
       if (isCategory) {
+        // Cập nhật tất cả sản phẩm trong loại
         products.forEach(p => {
           if (p.brand === item.name) {
             p.profit = parseFloat(newProfit.toFixed(1));
@@ -265,15 +371,43 @@ async function loadPricing() {
           }
         });
       } else {
+        // Cập nhật sản phẩm đơn lẻ
         item.profit = parseFloat(newProfit.toFixed(1));
         item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
         products[index] = item;
       }
+      
+      // ✅ CHUYỂN ĐỔI VỀ FORMAT GỐC VỚI GIÁ CÓ DẤU CHẤM
+      const updatedProducts = products.map(p => {
+        return {
+          id: p.originalProduct.id,
+          model: p.originalProduct.model || p.name,
+          price: formatPriceToString(p.sellPrice), // ✅ Format: "16.390.000"
+          status: p.originalProduct.status,
+          image: p.originalProduct.image,
+          description: p.originalProduct.description,
+          qty: p.originalProduct.qty,
+          priceValue: p.sellPrice, // ✅ Số: 16390000
+          importPrice: p.importPrice,
+          profit: p.profit,
+          category: p.category,
+          type: p.type
+        };
+      });
+      
       // Cập nhật danh mục trung bình
       categories = getCategories();
-      savePricingToLocalStorage(products);
+      
+      // Lưu vào localStorage
+      savePricingToLocalStorage(updatedProducts);
+      
       overlay.remove();
+      
+      // ✅ Render lại với keyword hiện tại (giữ nguyên kết quả tìm kiếm)
       render(filterData(searchKeyword));
+      
+      alert("✅ Đã cập nhật giá bán thành công!");
+      console.log("✅ Đã cập nhật và đồng bộ!");
     };
   }
 
