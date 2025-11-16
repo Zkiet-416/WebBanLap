@@ -40,7 +40,7 @@ function confirmLogout() {
   // Có thể thêm logic xóa session/token ở đây nếu cần
   // localStorage.removeItem('adminToken');
   // sessionStorage.clear();
-  
+  localStorage.removeItem("isAdminLoggedIn");
   // Chuyển về trang đăng nhập
   window.location.href = '../admin/adminlog.html';
 }
