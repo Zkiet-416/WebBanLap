@@ -6,6 +6,13 @@
 
 // Mở modal checkout
 window.openCheckoutModal = function() {
+   // =====  KIỂM TRA ĐĂNG NHẬP =====
+    const isLoggedIn = localStorage.getItem("currentUser") !== null;
+    if (!isLoggedIn) {
+        alert("Vui lòng đăng nhập để tiếp tục thanh toán!");
+        document.getElementById("popupLogin").classList.remove("hidden");
+        return; 
+    }
     // Kiểm tra giỏ hàng
     if (!window.cartData || window.cartData.length === 0) {
         alert("Giỏ hàng của bạn đang trống!");
@@ -447,4 +454,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkoutBtn) {
         checkoutBtn.onclick = openCheckoutModal;
     }
+
 });
