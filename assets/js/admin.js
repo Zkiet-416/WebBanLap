@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // === Gán sự kiện click cho menu ===
   menuItems.forEach((item) => {
     item.addEventListener("click", () => {
+    if (item.classList.contains('logout-item')) {
+        return;
+    }
+
       menuItems.forEach((m) => m.classList.remove("active"));
       item.classList.add("active");
 
