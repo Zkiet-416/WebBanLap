@@ -42,5 +42,5 @@ function confirmLogout() {
   // sessionStorage.clear();
   
   // Chuyển về trang đăng nhập
-  window.location.href = '/WebBanLap/admin/adminlog.html';
+  window.location.href = '../admin/adminlog.html';
 }
