@@ -83,7 +83,14 @@
       </div>
     </div>
   </div>
-
+  
+  <script>
+  // Nếu chưa đăng nhập, quay lại adminlog
+  if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+      window.location.href = "adminlog.html";
+  }
+  </script>
+  
   <script src="../assets/js/admin.js"></script>
   <script src="../assets/js/logout.js"></script>
   <script src="../assets/js/products.js"></script>
