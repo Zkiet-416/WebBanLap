@@ -1,5 +1,5 @@
 // =======================
-// pricing.js (v8 - Fix giá format và search index)
+// pricing.js (v10 - Fix search losing focus)
 // =======================
 
 function parsePriceString(price) {
@@ -248,9 +248,29 @@ async function loadPricing() {
       <div class="pagination">${pagination}</div>`;
   }
 
+  // ✅ CHỈ RENDER PHẦN WRAPPER, KHÔNG LÀM MẤT FOCUS INPUT
+  function updateTableOnly(data) {
+    const wrapper = document.querySelector(".pricing-wrapper");
+    if (wrapper) {
+      wrapper.innerHTML = renderTable(data);
+      attachTableEvents();
+    }
+  }
+
   function render(data) {
-    content.innerHTML = `<h1 class="page-title">Giá bán</h1><div class="pricing-wrapper">${renderTable(data)}</div>`;
-    attachEvents();
+    content.innerHTML = `
+      <h1 class="page-title">Giá bán</h1>
+
+      <!-- 🔍 THANH TÌM KIẾM RIÊNG CHO PRICING -->
+      <div class="pricing-search">
+        <input type="text" id="pricingSearchInput" placeholder="Tìm kiếm sản phẩm hoặc loại..." value="${searchKeyword}">
+      </div>
+
+      <div class="pricing-wrapper">
+        ${renderTable(data)}
+      </div>
+    `;
+    attachAllEvents();
   }
 
   function filterData(keyword) {
@@ -274,40 +294,56 @@ async function loadPricing() {
     }
   }
 
-  function attachEvents() {
-    document.getElementById("modeSwitch").onclick = () => {
-      mode = mode === "product" ? "category" : "product";
-      currentPage = 1;
-      searchKeyword = "";
-      filteredProducts = [];
-      categories = getCategories();
-      render(filterData(searchKeyword));
-    };
-
-    document.querySelector(".pagination").onclick = (e) => {
-      const btn = e.target.closest(".page-btn");
-      if (!btn) return;
-      currentPage = parseInt(btn.dataset.page);
-      render(filterData(searchKeyword));
-    };
-
-    document.querySelector(".pricing-table").onclick = (e) => {
-      const btn = e.target.closest(".edit-btn");
-      if (!btn) return;
-      // ✅ SỬ DỤNG ORIGINAL INDEX thay vì index hiển thị
-      const originalIndex = parseInt(btn.dataset.originalIndex);
-      if (mode === "product") openEditModal(products[originalIndex], originalIndex, false);
-      else openEditModal(categories[originalIndex], originalIndex, true);
-    };
-
-    const headerSearch = document.querySelector(".search-box input");
-    if (headerSearch) {
-      headerSearch.oninput = (e) => {
-        searchKeyword = e.target.value.trim();
+  // ✅ GÁN SỰ KIỆN CHỈ CHO BẢNG VÀ PAGINATION
+  function attachTableEvents() {
+    const modeBtn = document.getElementById("modeSwitch");
+    if (modeBtn) {
+      modeBtn.onclick = () => {
+        mode = mode === "product" ? "category" : "product";
         currentPage = 1;
+        searchKeyword = "";
+        filteredProducts = [];
+        categories = getCategories();
         render(filterData(searchKeyword));
       };
     }
+
+    const paginationEl = document.querySelector(".pagination");
+    if (paginationEl) {
+      paginationEl.onclick = (e) => {
+        const btn = e.target.closest(".page-btn");
+        if (!btn) return;
+        currentPage = parseInt(btn.dataset.page);
+        updateTableOnly(filterData(searchKeyword));
+      };
+    }
+
+    const tableEl = document.querySelector(".pricing-table");
+    if (tableEl) {
+      tableEl.onclick = (e) => {
+        const btn = e.target.closest(".edit-btn");
+        if (!btn) return;
+        const originalIndex = parseInt(btn.dataset.originalIndex);
+        if (mode === "product") openEditModal(products[originalIndex], originalIndex, false);
+        else openEditModal(categories[originalIndex], originalIndex, true);
+      };
+    }
+  }
+
+  // ✅ GÁN TẤT CẢ SỰ KIỆN (BAO GỒM SEARCH)
+  function attachAllEvents() {
+    // Event cho search input
+    const searchInput = document.getElementById("pricingSearchInput");
+    if (searchInput) {
+      searchInput.oninput = (e) => {
+        searchKeyword = e.target.value.trim();
+        currentPage = 1;
+        updateTableOnly(filterData(searchKeyword)); // ✅ CHỈ UPDATE BẢNG
+      };
+    }
+
+    // Các event khác
+    attachTableEvents();
   }
 
   function openEditModal(item, index, isCategory = false) {
@@ -427,8 +463,8 @@ async function loadPricing() {
       
       overlay.remove();
       
-      // ✅ Render lại với keyword hiện tại (giữ nguyên kết quả tìm kiếm)
-      render(filterData(searchKeyword));
+      // ✅ CHỈ UPDATE BẢNG, GIỮ NGUYÊN SEARCH INPUT
+      updateTableOnly(filterData(searchKeyword));
       
       alert("✅ Đã cập nhật giá bán thành công!");
       console.log("✅ Đã cập nhật và đồng bộ!");
