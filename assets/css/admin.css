@@ -68,10 +68,10 @@ body {
 
 /* ===== HEADER ===== */
 .header {
+  position: relative;
   height: 70px;
   background-color: #bfeaf5;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0 40px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -80,30 +80,10 @@ body {
   z-index: 900;
 }
 
-/* Search */
-.search-box {
-  position: relative;
-  width: 250px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 10px 35px 10px 15px;
-  border: none;
-  border-radius: 20px;
-  outline: none;
-}
-
-.search-box i {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #555;
-}
-
 /* User info */
 .user-info {
+  position: absolute;
+  right: 35px;
   display: flex;
   align-items: center;
   gap: 10px;
