@@ -1,7 +1,3 @@
-// =======================
-// pricing.js (v10 - Fix search losing focus)
-// =======================
-
 function parsePriceString(price) {
   if (typeof price === "number") return Math.round(price);
   if (!price) return 0;
