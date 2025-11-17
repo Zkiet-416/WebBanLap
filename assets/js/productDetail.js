@@ -1,6 +1,3 @@
-// productDetail.js - Đồng bộ với localStorage "laptopProducts" (v2 - Fix giá)
-
-// ========== HÀM LẤY DỮ LIỆU TỪ LOCALSTORAGE ==========
 function getLocalProducts() {
   try {
     // Ưu tiên sử dụng dữ liệu đã được xử lý và export từ products.js
