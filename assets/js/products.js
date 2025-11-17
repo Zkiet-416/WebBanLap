@@ -988,8 +988,10 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
     const pageProducts = productsList.slice(start, end);
     
     pageProducts.forEach(product => {
+        if(product.status==='hien'){
         const productCard = createProductCard(product);
         grid.appendChild(productCard);
+    }
     });
     
     updateProductCount(total, page, gridId);
