@@ -9,7 +9,7 @@ function closeADD(){
 }
 
 function addUser() {
-  const name = document.getElementById('name').value.trim();
+  const fullname = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
   const username = document.getElementById('acc').value.trim();
@@ -21,12 +21,12 @@ function addUser() {
   const passPattern = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/; // >=6 ký tự, có chữ và số
 
   // 1. Kiểm tra bắt buộc
-  if (!name || !email || !phone || !username || !password) {
+  if (!fullname || !email || !phone || !username || !password) {
     return alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
   }
 
   // 2. Kiểm tra độ dài / định dạng cơ bản
-  if (name.length < 2) return alert('Tên phải có ít nhất 2 ký tự!');
+  if (full.length < 2) return alert('Tên phải có ít nhất 2 ký tự!');
   if (!emailPattern.test(email)) return alert('Email không hợp lệ!');
   if (!phonePattern.test(phone)) return alert('Số điện thoại không hợp lệ! (10 chữ số, bắt đầu bằng 0)');
   if (!passPattern.test(password)) return alert('Mật khẩu phải có ít nhất 6 ký tự và bao gồm chữ và số!');
@@ -40,7 +40,7 @@ function addUser() {
   if (users.some(u => u.phone === phone)) return alert('Số điện thoại đã tồn tại!');
 
   // 5. Tạo user mới và lưu
-  const newUser = { name, email, phone, username, password, status: false };
+  const newUser = { fullname, email, phone, username, password, status: false };
   users.push(newUser);
   window.users = users;
   saveUsersToLocal(); // hàm của bạn lưu window.users vào localStorage
@@ -70,12 +70,12 @@ function searchUser() {
 
   // Lọc an toàn theo nhiều trường
   const filtered = list.filter(user => {
-    const name = (user.name || '').toLowerCase();
+    const fullname = (user.fullname || '').toLowerCase();
     const username = (user.username || '').toLowerCase();
     const email = (user.email || '').toLowerCase();
     const phone = (user.phone || '').toLowerCase();
 
-    return name.includes(keyword) ||
+    return fullname.includes(keyword) ||
            username.includes(keyword) ||
            email.includes(keyword) ||
            phone.includes(keyword);
@@ -99,7 +99,7 @@ function renderTable(data) {
   tbody.innerHTML += `
     <tr>
       <td>${index + 1}</td>
-      <td>${user.name}</td>
+      <td>${user.fullname}</td>
       <td>${user.email}</td>
       <td>${user.phone}</td>
       <td>${user.username}</td>
@@ -125,7 +125,7 @@ function renderTable(data) {
       tbody.innerHTML += `
         <tr>
           <td>${index + 1}</td>
-          <td>${user.name}</td>
+          <td>${user.fullname}</td>
           <td>${user.email}</td>
           <td>${user.phone}</td>
           <td>${user.username}</td>
@@ -281,7 +281,7 @@ function editPassword(identifier, span) {
 
 function toggleStatus(index, value) {
   users[index].status = value;
-  console.log(`User ${users[index].name} status: ${value}`);
+  console.log(`User ${users[index].fullname} status: ${value}`);
 }
 
 function saveUser(index) {

@@ -48,6 +48,13 @@
     return { rawOriginal: raw, id, customerName, customerPhone, shippingAddress, paymentMethod, status, items, totalAmount, createdAt };
   }
 
+  function calculateOrderTotal(order) {
+  return (order.items || []).reduce((sum, it) => {
+    const price = Number(it.price) || 0;
+    const qty = Number(it.quantity) || 0;
+    return sum + price * qty;
+  }, 0);
+}
   // Render danh sách đơn vào #ordersContainer
   function renderOrdersManagement() {
     const ordersContainer = document.getElementById('ordersContainer');
@@ -91,7 +98,7 @@
             </tbody>
           </table>
         </div>
-        <div style="margin-top:8px; text-align:right; font-weight:600">Tổng: ${formatCurrency(o.totalAmount)}</div>
+        <div style="margin-top:8px; text-align:right; font-weight:600">Tổng: ${formatCurrency( o.totalAmount = calculateOrderTotal(o))}</div>
       </div>
     `).join('');
 
@@ -234,3 +241,18 @@
   window.renderOrdersManagement = renderOrdersManagement;
   window.initOrdersPage = initOrdersPage;
 })();
+
+window.saveOrderToHistory = function(orderData) {
+  try {
+    const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    if (!orderData.id) orderData.id = 'ORD' + Date.now();
+    if (!orderData.status) orderData.status = 'Đã giao'; // gán mặc định
+    list.push(orderData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    renderOrdersManagement();
+    return orderData.id;
+  } catch (err) {
+    console.error('Lỗi saveOrderToHistory:', err);
+    return null;
+  }
+};
