@@ -1,4 +1,3 @@
-// ../assets/js/orders.js
 (function () {
   const STORAGE_KEY = 'ordersHistory';
 
@@ -34,7 +33,7 @@
     const customerPhone = raw.customerPhone || (raw.customer && raw.customer.phone) || '';
     const shippingAddress = raw.shippingAddress || raw.address || '';
     const paymentMethod = raw.paymentMethod || (raw.payment && raw.payment.methodText) || '';
-    const status = raw.status || raw.orderStatus || 'đã giao';
+    const status = raw.status || raw.orderStatus || 'Đã giao';
     const itemsRaw = raw.items || raw.products || raw.lines || [];
     const items = Array.isArray(itemsRaw) ? itemsRaw.map(it => ({
       id: it.id || it.productId || '',
@@ -49,12 +48,13 @@
   }
 
   function calculateOrderTotal(order) {
-  return (order.items || []).reduce((sum, it) => {
-    const price = Number(it.price) || 0;
-    const qty = Number(it.quantity) || 0;
-    return sum + price * qty;
-  }, 0);
-}
+    return (order.items || []).reduce((sum, it) => {
+      const price = Number(it.price) || 0;
+      const qty = Number(it.quantity) || 0;
+      return sum + price * qty;
+    }, 0);
+  }
+
   // Render danh sách đơn vào #ordersContainer
   function renderOrdersManagement() {
     const ordersContainer = document.getElementById('ordersContainer');
@@ -98,7 +98,7 @@
             </tbody>
           </table>
         </div>
-        <div style="margin-top:8px; text-align:right; font-weight:600">Tổng: ${formatCurrency( o.totalAmount = calculateOrderTotal(o))}</div>
+        <div style="margin-top:8px; text-align:right; font-weight:600">Tổng: ${formatCurrency(calculateOrderTotal(o))}</div>
       </div>
     `).join('');
 
@@ -160,6 +160,16 @@
         const idx = Number(btn.dataset.index);
         const rawArr = getRawOrders();
         rawArr[index].items.splice(idx, 1);
+        
+        // Tính lại tổng tiền sau khi xóa item
+        const newTotal = rawArr[index].items.reduce((sum, it) => {
+          const price = Number(it.price) || 0;
+          const qty = Number(it.quantity) || 0;
+          return sum + (price * qty);
+        }, 0);
+        rawArr[index].totalAmount = newTotal;
+        rawArr[index].total = newTotal;
+        
         localStorage.setItem(STORAGE_KEY, JSON.stringify(rawArr));
         // refresh modal nội dung
         openEditModal(index);
@@ -185,6 +195,16 @@
       });
       // loại bỏ quantity 0
       rawArr[index].items = rawArr[index].items.filter(it => Number(it.quantity) > 0);
+      
+      // Tính lại tổng tiền
+      const newTotal = rawArr[index].items.reduce((sum, it) => {
+        const price = Number(it.price) || 0;
+        const qty = Number(it.quantity) || 0;
+        return sum + (price * qty);
+      }, 0);
+      rawArr[index].totalAmount = newTotal;
+      rawArr[index].total = newTotal; // Để tương thích
+      
       localStorage.setItem(STORAGE_KEY, JSON.stringify(rawArr));
       overlay.classList.remove('show');
       overlay.setAttribute('aria-hidden', 'true');
@@ -243,13 +263,16 @@
 })();
 
 window.saveOrderToHistory = function(orderData) {
+  const STORAGE_KEY = 'ordersHistory';
   try {
     const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (!orderData.id) orderData.id = 'ORD' + Date.now();
     if (!orderData.status) orderData.status = 'Đã giao'; // gán mặc định
     list.push(orderData);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    renderOrdersManagement();
+    if (typeof window.renderOrdersManagement === 'function') {
+      window.renderOrdersManagement();
+    }
     return orderData.id;
   } catch (err) {
     console.error('Lỗi saveOrderToHistory:', err);
