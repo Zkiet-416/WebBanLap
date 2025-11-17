@@ -18,21 +18,80 @@ function formatPriceToString(price) {
   return priceNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Lưu vào localStorage với key "laptopProducts"
-function savePricingToLocalStorage(data) {
+// ✅ HÀM LƯU MỚI - ĐỒNG BỘ CẢ 2 CHIỀU
+function savePricingToLocalStorage(flatData) {
   try {
-    localStorage.setItem("laptopProducts", JSON.stringify(data));
-    console.log("✅ laptopProducts saved to localStorage.");
+    // 1. Lưu dữ liệu FLAT cho trang User (products.js, main.html)
+    localStorage.setItem("laptopProducts", JSON.stringify(flatData));
+    console.log("✅ Đã lưu laptopProducts (flat array)");
     
-    // Cập nhật window.allProducts nếu có
-    if (window.allProducts) {
-      window.allProducts = data;
+    // 2. CẬP NHẬT NGƯỢC LẠI adminProductData (nested object)
+    const adminData = localStorage.getItem("adminProductData");
+    if (adminData) {
+      try {
+        const parsedAdminData = JSON.parse(adminData);
+        
+        // Duyệt qua từng sản phẩm trong flatData và cập nhật vào cấu trúc nested
+        flatData.forEach(product => {
+          // Tìm brand group tương ứng
+          const brandGroup = parsedAdminData.product.brand.find(b => {
+            // Xác định loại sản phẩm (laptop, balo, de-tan-nhiet...)
+            const category = product.category === "laptop" ? "laptop" : product.type;
+            return b.name === (product.category === "laptop" ? "laptop" : product.type) || 
+                   b.name === category;
+          });
+          
+          if (brandGroup) {
+            // Xác định key của mảng sản phẩm (laptop, balo, de-tan-nhiet...)
+            let arrayKey;
+            if (product.category === "laptop") {
+              arrayKey = "laptop";
+            } else {
+              arrayKey = product.type; // balo, de-tan-nhiet, tai-nghe, chuot, ban-phim
+            }
+            
+            // Tìm sản phẩm cần cập nhật trong mảng nested
+            const productArray = brandGroup[arrayKey];
+            if (Array.isArray(productArray)) {
+              const targetProduct = productArray.find(p => p.id === product.id);
+              
+              if (targetProduct) {
+                // ✅ CẬP NHẬT GIÁ (format lại về dạng có dấu chấm)
+                targetProduct.price = formatPriceToString(product.priceValue);
+                
+                // ✅ CẬP NHẬT CÁC TRƯỜNG BỔ SUNG (nếu có)
+                if (product.importPrice !== undefined) {
+                  targetProduct.importPrice = product.importPrice;
+                }
+                if (product.profit !== undefined) {
+                  targetProduct.profit = product.profit;
+                }
+              }
+            }
+          }
+        });
+        
+        // 3. Lưu lại adminProductData đã được cập nhật
+        localStorage.setItem("adminProductData", JSON.stringify(parsedAdminData));
+        console.log("✅ Đã đồng bộ ngược về adminProductData (nested object)");
+        
+      } catch (e) {
+        console.error("⚠️ Không thể parse adminProductData:", e);
+      }
+    } else {
+      console.warn("⚠️ Chưa có adminProductData trong localStorage");
     }
     
-    // Thông báo cập nhật để các trang khác reload
+    // 4. Cập nhật window.allProducts nếu có
+    if (window.allProducts) {
+      window.allProducts = flatData;
+    }
+    
+    // 5. Thông báo cập nhật để các trang khác reload
     window.dispatchEvent(new Event('productsUpdated'));
+    
   } catch (e) {
-    console.error("❌ Failed saving laptopProducts:", e);
+    console.error("❌ Failed saving and syncing data:", e);
   }
 }
 
@@ -257,7 +316,7 @@ async function loadPricing() {
     content.innerHTML = `
       <h1 class="page-title">Giá bán</h1>
 
-      <!-- 🔍 THANH TÌM KIẾM RIÊNG CHO PRICING -->
+      <!-- 🔍 THANH TÌMKIEM RIÊNG CHO PRICING -->
       <div class="pricing-search">
         <input type="text" id="pricingSearchInput" placeholder="Tìm kiếm sản phẩm hoặc loại..." value="${searchKeyword}">
       </div>
@@ -290,7 +349,7 @@ async function loadPricing() {
     }
   }
 
-  // ✅ GÁN SỰ KIỆN CHỈ CHO BẢNG VÀ PAGINATION
+  // ✅ GẮN SỰ KIỆN CHỈ CHO BẢNG VÀ PAGINATION
   function attachTableEvents() {
     const modeBtn = document.getElementById("modeSwitch");
     if (modeBtn) {
@@ -326,7 +385,7 @@ async function loadPricing() {
     }
   }
 
-  // ✅ GÁN TẤT CẢ SỰ KIỆN (BAO GỒM SEARCH)
+  // ✅ GẮN TẤT CẢ SỰ KIỆN (BAO GỒM SEARCH)
   function attachAllEvents() {
     // Event cho search input
     const searchInput = document.getElementById("pricingSearchInput");
