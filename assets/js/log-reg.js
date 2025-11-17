@@ -27,7 +27,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
     };
-
+    checkLockedUser();
 
     // ===== CÁC XỬ LÝ LOGIN / REGISTER =====
     const logTab = document.getElementById("log-tab");
@@ -63,7 +63,8 @@ window.addEventListener("DOMContentLoaded", function () {
             email: "user@gmail.com",
             phone: "0123456789",
             password: "123456",
-            image: "../assets/images/defaultAvt.png"
+            image: "../assets/images/defaultAvt.png",
+            status: "active"
         }
     ];
     if (!localStorage.getItem("accounts")) {
@@ -91,7 +92,10 @@ window.addEventListener("DOMContentLoaded", function () {
         const user = accounts.find(a => a.email === acc || a.phone === acc);
         if (!user) return alert("Tài khoản không tồn tại!");
         if (user.password !== pass) return alert("Sai mật khẩu!");
+        if (user.status === "locked" || user.status === false) {
+            return alert("Tài khoản của bạn đã bị khoá! Vui lòng liên hệ admin.");
 
+        }
         alert("Đăng nhập thành công!");
         if (document.getElementById("rememberMe").checked == true) {
             localStorage.setItem("rememberAcc", acc);
@@ -128,7 +132,7 @@ window.addEventListener("DOMContentLoaded", function () {
         if (accounts.some(a => a.email === email)) return alert("Email đã tồn tại!");
         if (accounts.some(a => a.phone === phone)) return alert("Số điện thoại đã tồn tại!");
 
-        const newUser = { username, phone, email, password, image: "../assets/images/defaultAvt.png" };
+        const newUser = { username, phone, email, password, image: "../assets/images/defaultAvt.png", status: "active" };
         accounts.push(newUser);
         saveAccount(accounts);
         alert("Đăng ký thành công!");
@@ -161,4 +165,36 @@ window.addEventListener("DOMContentLoaded", function () {
         document.getElementById("psw1").value = savedPass;
         document.getElementById("rememberMe").checked = true;
     }
+
+    window.lockUnlockUser = function (userId, action) {
+        const accounts = getAccounts();
+        const userIndex = accounts.findIndex(a => a.email === userId || a.phone === userId);
+
+        if (userIndex !== -1) {
+            accounts[userIndex].status = action === 'lock' ? 'locked' : 'active';
+            saveAccount(accounts);
+            return true;
+        }
+        return false;
+    }
+
+
+
 });
+//KHI ĐANG DNHAP BỊ ADMIN KHÓA
+function checkLockedUser() {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) return;
+
+    const accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+
+    const user = accounts.find(a =>
+        a.email === currentUser.email || a.phone === currentUser.phone
+    );
+
+    if (!user || user.status === "locked" || user.status === false) {
+        alert("Tài khoản của bạn đã bị khóa bởi admin.");
+        localStorage.removeItem("currentUser");
+        window.parent.document.getElementById("popupLogin").classList.remove("hidden");
+    }
+}
