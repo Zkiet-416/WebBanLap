@@ -350,42 +350,136 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // === Hàm load Dashboard ===
-  function loadDashboard() {
-    // Lấy số lượng khách hàng từ localStorage
-    const STORAGE_KEY = 'accounts';
-    const customersData = localStorage.getItem(STORAGE_KEY);
-    let customerCount = 0;
-    
-    if (customersData) {
-        try {
-        const customers = JSON.parse(customersData);
-        if (Array.isArray(customers)) {
-            customerCount = customers.length;
-        }
-        } catch (err) {
-        console.error('Lỗi đọc dữ liệu khách hàng:', err);
-        customerCount = 0;
-        }
+function loadDashboard() {
+  // Lấy số lượng khách hàng từ localStorage
+  const ACCOUNTS_KEY = 'accounts';
+  const customersData = localStorage.getItem(ACCOUNTS_KEY);
+  let customerCount = 0;
+  
+  if (customersData) {
+    try {
+      const customers = JSON.parse(customersData);
+      if (Array.isArray(customers)) {
+        customerCount = customers.length;
+      }
+    } catch (err) {
+      console.error('Lỗi đọc dữ liệu khách hàng:', err);
+      customerCount = 0;
     }
-    content.innerHTML = `
-      <h1 class="page-title">Dashboard</h1>
-      <div class="stats">
-        <div class="stat-box">
-          <h3>Khách hàng</h3>
-          <div class="number">${customerCount}</div>
-        </div>
-        <div class="stat-box">
-          <h3>Đơn hàng</h3>
-          <div class="number">608</div>
-        </div>
-        <div class="stat-box">
-          <h3>Doanh thu</h3>
-          <div class="number">126,000,000</div>
-        </div>
-      </div>
-      <div class="history-box">
-        <h3>Lịch sử đơn hàng</h3>
-      </div>`;
   }
+
+  // Lấy dữ liệu đơn hàng từ localStorage
+  const ORDERS_KEY = 'ordersHistory';
+  let orderCount = 0;
+  let totalProductsSold = 0;
+  let recentOrders = [];
+
+  try {
+    const ordersData = localStorage.getItem(ORDERS_KEY);
+    if (ordersData) {
+      const orders = JSON.parse(ordersData);
+      if (Array.isArray(orders)) {
+        orderCount = orders.length;
+        
+        // Tính tổng số lượng sản phẩm đã bán
+        orders.forEach(order => {
+          const items = order.items || order.products || order.lines || [];
+          if (Array.isArray(items)) {
+            items.forEach(item => {
+              const quantity = Number(item.quantity || item.qty || 0);
+              totalProductsSold += quantity;
+            });
+          }
+        });
+
+        // Lấy 5 đơn hàng gần nhất để hiển thị
+        recentOrders = orders
+          .map(order => ({
+            id: order.id || order.orderId || order.code || 'N/A',
+            customerName: order.customerName || (order.customer && order.customer.name) || order.customer || 'N/A',
+            totalAmount: Number(order.totalAmount || order.total || 0),
+            status: order.status || order.orderStatus || 'Đã giao',
+            createdAt: order.createdAt || order.orderDate || ''
+          }))
+          .slice(-5) // Lấy 5 đơn gần nhất
+          .reverse(); // Đảo ngược để đơn mới nhất lên đầu
+      }
+    }
+  } catch (err) {
+    console.error('Lỗi đọc dữ liệu đơn hàng:', err);
+  }
+
+  // Helper function để format tiền
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', { 
+      style: 'currency', 
+      currency: 'VND' 
+    }).format(amount);
+  }
+
+  // Helper function để escape HTML
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // Tạo HTML cho lịch sử đơn hàng
+  const orderHistoryHTML = recentOrders.length > 0 ? `
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+      <thead>
+        <tr style="background-color: #f5f5f5; text-align: left;">
+          <th style="padding: 10px; border-bottom: 2px solid #ddd;">Mã đơn</th>
+          <th style="padding: 10px; border-bottom: 2px solid #ddd;">Khách hàng</th>
+          <th style="padding: 10px; border-bottom: 2px solid #ddd;">Tổng tiền</th>
+          <th style="padding: 10px; border-bottom: 2px solid #ddd;">Trạng thái</th>
+          <th style="padding: 10px; border-bottom: 2px solid #ddd;">Ngày đặt</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${recentOrders.map(order => `
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px;">${escapeHtml(order.id)}</td>
+            <td style="padding: 10px;">${escapeHtml(order.customerName)}</td>
+            <td style="padding: 10px;">${formatCurrency(order.totalAmount)}</td>
+            <td style="padding: 10px;">
+              <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; 
+                background-color: ${order.status === 'Đã giao' ? '#4CAF50' : order.status === 'Đang xử lý' ? '#FF9800' : '#f44336'}; 
+                color: white;">
+                ${escapeHtml(order.status)}
+              </span>
+            </td>
+            <td style="padding: 10px;">${escapeHtml(order.createdAt)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : '<p style="text-align: center; padding: 20px; color: #999;">Chưa có đơn hàng nào.</p>';
+
+  // Render nội dung Dashboard
+  content.innerHTML = `
+    <h1 class="page-title">Dashboard</h1>
+    <div class="stats">
+      <div class="stat-box">
+        <h3>Khách hàng</h3>
+        <div class="number">${customerCount}</div>
+      </div>
+      <div class="stat-box">
+        <h3>Đơn hàng</h3>
+        <div class="number">${orderCount}</div>
+      </div>
+      <div class="stat-box">
+        <h3>Số lượng sản phẩm đã bán</h3>
+        <div class="number">${totalProductsSold}</div>
+      </div>
+    </div>
+    <div class="history-box">
+      <h3>Lịch sử đơn hàng (5 đơn gần nhất)</h3>
+      ${orderHistoryHTML}
+    </div>
+  `;
+}
 });
