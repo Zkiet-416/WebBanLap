@@ -1,11 +1,11 @@
 
 let isAdmin = false;
 let users = [];
-function openADD(){
-    document.getElementsByClassName("add-user")[0].style.display="block";
+function openADD() {
+  document.getElementsByClassName("add-user")[0].style.display = "block";
 }
-function closeADD(){
-    document.getElementsByClassName("add-user")[0].style.display="none";
+function closeADD() {
+  document.getElementsByClassName("add-user")[0].style.display = "none";
 }
 
 function addUser() {
@@ -76,18 +76,18 @@ function searchUser() {
     const phone = (user.phone || '').toLowerCase();
 
     return fullname.includes(keyword) ||
-           username.includes(keyword) ||
-           email.includes(keyword) ||
-           phone.includes(keyword);
+      username.includes(keyword) ||
+      email.includes(keyword) ||
+      phone.includes(keyword);
   });
 
   renderTable(filtered);
 }
 
 function deleteUser(index) {
-    users.splice(index, 1);//bat dau xoa phan tu tu vi tri index so phan tu la 1
-    saveUsersToLocal(); 
-    renderTable(users);
+  users.splice(index, 1);//bat dau xoa phan tu tu vi tri index so phan tu la 1
+  saveUsersToLocal();
+  renderTable(users);
 }
 
 function renderTable(data) {
@@ -95,8 +95,9 @@ function renderTable(data) {
   tbody.innerHTML = '';
 
   data.forEach((user, index) => {
-  if (isAdmin) {
-  tbody.innerHTML += `
+    const isLocked = user.status === "locked"
+    if (isAdmin) {
+      tbody.innerHTML += `
     <tr>
       <td>${index + 1}</td>
       <td>${user.fullname}</td>
@@ -115,12 +116,12 @@ function renderTable(data) {
       </td>
     </tr>
   `;
-  document.querySelectorAll('.password-text').forEach((el) => {
-    const icon = el.previousElementSibling;
-    const width = el.offsetWidth;
-    icon.style.right = `calc(50% + ${width / 2 -1}px)`; // căn theo giữa + độ dài mật khẩu
-  });
-}else {
+      document.querySelectorAll('.password-text').forEach((el) => {
+        const icon = el.previousElementSibling;
+        const width = el.offsetWidth;
+        icon.style.right = `calc(50% + ${width / 2 - 1}px)`; // căn theo giữa + độ dài mật khẩu
+      });
+    } else {
       // Chế độ xem
       tbody.innerHTML += `
         <tr>
@@ -144,7 +145,7 @@ function renderTable(data) {
 //   input.type = 'text';
 //   input.value = oldValue;
 //   input.style.width = "100px";
-  
+
 //   // Thay thế mật khẩu bằng ô nhập
 //   span.replaceWith(input);
 //   input.focus();
@@ -313,11 +314,29 @@ function updateField(identifier, field, value) {
     return false;
   }
 
-  
+
 
   // Áp dụng giá trị (chuyển boolean cho status)
-  list[idx][field] = (field === 'status') ? !!value : value;
+  if (field === "status") {
 
+    const newStatus = value ? "locked" : "active";
+    list[idx].status = newStatus;
+
+    // ĐỒNG BỘ VỚI ACCOUNTS
+    const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+    const accountIndex = accounts.findIndex(acc =>
+      acc.email === list[idx].email || acc.phone === list[idx].phone
+    );
+
+
+
+    if (accountIndex !== -1) {
+      accounts[accountIndex].status = newStatus;
+      localStorage.setItem("accounts", JSON.stringify(accounts));
+    }
+  } else {
+    list[idx][field] = value;
+  }
   // Lưu và render
   window.users = list;
   saveUsersToLocal();
@@ -327,16 +346,16 @@ function updateField(identifier, field, value) {
 }
 
 
-function edit(){
-  const f=document.getElementById('mode').value;
-  if (f=="edit") isAdmin=true;
-  else isAdmin=false;
+function edit() {
+  const f = document.getElementById('mode').value;
+  if (f == "edit") isAdmin = true;
+  else isAdmin = false;
   loadUsers();
 }
 
 
 // Key dùng chung trong localStorage
-const STORAGE_KEY = 'accounts'; 
+const STORAGE_KEY = 'accounts';
 
 // Load users từ localStorage, gán vào window.users, render và trả về mảng
 function loadUsers() {
@@ -351,7 +370,7 @@ function loadUsers() {
       users = [];
     }
   } else {
-    users = []; 
+    users = [];
   }
   window.users = users;
   if (typeof renderTable === 'function') renderTable(users);
