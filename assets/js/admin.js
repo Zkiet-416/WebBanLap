@@ -255,7 +255,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </form>
                 </div>
             </div>
-            <script src="order.js"></script>
             </div>`;
         renderOrdersManagement();
           break;
