@@ -59,10 +59,11 @@ function LoadReceipt() {
                 brand[type].forEach(product => {
                     // Loại bỏ dấu chấm (.) trong giá tiền để chuyển từ định dạng chuỗi VN sang chuỗi số
                     const cleanedPrice = (product.price || '0').replace(/\./g, '');
-                    
+                    const originalPrice = Number(cleanedPrice); 
+                    const costPrice = originalPrice * 0.90; 
                     allProducts.push({
                         name: product.model,
-                        price: cleanedPrice,
+                        price: String(costPrice),
                         imagePath: product.image
                     });
                 });
@@ -98,14 +99,14 @@ function LoadReceipt() {
       id: "PN001",
       date: "2025-10-28",
       products: [
-        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "3150000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
-        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "1369000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
+        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "2835000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
+        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "990000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
       ],
     },
     {
       id: "PN002",
       date: "2025-10-30",
-      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "16390000", qty: "5", imagePath: "../assets/images/Acer1.png" }],
+      products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "14751000", qty: "5", imagePath: "../assets/images/Acer1.png" }],
     },
   ];
 
@@ -117,7 +118,9 @@ function LoadReceipt() {
       localStorage.setItem('receiptData', JSON.stringify(invoices));
   }
 
-  // ... (Hàm addProductRow và updatePrice giữ nguyên) ...
+  function isValidInvoiceId(id) {
+    return /^PN\d{3}$/i.test(id);
+  }
 
   function addProductRow(containerId) {
     
@@ -217,6 +220,16 @@ function LoadReceipt() {
 
     if (!id || !date) {
         alert("Vui lòng nhập ID Phiếu và chọn Ngày nhập!");
+        return;
+    }
+    if (!isValidInvoiceId(id)) {
+        alert("ID Phiếu phải có cấu trúc 'PN' theo sau là 3 chữ số (ví dụ: PN001, PN123).");
+        return;
+    }
+
+    // Kiểm tra trùng ID
+    if (invoices.some(inv => inv.id === id)) {
+        alert(`ID Phiếu '${id}' đã tồn tại. Vui lòng chọn ID khác.`);
         return;
     }
 
