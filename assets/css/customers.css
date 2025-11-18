@@ -1,4 +1,4 @@
-.search-user{
+.search-user {
     width: 100%;
     display: flex;
     position: relative;
@@ -6,6 +6,7 @@
     margin-bottom: 0;
     border-radius: 10px;
 }
+
 .search-user input {
     width: 100%;
     padding: 10px 15px;
@@ -16,6 +17,7 @@
     outline: none;
     height: 42px;
 }
+
 .search-user i {
     position: absolute;
     right: 20px;
@@ -23,30 +25,34 @@
     transform: translateY(-50%);
     color: #999;
 }
-.edit-add{
+
+.edit-add {
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    gap:10px;
+    gap: 10px;
 }
 
 .edit-add button,
 .edit-add select {
-  border: none;               /*  xóa viền */
-  outline: none;              /*  xóa viền khi focus */
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  
+    border: none;
+    /*  xóa viền */
+    outline: none;
+    /*  xóa viền khi focus */
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+
 }
 
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
 }
-input{
+
+input {
     border-radius: 20px;
 }
+
 h2 {
     color: #333;
 }
@@ -56,40 +62,58 @@ table {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
-    max-height: 800px;       /* Giới hạn chiều cao */
-    overflow-y: auto;        /* Cuộn dọc */
-}
-thead tr,tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;     /* Giữ cột thẳng hàng */
-  background-color: rgb(203, 239, 236);
-}
-tbody td {
-  max-width: calc(100% / 7);          /* Giới hạn chiều rộng mỗi ô */
-  overflow: hidden;           /* Ẩn phần dư */
-  white-space: nowrap;        /* Không xuống dòng */
-  text-overflow: ellipsis;    /* Hiển thị “…” khi bị ẩn */
-}
-tbody {
-  display: block;          /* Tách phần tbody để có thể cuộn riêng */
-  max-height: 800px;       /* Chiều cao vùng cuộn */
-  overflow-y: auto;        /* Cuộn nội dung */
-  width: 100%;
-  scrollbar-width: none; 
-}
-tbody::-webkit-scrollbar {
-  display: none;
+    max-height: 800px;
+    /* Giới hạn chiều cao */
+    overflow-y: auto;
+    /* Cuộn dọc */
 }
 
-th, td {
+thead tr,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* Giữ cột thẳng hàng */
+    background-color: rgb(203, 239, 236);
+}
+
+tbody td {
+    max-width: calc(100% / 7);
+    /* Giới hạn chiều rộng mỗi ô */
+    overflow: hidden;
+    /* Ẩn phần dư */
+    white-space: nowrap;
+    /* Không xuống dòng */
+    text-overflow: ellipsis;
+    /* Hiển thị “…” khi bị ẩn */
+}
+
+tbody {
+    display: block;
+    /* Tách phần tbody để có thể cuộn riêng */
+    max-height: 800px;
+    /* Chiều cao vùng cuộn */
+    overflow-y: auto;
+    /* Cuộn nội dung */
+    width: 100%;
+    scrollbar-width: none;
+}
+
+tbody::-webkit-scrollbar {
+    display: none;
+}
+
+th,
+td {
     border: none;
     padding: 10px;
     text-align: center;
     vertical-align: middle;
     padding: 10px;
-    text-align: center; /* 🔹 Căn giữa nội dung trong ô */
-    vertical-align: middle; /* 🔹 Căn giữa theo chiều dọc */
+    text-align: center;
+    /* 🔹 Căn giữa nội dung trong ô */
+    vertical-align: middle;
+    /* 🔹 Căn giữa theo chiều dọc */
     background: rgb(203, 239, 236);
 }
 
@@ -104,10 +128,12 @@ th, td {
     display: none;
     position: fixed;
     z-index: 1000;
-    background-color: rgba(0,0,0,0.7);/*nền mờ*/
+    background-color: rgba(0, 0, 0, 0.7);
+    /*nền mờ*/
 }
 
-input[type="text"], input[type="email"] {
+input[type="text"],
+input[type="email"] {
     padding: 8px;
     margin-right: 10px;
 }
@@ -116,25 +142,28 @@ input[type="text"], input[type="email"] {
     width: 50px;
     height: 25px;
     appearance: none;
-    background: rgb(40, 167, 69);
+    background: gray;
     border-radius: 20px;
     position: relative;
     cursor: pointer;
 }
+
 .switch::before {
     content: '';
     width: 19px;
     height: 19px;
     position: absolute;
-    background: lightcyan;
+    background: rgb(86, 84, 84);
     border-radius: 50%;
     top: 3px;
     left: 3px;
 }
+
 .switch:checked {
-    background: gray;
+    background: rgb(40, 167, 69);
 }
+
 .switch:checked::before {
     left: 28px;
-    background: rgb(86, 84, 84);
+    background: lightcyan;
 }

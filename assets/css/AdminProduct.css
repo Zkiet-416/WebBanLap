@@ -382,6 +382,7 @@ input:checked + .slider:before {
 /* Thay đổi: Dùng wrapper mới để xử lý cuộn ngang */
 .sp-product-table-wrapper {
     overflow-x: auto;
+    overflow-y:visible;
     width: 100%;
     background:white;
 }
@@ -668,4 +669,122 @@ input:checked + .slider:before {
     line-height: 1.7;
     color: #333;
     white-space: pre-line; 
+}
+/* =========================================
+   CUSTOM FORM MODAL (GIAO DIỆN MỚI)
+   ========================================= */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền tối mờ */
+    z-index: 2000; /* Cao hơn các thành phần khác */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-form-container {
+    background-color: #B2D8D8; /* Màu xanh nền giống trong ảnh */
+    width: 400px;
+    max-width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header có tag nhọn xuống (giả lập theo ảnh) */
+.custom-form-header {
+    text-align: right;
+    padding: 10px 20px;
+    background-color: transparent;
+}
+
+.custom-form-header h3 {
+    display: inline-block;
+    background-color: #AEEEEE; /* Màu sáng hơn cho tiêu đề */
+    padding: 8px 25px;
+    border-radius: 5px;
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #000;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+/* Mũi nhọn nhỏ dưới tiêu đề (trang trí) */
+.custom-form-header h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 20px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #AEEEEE;
+}
+
+.custom-form-body {
+    padding: 20px 30px 30px 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #000;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* BUTTONS */
+.custom-form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.btn-custom-reset, .btn-custom-submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: opacity 0.2s;
+}
+
+.btn-custom-reset {
+    background-color: #D3D3D3; /* Màu xám */
+    color: #333;
+}
+
+.btn-custom-submit {
+    background-color: #33FF66; /* Màu xanh lá tươi */
+    color: #000;
+}
+
+.btn-custom-reset:hover, .btn-custom-submit:hover {
+    opacity: 0.8;
 }

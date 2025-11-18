@@ -285,8 +285,14 @@ window.loadStockPage = function() {
         return initialStockTransactions;
     }
     
-        function loadSaleTransactionsFromOrderHistory(transactionsForIdCheck) {
-        const ORDER_HISTORY_KEY = 'orderHistory'; 
+    // === BỔ SUNG HÀM BỊ THIẾU ===
+    /**
+     * Tải và chuyển đổi dữ liệu bán hàng từ Lịch sử Đơn hàng (do checkout.js lưu)
+     * thành các giao dịch 'xuat'.
+     * Key đọc: 'ordersHistory' (số nhiều) - khớp với checkout.js (dòng 484)
+     */
+    function loadSaleTransactionsFromOrderHistory(transactionsForIdCheck) {
+        const ORDER_HISTORY_KEY = 'ordersHistory'; // Key chính xác (số nhiều)
         let orderSaleTransactions = [];
 
         // Tìm ID lớn nhất hiện có để đảm bảo ID giao dịch mới không bị trùng
@@ -299,39 +305,87 @@ window.loadStockPage = function() {
 
             const orderHistory = JSON.parse(rawData);
 
-            // Giả sử 'orderHistory' là một mảng các đơn hàng
+            // 'orderHistory' là một mảng các đơn hàng (orderInfo)
             if (!Array.isArray(orderHistory)) return [];
 
             orderHistory.forEach(order => {
-                // Chỉ xử lý các đơn hàng đã thanh toán/hoàn thành (tùy thuộc vào cấu trúc dữ liệu của bạn, tôi giả định trạng thái là 'paid' hoặc 'completed')
-                // Nếu không có trường status, bạn có thể bỏ qua điều kiện này.
-                // if (order.status !== 'completed' && order.status !== 'paid') return; 
+                
+                // Lấy ngày bán hàng từ 'orderDate' (VD: "18/11/2025, 12:15:47")
+                let saleDate;
+                if (order.orderDate) { 
+                    try {
+                        // 1. Tách phần ngày từ chuỗi (Lấy "DD/MM/YYYY")
+                        const datePart = order.orderDate.split(' ')[1]; 
+                        // 2. Tách các thành phần ngày/tháng/năm
+                        const parts = datePart.split('/'); // Lấy [DD, MM, YYYY]
 
-                const saleDate = order.date || new Date().toISOString().slice(0, 10);
+                        if (parts.length === 3) {
+                            // Chuyển "DD/MM/YYYY" -> "YYYY-MM-DD"
+                            const day = parts[0];
+                            const month = parts[1];
+                            const year = parts[2];
+                            saleDate = `${year}-${month}-${day}`;
+                        } else {
+                            saleDate = new Date().toISOString().slice(0, 10); // Fallback
+                        }
+                    } catch(e) {
+                        console.error("Lỗi parse ngày orderDate:", order.orderDate, e);
+                        saleDate = new Date().toISOString().slice(0, 10); // Fallback
+                    }
+                } else {
+                    saleDate = new Date().toISOString().slice(0, 10); // Fallback
+                }
 
+                // Lặp qua các 'items' trong đơn hàng
                 if (order.items && Array.isArray(order.items)) {
                     order.items.forEach((item) => {
-                        // Gán ID mới tăng dần và tạo giao dịch xuất
+                        // Tạo giao dịch XUẤT
                         orderSaleTransactions.push({
                             id: transactionIdCounter++, // Gán ID mới
                             name: item.name || 'Sản phẩm bán ra',
                             brand: 'Đã bán (LS)', // Ghi rõ nguồn gốc
-                            img: item.image || 'https://via.placeholder.com/50/DC3545/FFFFFF?text=O', // Ảnh đại diện cho Xuất
-                            date: saleDate,
+                            img: item.image || 'https://via.placeholder.com/50/DC3545/FFFFFF?text=O', // Ảnh từ giỏ hàng
+                            date: saleDate, // Ngày bán
                             type: 'xuat', // Loại giao dịch là XUẤT
-                            qty: parseInt(item.qty) || 0 // Số lượng bán
+                            qty: parseInt(item.quantity) || 0 // Số lượng bán
                         });
                     });
                 }
             });
 
         } catch (error) {
-            console.error("Lỗi khi đọc Local Storage của lịch sử đơn hàng:", error);
+            console.error("Lỗi khi đọc Local Storage của 'ordersHistory':", error);
             return [];
         }
 
         return orderSaleTransactions;
     }
+    // === KẾT THÚC BỔ SUNG ===
+
+    // === HÀM MỚI: LƯU TỒN KHO RA LOCALSTORAGE CHO USER ===
+    /**
+     * Lưu trữ dữ liệu tồn kho đã tính toán vào Local Storage
+     * để checkout.js (user) có thể đọc được.
+     * CHỈ LƯU TÊN VÀ SỐ LƯỢC TỒN
+     */
+    function saveStockToLocalStorage(stockData) {
+        const STOCK_KEY = 'currentInventoryStock';
+        try {
+            // Chúng ta chỉ cần lưu tên và số lượng tồn
+            const simplifiedStock = stockData.map(item => ({
+                name: item.name,
+                qty: item.qty
+            }));
+            
+            localStorage.setItem(STOCK_KEY, JSON.stringify(simplifiedStock));
+            // Dòng console.log này để admin biết kho đã được "xuất bản"
+            console.log('Đã cập nhật kho (currentInventoryStock) vào Local Storage cho user.');
+        } catch (e) {
+            console.error("Lỗi khi lưu tồn kho vào Local Storage:", e);
+        }
+    }
+    // === KẾT THÚC HÀM MỚI ===
+
     //  CÁC HÀM TÍNH TOÁN VÀ HIỂN THỊ
     /**
  * Tính toán số lượng tồn kho cuối cùng cho mỗi sản phẩm.
@@ -391,7 +445,7 @@ function calculateStock(transactions) {
         if (type === 'ton') {
             thead.innerHTML = `
                 <tr>
-                    <th style="width: 8%">ID</th>
+                    <th style"width: 8%">ID</th>
                     <th style="width: 47%">Tên / Loại Sản Phẩm</th> 
                     <th style="width: 20%">Số lượng tồn</th>
                     <th style="width: 25%">Tình trạng</th>
@@ -633,6 +687,10 @@ function calculateStock(transactions) {
             // Tính toán tồn kho từ các giao dịch đã lọc
             const stockData = calculateStock(stockFilteredTransactions);
             
+            // === THAY ĐỔI: CẬP NHẬT LOCAL STORAGE CHO USER ===
+            saveStockToLocalStorage(stockData);
+            // === KẾT THÚC THAY ĐỔI ===
+            
             // Cập nhật currentDataSet
             currentDataSet = stockData.filter(p => p.qty > 0); // Chỉ hiển thị sản phẩm còn tồn
             
@@ -672,18 +730,29 @@ function calculateStock(transactions) {
 
             // 4. Tải và chuyển đổi dữ liệu sản phẩm ban đầu từ Local Storage (adminproductdata)
             const adminProductInitialTransactions = loadAdminProductsAsInitialStock(transactionsForIdCheck);
+            // 5. Tải giao dịch BÁN HÀNG từ Local Storage (ordersHistory)
             const orderHistorySaleTransactions = loadSaleTransactionsFromOrderHistory([...transactionsForIdCheck, ...adminProductInitialTransactions]);
             
-            // 5. Kết hợp tất cả: Dữ liệu tĩnh + Sản phẩm ban đầu (adminproductdata) + Phiếu nhập (receiptData)
+            // 6. Kết hợp tất cả: Dữ liệu tĩnh + SP ban đầu + Phiếu nhập + Đơn đã bán
             allTransactions = [
                 ...staticTransactions, 
                 ...adminProductInitialTransactions,
                 ...receiptTransactions,
-                ...orderHistorySaleTransactions
+                ...orderHistorySaleTransactions // <-- ĐÃ THÊM GIAO DỊCH XUẤT VÀO ĐÂY
             ];
             
-            // 6. Sắp xếp lại theo ngày để đảm bảo tính toán tồn kho chính xác
+            // 7. Sắp xếp lại theo ngày để đảm bảo tính toán tồn kho chính xác
             allTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // === THAY ĐỔI: LƯU KHO BAN ĐẦU RA LOCALSTORAGE ===
+            // (Để checkout.js có thể đọc được ngay cả khi admin chưa tra cứu)
+            try {
+                const initialStockData = calculateStock(allTransactions);
+                saveStockToLocalStorage(initialStockData); 
+            } catch (e) {
+                console.error("Lỗi khi lưu kho ban đầu (initialize):", e);
+            }
+            // === KẾT THÚC THAY ĐỔI ===
 
 
             // Thiết lập sự kiện
