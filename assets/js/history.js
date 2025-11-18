@@ -1,4 +1,4 @@
-// history.js - Quản lý lịch sử mua hàng (ĐÃ SỬA ĐỒNG BỘ)
+// history.js - Quản lý lịch sử mua hàng (ĐÃ ĐỒNG BỘ HOÀN TOÀN)
 
 // ========== HÀM HIỂN THỊ TRANG LỊCH SỬ ==========
 window.showHistoryPage = function() {
@@ -8,6 +8,7 @@ window.showHistoryPage = function() {
     const accessories = document.getElementById('accessories');
     const slider = document.querySelector('.slider');
     const historyPage = document.getElementById('historyPage');
+    const profile = document.getElementById("profile");
     
     // Ẩn các trang khác
     if (cartDetail) cartDetail.style.display = 'none';
@@ -15,6 +16,7 @@ window.showHistoryPage = function() {
     if (suggestions) suggestions.style.display = 'none';
     if (accessories) accessories.style.display = 'none';
     if (slider) slider.style.display = 'none';
+    profile.classList.add("hidden");
     
     // Hiển thị trang history
     if (historyPage) historyPage.style.display = 'block';
@@ -38,7 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (dateFilter) {
         dateFilter.addEventListener('change', filterOrders);
     }
+    
+    // Tự động đồng bộ mỗi 3 giây
+    setInterval(syncDataFromOrdersManagement, 3000);
 });
+
+// ========== QUẢN LÝ DỮ LIỆU ==========
 
 // Hàm tải lịch sử đơn hàng
 function loadOrderHistory() {
@@ -73,6 +80,8 @@ function getOrderHistory() {
     }
 }
 
+// ========== RENDER GIAO DIỆN ==========
+
 // Render danh sách đơn hàng
 function renderOrders(orders) {
     const container = document.getElementById('ordersList');
@@ -99,29 +108,24 @@ function renderOrders(orders) {
     container.innerHTML = orders.map(order => createOrderHTML(order)).join('');
 }
 
-// 🎯 TẠO HTML CHO MỘT ĐƠN HÀNG VỚI XỬ LÝ THỜI GIAN ĐÚNG CÁCH
+// Tạo HTML cho một đơn hàng
 function createOrderHTML(order) {
-    // 🎯 XỬ LÝ THỜI GIAN AN TOÀN - SỬA LỖI HIỂN THỊ THỜI GIAN
+    // Xử lý thời gian an toàn
     let orderDate, orderTime;
     
     try {
-        // Thử parse từ ISO string (định dạng từ checkout.js)
         const dateObj = new Date(order.orderDate);
         
-        // Kiểm tra xem date có hợp lệ không
         if (isNaN(dateObj.getTime())) {
-            // Nếu không hợp lệ, thử parse từ các định dạng khác
             const fallbackDate = new Date(order.orderDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3'));
             if (!isNaN(fallbackDate.getTime())) {
                 orderDate = fallbackDate.toLocaleDateString('vi-VN');
                 orderTime = fallbackDate.toLocaleTimeString('vi-VN');
             } else {
-                // Fallback cuối cùng
                 orderDate = 'Không xác định';
                 orderTime = 'Không xác định';
             }
         } else {
-            // Date hợp lệ, format bình thường
             orderDate = dateObj.toLocaleDateString('vi-VN');
             orderTime = dateObj.toLocaleTimeString('vi-VN');
         }
@@ -131,9 +135,39 @@ function createOrderHTML(order) {
         orderTime = 'Không xác định';
     }
     
+   // 🎯 LOGIC HIỂN THỊ NÚT THEO TRẠNG THÁI MỚI
+    const status = order.status || 'Mới đặt';
+    let actionButtons = '';
+    
+    if (status === 'cancelled' || status === 'Đã hủy') {
+        // ĐÃ HỦY: Chỉ hiện nút Mua tiếp
+        actionButtons = `
+            <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
+                <i class="fas fa-cart-plus"></i> Mua tiếp ngay
+            </button>
+        `;
+    } else {
+        // TẤT CẢ TRẠNG THÁI KHÁC: Hiện cả 2 nút (Đang xử lý, Đã đặt, v.v.)
+        actionButtons = `
+            <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
+                <i class="fas fa-cart-plus"></i> Mua tiếp ngay
+            </button>
+            <button class="btn-action btn-cancel" onclick="cancelOrder('${order.orderId}')">
+                <i class="fas fa-times"></i> Hủy đơn hàng
+            </button>
+        `;
+    }
+    
+    // 🎯 XÁC ĐỊNH CLASS CSS THEO TRẠNG THÁI
+    let statusClass = 'completed'; // Mặc định
+    if (status === 'cancelled' || status === 'Đã hủy') {
+        statusClass = 'cancelled';
+    } else if (status === 'Mới đặt' || status === 'Đang xử lý' || status === 'pending') {
+        statusClass = 'processing';
+    }
+    
     return `
-        <div class="order-card" data-order-id="${order.orderId}" data-status="${order.status}">
-            <!-- THÊM NÚT XÓA Ở GÓC TRÊN PHẢI -->
+        <div class="order-card" data-order-id="${order.orderId}" data-status="${status}">
             <button class="btn-delete-order" onclick="deleteOrderSync('${order.orderId}')" title="Xóa đơn hàng">
                 <i class="fas fa-times"></i>
             </button>
@@ -147,8 +181,8 @@ function createOrderHTML(order) {
                         <span><i class="fas fa-map-marker-alt"></i> ${order.shippingAddress || 'Không có địa chỉ'}</span>
                     </div>
                 </div>
-                <div class="order-status status-${order.status}">
-                    ${getStatusText(order.status)}
+                <div class="order-status status-${statusClass}">
+                    ${getStatusText(status)}
                 </div>
             </div>
             
@@ -171,33 +205,23 @@ function createOrderHTML(order) {
                     Tổng cộng: ${formatCurrency(order.totalAmount || 0)}
                 </div>
                 <div class="order-actions">
-                    ${order.status === 'completed' ? `
-                        <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
-                            <i class="fas fa-cart-plus"></i> Mua tiếp ngay
-                        </button>
-                        <button class="btn-action btn-cancel" onclick="cancelOrder('${order.orderId}')">
-                            <i class="fas fa-times"></i> Hủy đơn hàng
-                        </button>
-                    ` : ''}
-                    ${order.status === 'cancelled' ? `
-                        <button class="btn-action btn-reorder" onclick="continueShopping('${order.orderId}')">
-                            <i class="fas fa-cart-plus"></i> Mua tiếp ngay
-                        </button>
-                    ` : ''}
+                    ${actionButtons}
                 </div>
             </div>
         </div>
     `;
 }
 
-// 🎯 HÀM XÓA ĐƠN HÀNG ĐỒNG BỘ - ĐÃ SỬA
+// ========== XỬ LÝ HÀNH ĐỘNG ==========
+
+// Hàm xóa đơn hàng đồng bộ
 function deleteOrderSync(orderId) {
     console.log('🗑️ Xóa đơn hàng đồng bộ:', orderId);
     
     if (confirm('Bạn có chắc muốn xóa vĩnh viễn đơn hàng này?')) {
         let deletedCount = 0;
         
-        // 1. Xóa trong lịch sử cá nhân (history.js)
+        // 1. Xóa trong lịch sử cá nhân
         const orders = getOrderHistory();
         const orderIndex = orders.findIndex(o => o.orderId === orderId);
         
@@ -213,7 +237,7 @@ function deleteOrderSync(orderId) {
             }
         }
         
-        // 2. Xóa trong hệ thống quản lý (orders-management.js)
+        // 2. Xóa trong hệ thống quản lý
         const allOrders = JSON.parse(localStorage.getItem('ordersHistory') || '[]');
         const allOrdersIndex = allOrders.findIndex(o => 
             o.orderId === orderId || o.id === orderId
@@ -242,47 +266,26 @@ function deleteOrderSync(orderId) {
     }
 }
 
-// Thay thế hàm deleteOrder cũ
-function deleteOrder(orderId) {
-    deleteOrderSync(orderId);
-}
-
 // Hàm mua tiếp ngay
 function continueShopping(orderId) {
-    console.log('🛒 Mua tiếp ngay đơn hàng:', orderId);
     const orders = getOrderHistory();
     const order = orders.find(o => o.orderId === orderId);
     
     if (order && order.items) {
         let addedCount = 0;
         
-        // Thêm tất cả sản phẩm vào giỏ hàng
         order.items.forEach(item => {
             if (typeof window.addToCart === 'function' && item.id) {
-                // Thêm từng sản phẩm với số lượng
                 for (let i = 0; i < (item.quantity || 1); i++) {
                     window.addToCart(item.id);
                     addedCount++;
                 }
             }
         });
-        
-        if (addedCount > 0) {
-            alert(`✅ Đã thêm ${addedCount} sản phẩm vào giỏ hàng!`);
-        } else {
-            alert('❌ Không thể thêm sản phẩm vào giỏ hàng!');
-        }
-        
-        // Chuyển đến trang giỏ hàng
-        if (typeof window.showCartDetail === 'function') {
-            window.showCartDetail();
-        }
-    } else {
-        alert('❌ Không tìm thấy đơn hàng hoặc sản phẩm!');
     }
 }
 
-// 🎯 HÀM CẬP NHẬT TRẠNG THÁI ĐỒNG BỘ - ĐÃ SỬA
+// Hàm cập nhật trạng thái đồng bộ
 function updateOrderStatusSync(orderId, newStatus) {
     console.log(`🔄 Cập nhật trạng thái đơn ${orderId} -> ${newStatus}`);
     
@@ -335,13 +338,15 @@ function cancelOrder(orderId) {
     console.log('❌ Hủy đơn hàng:', orderId);
     
     if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-        if (updateOrderStatusSync(orderId, 'cancelled')) {
+        if (updateOrderStatusSync(orderId, 'Đã hủy')) {
             alert('✅ Đã hủy đơn hàng thành công!');
         } else {
             alert('❌ Không tìm thấy đơn hàng để hủy!');
         }
     }
 }
+
+// ========== LỌC VÀ TÌM KIẾM ==========
 
 // Lọc đơn hàng
 function filterOrders() {
@@ -358,7 +363,27 @@ function filterOrders() {
     
     // Lọc theo trạng thái
     if (statusValue !== 'all') {
-        filteredOrders = filteredOrders.filter(order => order.status === statusValue);
+        if (statusValue === 'processing') {
+            // Lọc các đơn đang xử lý
+            filteredOrders = filteredOrders.filter(order => 
+                order.status === 'Mới đặt' || 
+                order.status === 'Đang xử lý' || 
+                order.status === 'pending'
+            );
+        } else if (statusValue === 'completed') {
+            // Lọc các đơn đã đặt/hoàn thành
+            filteredOrders = filteredOrders.filter(order => 
+                order.status === 'completed' || 
+                order.status === 'Đã giao' ||
+                order.status === 'Đã đặt'
+            );
+        } else if (statusValue === 'cancelled') {
+            // Lọc các đơn đã hủy
+            filteredOrders = filteredOrders.filter(order => 
+                order.status === 'cancelled' || 
+                order.status === 'Đã hủy'
+            );
+        }
     }
     
     // Lọc theo thời gian
@@ -380,7 +405,7 @@ function filterOrders() {
                 startDate = new Date(now.setMonth(now.getMonth() - 6));
                 break;
             default:
-                startDate = new Date(0); // Từ ngày đầu tiên
+                startDate = new Date(0);
         }
         
         filteredOrders = filteredOrders.filter(order => {
@@ -388,7 +413,7 @@ function filterOrders() {
                 const orderDate = new Date(order.orderDate);
                 return orderDate >= startDate;
             } catch (e) {
-                return false; // Bỏ qua đơn hàng có thời gian không hợp lệ
+                return false;
             }
         });
     }
@@ -396,15 +421,23 @@ function filterOrders() {
     renderOrders(filteredOrders);
 }
 
+// ========== HÀM TIỆN ÍCH ==========
+
 // Hàm chuyển đổi trạng thái sang tiếng Việt
 function getStatusText(status) {
     const statusMap = {
-        'completed': 'Hoàn thành',
+        // 🎯 TRẠNG THÁI TỪ ADMIN → HIỂN THỊ USER
+        'Mới đặt': 'Đang xử lý',
+        'Đang xử lý': 'Đang xử lý', 
+        'pending': 'Đang xử lý',
+        'completed': 'Đã đặt',
+        'Đã giao': 'Đã đặt',
+        'Đã đặt': 'Đã đặt',
         'cancelled': 'Đã hủy',
-        'Mới đặt': 'Mới đặt',
-        'Đang xử lý': 'Đang xử lý'
+        'Đã hủy': 'Đã hủy',
+        'shipping': 'Đang giao hàng'
     };
-    return statusMap[status] || status;
+    return statusMap[status] || 'Đang xử lý';
 }
 
 // Định dạng tiền
@@ -415,7 +448,9 @@ function formatCurrency(amount) {
     }).format(amount || 0);
 }
 
-// 🎯 HÀM ĐỒNG BỘ DỮ LIỆU TỪ ORDERS-MANAGEMENT - MỚI THÊM
+// ========== HỆ THỐNG ĐỒNG BỘ ==========
+
+// Hàm đồng bộ dữ liệu từ orders-management
 function syncDataFromOrdersManagement() {
     try {
         const currentUser = localStorage.getItem('currentUser');
@@ -429,39 +464,46 @@ function syncDataFromOrdersManagement() {
         let updated = false;
         
         // Đồng bộ từ ordersHistory sang user history
-        ordersHistory.forEach(managementOrder => {
-            const orderId = managementOrder.orderId || managementOrder.id;
+        ordersHistory.forEach(adminOrder => {
+            const orderId = adminOrder.orderId || adminOrder.id;
             const existingUserOrder = userOrders.find(userOrder => userOrder.orderId === orderId);
             
             if (existingUserOrder) {
-                // Cập nhật thông tin từ hệ thống quản lý
-                existingUserOrder.status = managementOrder.status || existingUserOrder.status;
-                existingUserOrder.items = managementOrder.items || existingUserOrder.items;
-                existingUserOrder.totalAmount = managementOrder.totalAmount || managementOrder.total || existingUserOrder.totalAmount;
-                existingUserOrder.shippingAddress = managementOrder.shippingAddress || managementOrder.address || existingUserOrder.shippingAddress;
-                updated = true;
-            } else if (managementOrder.customerName || managementOrder.customer) {
-                // Thêm đơn hàng mới từ hệ thống quản lý
+                // 🎯 CẬP NHẬT TRẠNG THÁI THEO ADMIN
+                const adminStatus = adminOrder.status;
+                if (adminStatus && existingUserOrder.status !== adminStatus) {
+                    existingUserOrder.status = adminStatus;
+                    updated = true;
+                    console.log(`🔄 Đồng bộ trạng thái đơn ${orderId}: ${existingUserOrder.status} → ${adminStatus}`);
+                }
+                
+                // Cập nhật thông tin khác
+                existingUserOrder.items = adminOrder.items || existingUserOrder.items;
+                existingUserOrder.totalAmount = adminOrder.totalAmount || adminOrder.total || existingUserOrder.totalAmount;
+                existingUserOrder.shippingAddress = adminOrder.shippingAddress || adminOrder.address || existingUserOrder.shippingAddress;
+                
+            } else if (adminOrder.customerName || adminOrder.customer) {
+                // Thêm đơn hàng mới từ admin
                 const newUserOrder = {
                     orderId: orderId,
-                    orderDate: managementOrder.orderDate || managementOrder.createdAt || new Date().toISOString(),
-                    items: managementOrder.items || [],
-                    totalAmount: managementOrder.totalAmount || managementOrder.total || 0,
-                    shippingAddress: managementOrder.shippingAddress || managementOrder.address || '',
-                    paymentMethod: managementOrder.paymentMethod || (managementOrder.payment && managementOrder.payment.methodText) || '',
-                    status: managementOrder.status || 'completed'
+                    orderDate: adminOrder.orderDate || adminOrder.createdAt || new Date().toISOString(),
+                    items: adminOrder.items || [],
+                    totalAmount: adminOrder.totalAmount || adminOrder.total || 0,
+                    shippingAddress: adminOrder.shippingAddress || adminOrder.address || '',
+                    paymentMethod: adminOrder.paymentMethod || (adminOrder.payment && adminOrder.payment.methodText) || '',
+                    status: adminOrder.status || 'Mới đặt'
                 };
                 userOrders.unshift(newUserOrder);
                 updated = true;
+                console.log(`➕ Thêm đơn mới từ admin: ${orderId} - ${newUserOrder.status}`);
             }
         });
         
         if (updated) {
-            // Sắp xếp lại theo thời gian
             userOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
             localStorage.setItem(userHistoryKey, JSON.stringify(userOrders));
-            console.log('✅ Đã đồng bộ dữ liệu từ orders-management');
-            loadOrderHistory(); // Reload để hiển thị
+            console.log('✅ Đã đồng bộ dữ liệu từ admin');
+            loadOrderHistory();
         }
         
     } catch (error) {
@@ -469,7 +511,7 @@ function syncDataFromOrdersManagement() {
     }
 }
 
-// 🎯 HÀM KIỂM TRA VÀ SỬA LỖI DỮ LIỆU - MỚI THÊM
+// Hàm kiểm tra và sửa lỗi dữ liệu
 function validateAndFixOrderData() {
     try {
         const currentUser = localStorage.getItem('currentUser');
@@ -480,21 +522,17 @@ function validateAndFixOrderData() {
         let userOrders = JSON.parse(localStorage.getItem(userHistoryKey) || '[]');
         let fixed = false;
         
-        // Sửa lỗi dữ liệu
         userOrders = userOrders.filter(order => {
-            // Loại bỏ đơn hàng không có orderId
             if (!order.orderId) {
                 fixed = true;
                 return false;
             }
             
-            // Đảm bảo có items array
             if (!order.items || !Array.isArray(order.items)) {
                 order.items = [];
                 fixed = true;
             }
             
-            // Đảm bảo có totalAmount
             if (!order.totalAmount && order.totalAmount !== 0) {
                 order.totalAmount = order.items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 0), 0);
                 fixed = true;
@@ -526,3 +564,6 @@ document.addEventListener('DOMContentLoaded', function() {
 window.loadOrderHistory = loadOrderHistory;
 window.getOrderHistory = getOrderHistory;
 window.syncDataFromOrdersManagement = syncDataFromOrdersManagement;
+window.cancelOrder = cancelOrder;
+window.continueShopping = continueShopping;
+window.deleteOrderSync = deleteOrderSync;
