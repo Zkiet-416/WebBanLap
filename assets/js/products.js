@@ -959,6 +959,16 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
         return;
     }
     
+    // 1. LỌC DANH SÁCH SẢN PHẨM CHỈ LẤY NHỮNG SẢN PHẨM SẼ ĐƯỢC HIỂN THỊ
+    const visibleProducts = productsList.filter(product => {
+        const productStatus = product.status || 'an';
+        const categoryActiveStatus = product.categoryStatus || 'active'; 
+        
+        // CHỈ GIỮ LẠI SẢN PHẨM CÓ status='hien' VÀ categoryStatus='active'
+        return productStatus.toLowerCase() === 'hien' && categoryActiveStatus.toLowerCase() === 'active';
+    });
+    
+    // Giữ nguyên việc lưu trữ danh sách ban đầu cho các chức năng khác (nếu cần)
     if (gridId === "product-grid") {
         currentLaptopProducts = productsList;
         currentLaptopPage = page;
@@ -969,27 +979,29 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
     
     grid.innerHTML = "";
     
-    const total = productsList.length;
+    // 2. TÍNH TOÁN PHÂN TRANG DỰA TRÊN SỐ LƯỢNG SẢN PHẨM CÓ THỂ HIỂN THỊ (visibleProducts)
+    const total = visibleProducts.length;
     const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
     
-    if (page < 1) page = 1;
-    if (page > totalPages) page = totalPages;
+    let currentPage = page;
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > totalPages) currentPage = totalPages;
     
-    const start = (page - 1) * PER_PAGE;
+    const start = (currentPage - 1) * PER_PAGE;
     const end = start + PER_PAGE;
-    const pageProducts = productsList.slice(start, end);
     
+    // 3. CẮT MẢNG DỰA TRÊN visibleProducts
+    const pageProducts = visibleProducts.slice(start, end);
+    
+    // 4. RENDER: Tất cả sản phẩm trong pageProducts đều đã được lọc
     pageProducts.forEach(product => {
-        // 1. Lấy trạng thái Brand/Category (Mới)
-        const categoryActiveStatus = product.categoryStatus || 'active'; 
-        if( product.status === 'hien' && categoryActiveStatus === 'active' ){
-            const productCard = createProductCard(product);
-            grid.appendChild(productCard);
-        }
+        const productCard = createProductCard(product);
+        grid.appendChild(productCard);
     });
     
-    updateProductCount(total, page, gridId);
-    renderPagination(totalPages, page, gridId);
+    // 5. CẬP NHẬT PHÂN TRANG
+    updateProductCount(total, currentPage, gridId);
+    renderPagination(totalPages, currentPage, gridId);
 }
 
 // Cập nhật số lượng sản phẩm
