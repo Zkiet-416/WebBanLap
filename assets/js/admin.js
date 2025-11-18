@@ -165,6 +165,60 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div id="product-pagination-container" class="pagination-container page-2-pagination"></div>
     </div>
+        <div id="product-form-modal" class="custom-modal-overlay" style="display: none;">
+                   <div class="custom-form-container">
+                       <div class="custom-form-header">
+                           <h3 id="custom-form-title">+ Thêm</h3>
+                       </div>
+
+                       <div class="custom-form-body">
+                           <div class="form-group">
+                               <label>Tên Model:</label>
+                               <input type="text" id="inp-model" placeholder="Nhập tên sản phẩm...">
+                           </div>
+
+                           <div class="form-group">
+                               <label>Loại (Category):</label>
+                               <select id="inp-type">
+                                   <option value="laptop">Laptop</option>
+                                   <option value="balo">Balo</option>
+                                   <option value="de-tan-nhiet">Đế tản nhiệt</option>
+                                   <option value="chuot">Chuột</option>
+                                   <option value="ban-phim">Bàn phím</option>
+                                   <option value="tai-nghe">Tai nghe</option>
+                               </select>
+                           </div>
+
+                           <div class="form-group">
+                               <label>ID (Mã SP):</label>
+                               <input type="text" id="inp-id" placeholder="VD: AC-NITRO5">
+                           </div>
+
+                           <div class="form-group">
+                               <label>Giá (VNĐ):</label>
+                               <input type="text" id="inp-price" placeholder="VD: 15.000.000">
+                           </div>
+
+                           <div class="form-group">
+                               <label>Mô tả:</label>
+                               <textarea id="inp-desc" rows="4" placeholder="Thông số kỹ thuật (ngăn cách bằng dấu |)..."></textarea>
+                           </div>
+
+                           <div class="form-group">
+                               <label>Hình ảnh (URL):</label>
+                               <div class="file-input-wrapper">
+                                   <input type="text" id="inp-image" placeholder="https://..." style="width: 100%;">
+                               </div>
+                               <small style="font-size: 0.8rem; color: #666;">*Nhập đường dẫn ảnh</small>
+                           </div>
+
+                           <div class="custom-form-actions">
+                               <button class="btn-custom-reset" onclick="closeProductForm()">Hủy / Đặt lại</button>
+                               <button class="btn-custom-submit" onclick="handleProductFormSubmit()">Hoàn tất</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
 
     <div id="detailsModal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
