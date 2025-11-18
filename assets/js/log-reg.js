@@ -181,6 +181,8 @@ window.addEventListener("DOMContentLoaded", function () {
 
 
 });
+setInterval(checkLockedUser, 1000);
+
 //KHI ĐANG DNHAP BỊ ADMIN KHÓA
 function checkLockedUser() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
