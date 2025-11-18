@@ -7,6 +7,7 @@ function normalizeData(data) {
     let result = [];
     data.product.brand.forEach(brandGroup => {
         const groupName = brandGroup.name; 
+        const categoryStatus = brandGroup.status
         const subProducts = brandGroup[groupName];
         
         if (Array.isArray(subProducts)) {
@@ -51,7 +52,8 @@ function normalizeData(data) {
                     id: product.id,
                     priceValue: priceValue,
                     category: productCategory,
-                    type: productType 
+                    type: productType ,
+                    categoryStatus: categoryStatus
                 });
             });
         }
@@ -68,7 +70,7 @@ let currentViewingBrandName = null;
 // BIẾN PHÂN TRANG
 let brandsPerPage = 10;
 let currentBrandPage = 1;
-let productsPerPage = 7;
+let productsPerPage = 6;
 let currentProductPage = 1;
 let currentProductsList = [];
 let filteredProductsList = [];
@@ -538,7 +540,7 @@ const updatePageTitle = (newTitle) => {
         const model = prompt("Nhập Model SP:");
         if (!model) return;
 
-        const price = prompt("Nhập Giá tiền (ví dụ: 15.000.000):");
+        const price = prompt("Nhập Giá nhập: (ví dụ: 15.000.000):");
         if (!price) return;
 
         const image = prompt("Nhập URL Hình ảnh:", "https://placehold.co/150x150?text=IMG");
@@ -638,7 +640,10 @@ const updatePageTitle = (newTitle) => {
         document.getElementById('detail-offer-content').textContent = currentOfferContent;
         document.getElementById('detail-product-image').src = row.dataset.image;
         document.getElementById('detail-description-content').textContent = row.dataset.description.replace(/ \| /g, '\n');
-
+        const rawDescription = row.dataset.description || "Đang cập nhật...";
+        const formattedDescription = rawDescription.replace(/ \| /g, '\n').replace(/\|/g, '\n'); // Thay thế " | " và "|"
+    
+    document.getElementById('detail-description-content').textContent = formattedDescription;
         modal.style.display = 'block';
     };
 
