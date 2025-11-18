@@ -120,7 +120,7 @@
 
 /* ĐANG XỬ LÝ - MÀU CAM */
 .status-processing {
-    background: orange;
+    background: #ebbc65;
 }
 
 /* ĐÃ ĐẶT - MÀU XANH */
@@ -130,7 +130,7 @@
 
 /* ĐÃ HỦY - MÀU ĐỎ */
 .status-cancelled {
-    background: #e74c3c;
+    background: #ed8175;
 }
 
 .order-items {
