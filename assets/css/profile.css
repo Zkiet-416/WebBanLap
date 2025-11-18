@@ -16,7 +16,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    min-height: 75vh;
+    min-height: 80vh;
     background-color: #f3f7fa;
     z-index: 1;
 }
@@ -132,7 +132,7 @@
 #profile .profile-form {
     display: flex;
     flex-direction: column;
-    gap: 13px;
+    gap: 15px;
     align-items: center;
 }
 
@@ -150,7 +150,6 @@
     text-align: left;
     font-size: 14px;
     color: #01342a;
-    letter-spacing: 0.3px;
 }
 
 /* Ô nhập liệu */
@@ -185,9 +184,9 @@
 
 /* Giới tính */
 .gender-options {
-    flex: 2;
+    flex: 2.2;
     display: flex;
-    gap: 20px;
+    gap: 18px;
     justify-content: flex-start;
 }
 
@@ -204,23 +203,67 @@
 /* Ngày sinh */
 .birthday-select {
     display: flex;
-    flex: 2;
+    flex: 2.2;
     gap: 10px;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .birthday-select select {
-    flex: 1;
     padding: 8px;
     border-radius: 6px;
     background-color: #fff;
     color: #2d5f54;
     border: 1px solid #cde8e5;
     outline: none;
+
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .birthday-select select:focus {
+    border-color: #7dd3c0;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
+}
+
+/* ===== STYLE CHO ĐỊA CHỈ ===== */
+#profile .address-group {
+    flex: 2.2;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Select Tỉnh/Huyện/Xã */
+#profile .address-group select {
+    flex: 1;
+    text-align: center;
+    padding: 9px;
+    border: 1px solid #cde8e5;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #01342a;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#profile .address-group select:focus {
+    border-color: #7dd3c0;
+    box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
+}
+
+/* Ô nhập số nhà / tên đường */
+#profile #address-detail {
+    text-align: center;
+    flex-basis: 100%;
+    padding: 9px;
+    border: 1px solid #cde8e5;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #01342a;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#profile #address-detail:focus {
     border-color: #7dd3c0;
     box-shadow: 0 0 6px rgba(125, 211, 192, 0.4);
 }
@@ -245,6 +288,19 @@
     transform: translateY(-2px);
 }
 
+
+
+/* ===== RESPONSIVE – Mobile giống form gốc ===== */
+@media (max-width: 768px) {
+    #profile .address-group {
+        flex-basis: 100%;
+    }
+
+    #profile .address-group select,
+    #profile #address-detail {
+        flex-basis: 100%;
+    }
+}
 
 
 /* Sidebar bên trái */
