@@ -37,6 +37,225 @@ window.addEventListener("load", () => {
     monthSelect.addEventListener("change", updateDays);
     yearSelect.addEventListener("change", updateDays);
 
+    // ========= CHỌN ĐỊA CHỈ =========
+
+    // LẤY THẺ
+    const citySelect = document.getElementById("city");
+    const districtSelect = document.getElementById("districtpf");
+    const addressDetailInput = document.getElementById("address-detail");
+
+    // DỮ LIỆU GIỐNG CHECKOUT
+    const addressData = {
+        "Hà Nội": [
+            "Phúc Xá",
+            "Trúc Bạch",
+            "Vĩnh Phúc",
+            "Cống Vị",
+            "Ngọc Khánh",
+            "Kim Mã",
+            "Giảng Võ",
+            "Láng Hạ",
+            "Láng Thượng",
+            "Thịnh Liệt",
+            "Hoàng Văn Thụ",
+            "Mai Động",
+            "Tương Mai",
+            "Định Công",
+            "Khương Đình"
+        ],
+
+        "Hồ Chí Minh": [
+            "Bến Nghé",
+            "Bến Thành",
+            "Nguyễn Thái Bình",
+            "Phạm Ngũ Lão",
+            "Đa Kao",
+            "Tân Định",
+            "Hiệp Bình Chánh",
+            "Hiệp Bình Phước",
+            "Linh Trung",
+            "Linh Tây",
+            "Tăng Nhơn Phú A",
+            "Tăng Nhơn Phú B",
+            "Phước Long A",
+            "Phước Long B",
+            "Trường Thọ",
+            "Chợ Quán",
+            "Vườn Lài"
+        ],
+
+        "Đà Nẵng": [
+            "Hải Châu 1",
+            "Hải Châu 2",
+            "Hòa Cường Bắc",
+            "Hòa Cường Nam",
+            "Thạch Thang",
+            "Thanh Bình",
+            "Thuận Phước",
+            "Khuê Trung",
+            "Khuê Mỹ",
+            "Hòa Hải",
+            "Hòa Quý",
+            "Hòa Minh",
+            "Hòa Khánh Bắc",
+            "Hòa Khánh Nam"
+        ],
+
+        "Hải Phòng": [
+            "Minh Khai",
+            "Phan Bội Châu",
+            "Hạ Lý",
+            "Hoàng Văn Thụ",
+            "Gia Viên",
+            "Cầu Đất",
+            "Lạc Viên",
+            "Vạn Mỹ",
+            "Đằng Hải",
+            "Đằng Lâm",
+            "Hợp Đức",
+            "Vạn Hương"
+        ],
+
+        "Cần Thơ": [
+            "Xuân Khánh",
+            "An Hòa",
+            "An Hội",
+            "An Khánh",
+            "An Nghiệp",
+            "Tân An",
+            "Cái Khế",
+            "Thới Bình",
+            "Hưng Lợi",
+            "An Bình",
+            "An Thới",
+            "Bùi Hữu Nghĩa"
+        ],
+
+        "Khánh Hòa": [
+            "xã Nam Cam Ranh",
+            "Nam Nha Trang",
+            "xã Bắc Ninh Hòa",
+            "xã Tân Định",
+            "xã Nam Ninh Hòa",
+            "xã Tây Ninh Hòa",
+            "xã Hòa Trí",
+            "xã Đại Lãnh",
+            "xã Tu Bông",
+            "xã Vạn Thắng",
+            "xã Cam An",
+            "phường Tây Nha Trang",
+            "phường Nam Nha Trang",
+            "phường Bắc Cam Ranh",
+            "phường Cam Ranh",
+            "phường Ba Ngòi",
+            "phường Cam Linh"
+        ],
+        " Bình Dương": [
+            "Hiệp Thành",
+            "Phú Lợi",
+            "Phú Cường",
+            "Chánh Nghĩa",
+            "Định Hòa",
+            "Tân An",
+            "Tương Bình Hiệp",
+            "Hòa Phú",
+            "Phú Thọ",
+            "Phú Hòa"
+        ],
+
+        "Đồng Nai": [
+            "Tân Phong",
+            "Tân Hiệp",
+            "An Bình",
+            "Tam Hòa",
+            "Tam Hiệp",
+            "Hố Nai",
+            "Trảng Dài",
+            "Long Bình",
+            "Long Hưng",
+            "Quang Vinh",
+            "Thanh Bình"
+        ],
+
+        "Thừa Thiên Huế": [
+            "Thuận Hòa",
+            "Thuận Lộc",
+            "Thuận Thành",
+            "Phú Hậu",
+            "Phú Hiệp",
+            "Phú Bình",
+            "Tây Lộc",
+            "Thuỷ Biều",
+            "An Tây",
+            "Kim Long",
+            "Hương Long"
+        ],
+
+        "Quảng Ninh": [
+            "Hồng Gai",
+            "Hồng Hà",
+            "Cao Thắng",
+            "Trần Hưng Đạo",
+            "Yết Kiêu",
+            "Bạch Đằng",
+            "Hà Tu",
+            "Hà Trung",
+            "Hà Khánh",
+            "Giếng Đáy",
+            "Cao Xanh",
+            "Hà Phong"
+        ]
+
+    };
+
+
+    // KHỞI TẠO TỈNH
+    function initCitiesProfile() {
+        citySelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
+
+        Object.keys(addressData).forEach(city => {
+            const option = document.createElement("option");
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+        });
+
+        districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+    }
+
+    function updateDistrictsProfile() {
+        const selectedCity = citySelect.value;
+        districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+
+        if (!selectedCity) return;
+        const districts = addressData[selectedCity];
+
+        if (districts && districts.length > 0) {
+            districts.forEach(district => {
+                const opt = document.createElement("option");
+                opt.value = district;
+                opt.textContent = district;
+                districtSelect.appendChild(opt);
+            });
+
+            // Set giá trị nếu có
+            if (currentUser.district) {
+                const districtExists = districts.includes(currentUser.district);
+
+                if (districtExists) {
+                    districtSelect.value = currentUser.district;
+                }
+            }
+        }
+
+
+    }
+
+    // EVENT
+    initCitiesProfile();
+    citySelect.addEventListener("change", updateDistrictsProfile);
+
+
     // ========= THAY AVATAR =========
     const avatar = document.querySelector(".avatar img");
     const changeAvatar = document.getElementById("change-avatar");
@@ -77,6 +296,9 @@ window.addEventListener("load", () => {
         fullnameInput.value = currentUser.fullname || "";
         emailInput.value = currentUser.email || "";
         phoneInput.value = currentUser.phone || "";
+        currentUser.district = currentUser.district || "Quận 1"; // GÁN MẪU
+        currentUser.city = currentUser.city || "Hồ Chí Minh"; // GÁN MẪU
+        currentUser.addressDetail = currentUser.addressDetail || "";
 
         if (currentUser.gender) {
             const genderRadio = document.querySelector(`input[name="gender"][value="${currentUser.gender}"]`);
@@ -90,6 +312,21 @@ window.addEventListener("load", () => {
             updateDays();
             daySelect.value = day;
         }
+
+
+        if (currentUser.city && currentUser.city !== "") {
+            citySelect.value = currentUser.city;
+            updateDistrictsProfile();
+        }
+
+        currentUser.district = currentUser.district || "";
+        console.log("User district after init:", currentUser.district);
+
+
+        if (currentUser.addressDetail) {
+            addressDetailInput.value = currentUser.addressDetail;
+        }
+
     }
 
     // ========= LƯU THÔNG TIN =========
@@ -163,6 +400,10 @@ window.addEventListener("load", () => {
         currentUser.phone = phone;
         currentUser.gender = genderInput;
         currentUser.birthday = birthdayInput;
+        currentUser.city = citySelect.value;
+        currentUser.district = districtSelect.value;
+        currentUser.addressDetail = addressDetailInput.value;
+
         //cập nhật ảnh
         if (avatar.dataset.newImage) {
             currentUser.image = avatar.dataset.newImage;
@@ -205,6 +446,7 @@ window.addEventListener("load", () => {
     deleteAvatar.disabled = true;
 
     edit.addEventListener("click", () => {
+        // bật tất cả inputs/select trong profile
         profileInputs.forEach(i => i.disabled = false);
         changeAvatar.disabled = false;
         deleteAvatar.disabled = false;
@@ -212,12 +454,25 @@ window.addEventListener("load", () => {
         save.classList.remove("hidden");
         cancel.classList.remove("hidden");
 
+        // đảm bảo bật riêng từng control địa chỉ
+        citySelect.disabled = false;
+        districtSelect.disabled = false;
+        addressDetailInput.disabled = false;
 
-        setupValidation(phoneInput, window.phonePattern, "Số điện thoại không hợp lệ! Phải có 10 chữ số và bắt đầu bằng 0."
-        );
-        setupValidation(emailInput, window.emailPattern, "Email không hợp lệ! Vui lòng nhập đúng định dạng (vd: ten@gmail.com)."
-        );
+        // nếu đã có tỉnh trong currentUser thì load lại quận
+        if (citySelect.value) {
+            // populate districts dựa trên citySelect.value
+            updateDistrictsProfile(); // sẽ fill options và set districtSelect.disabled = false
+            // set giá trị quận nếu user có
+            if (currentUser && currentUser.district) {
+                districtSelect.value = currentUser.district;
+            }
+        }
+        // kích hoạt validation
+        setupValidation(phoneInput, window.phonePattern, "Số điện thoại không hợp lệ! Phải có 10 chữ số và bắt đầu bằng 0.");
+        setupValidation(emailInput, window.emailPattern, "Email không hợp lệ! Vui lòng nhập đúng định dạng (vd: ten@gmail.com).");
     });
+
 
     const cancel = document.getElementById("cancel-profile");
 
