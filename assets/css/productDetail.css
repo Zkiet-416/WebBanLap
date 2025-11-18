@@ -1,10 +1,15 @@
 /* ========== PRODUCT DETAIL PAGE ========== */
 
+.product-detail-page {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 .product-detail-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  margin-top: 28px;
+  margin-top: 0;
   max-width: 100%;
   overflow: hidden;
 }

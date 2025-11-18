@@ -1259,6 +1259,84 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Khởi tạo trang sản phẩm thành công!");
 });
 
+window.addEventListener('storage', function(e) {
+    // Kiểm tra xem có phải laptopProducts bị thay đổi không
+    if (e.key === 'laptopProducts' && e.newValue !== e.oldValue) {
+        console.log('🔄 Phát hiện thay đổi dữ liệu sản phẩm từ Admin!');
+        
+        try {
+            // Parse dữ liệu mới
+            const updatedProducts = JSON.parse(e.newValue);
+            
+            if (Array.isArray(updatedProducts) && updatedProducts.length > 0) {
+                // Cập nhật allProducts
+                window.allProducts = updatedProducts;
+                allProducts = updatedProducts;
+                
+                // Refresh lại giao diện
+                if (typeof window.productsAPI !== 'undefined' && 
+                    typeof window.productsAPI.refreshData === 'function') {
+                    window.productsAPI.refreshData();
+                }
+                
+                // Hiển thị thông báo cho user (tùy chọn)
+                showUpdateNotification();
+                
+                console.log('✅ Đã đồng bộ dữ liệu mới:', updatedProducts.length, 'sản phẩm');
+            }
+        } catch (error) {
+            console.error('❌ Lỗi khi đồng bộ dữ liệu:', error);
+        }
+    }
+});
+
+/**
+ * Hiển thị thông báo cập nhật cho user (tùy chọn - có thể tắt)
+ */
+function showUpdateNotification() {
+    // Tạo thông báo nhẹ nhàng
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-sync-alt"></i> 
+        Giá sản phẩm đã được cập nhật!
+    `;
+    
+    // Thêm CSS animation
+    if (!document.getElementById('notification-style')) {
+        const style = document.createElement('style');
+        style.id = 'notification-style';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
 // ========== MENU DROPDOWN EVENTS (Đã sửa) ==========
 function attachDropdownEvents() {
     // Laptop brands từ dropdown

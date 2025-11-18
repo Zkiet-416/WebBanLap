@@ -33,33 +33,27 @@ function savePricingToLocalStorage(flatData) {
         
         // Duyệt qua từng sản phẩm trong flatData và cập nhật vào cấu trúc nested
         flatData.forEach(product => {
-          // Tìm brand group tương ứng
           const brandGroup = parsedAdminData.product.brand.find(b => {
-            // Xác định loại sản phẩm (laptop, balo, de-tan-nhiet...)
             const category = product.category === "laptop" ? "laptop" : product.type;
             return b.name === (product.category === "laptop" ? "laptop" : product.type) || 
                    b.name === category;
           });
           
           if (brandGroup) {
-            // Xác định key của mảng sản phẩm (laptop, balo, de-tan-nhiet...)
             let arrayKey;
             if (product.category === "laptop") {
               arrayKey = "laptop";
             } else {
-              arrayKey = product.type; // balo, de-tan-nhiet, tai-nghe, chuot, ban-phim
+              arrayKey = product.type;
             }
             
-            // Tìm sản phẩm cần cập nhật trong mảng nested
             const productArray = brandGroup[arrayKey];
             if (Array.isArray(productArray)) {
               const targetProduct = productArray.find(p => p.id === product.id);
               
               if (targetProduct) {
-                // ✅ CẬP NHẬT GIÁ (format lại về dạng có dấu chấm)
                 targetProduct.price = formatPriceToString(product.priceValue);
                 
-                // ✅ CẬP NHẬT CÁC TRƯỜNG BỔ SUNG (nếu có)
                 if (product.importPrice !== undefined) {
                   targetProduct.importPrice = product.importPrice;
                 }
@@ -87,8 +81,14 @@ function savePricingToLocalStorage(flatData) {
       window.allProducts = flatData;
     }
     
-    // 5. Thông báo cập nhật để các trang khác reload
-    window.dispatchEvent(new Event('productsUpdated'));
+    // ✅ 5. THÊM MỚI: Trigger custom event để đồng bộ TRONG CÙNG TAB
+    window.dispatchEvent(new CustomEvent('productsUpdated', { 
+      detail: { products: flatData } 
+    }));
+    
+    // ✅ 6. THÊM MỚI: Gửi tín hiệu broadcast cho các tab khác
+    // (storage event tự động trigger, nhưng ta log để debug)
+    console.log("📡 Đã gửi tín hiệu cập nhật tới các tab khác");
     
   } catch (e) {
     console.error("❌ Failed saving and syncing data:", e);
