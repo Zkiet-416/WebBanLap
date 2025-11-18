@@ -7,7 +7,7 @@ function normalizeData(data) {
     let result = [];
     data.product.brand.forEach(brandGroup => {
         const groupName = brandGroup.name; 
-        const categoryStatus = brandGroup.status
+        const categoryStatus = brandGroup.status;
         const subProducts = brandGroup[groupName];
         
         if (Array.isArray(subProducts)) {
@@ -100,7 +100,9 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
     modal.style.display = 'flex';
 
     const typeSelect = document.getElementById('inp-type');
-    
+    const idInput = document.getElementById('inp-id');
+    const priceInput = document.getElementById('inp-price'); // Lấy input Giá
+
     if (isEditingMode && productData) {
         // CHẾ ĐỘ SỬA
         title.textContent = "Chỉnh sửa";
@@ -111,9 +113,11 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
         document.getElementById('inp-model').value = productData.model || "";
         typeSelect.value = type; // Auto select type
         typeSelect.disabled = true; // Không cho sửa loại khi đang edit
-        document.getElementById('inp-id').value = productData.id || "";
-        document.getElementById('inp-id').disabled = true; // Thường không nên sửa ID
-        document.getElementById('inp-price').value = productData.price || "";
+        idInput.value = productData.id || "";
+        idInput.disabled = true; // Thường không nên sửa ID
+        priceInput.value = productData.price || "";
+        priceInput.disabled = true; // <--- ĐIỂM CHỈNH SỬA: Tắt chỉnh sửa Giá khi đang edit
+        
         // Chuyển dấu | thành xuống dòng để dễ chỉnh sửa trong textarea
         document.getElementById('inp-desc').value = (productData.description || "").replace(/ \| /g, '\n'); 
         document.getElementById('inp-image').value = productData.image || "";
@@ -130,7 +134,8 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
              typeSelect.value = 'laptop'; // Default
         }
         typeSelect.disabled = false;
-        document.getElementById('inp-id').disabled = false;
+        idInput.disabled = false;
+        priceInput.disabled = false; // <--- ĐIỂM CHỈNH SỬA: Bật chỉnh sửa Giá khi thêm mới
     }
 };
 
@@ -139,26 +144,26 @@ window.closeProductForm = () => {
 };
 
 window.handleProductFormSubmit = () => {
-    // Lấy dữ liệu từ form
+    // 1. Lấy dữ liệu từ form và Validate (Giữ nguyên)
     const model = document.getElementById('inp-model').value.trim();
     const type = document.getElementById('inp-type').value;
     const id = document.getElementById('inp-id').value.trim();
-    const price = document.getElementById('inp-price').value.trim();
+    const price = document.getElementById('inp-price').value.trim(); 
     const descRaw = document.getElementById('inp-desc').value.trim();
     const image = document.getElementById('inp-image').value.trim() || "https://placehold.co/150x150?text=NoImage";
     
-    // Chuẩn hóa mô tả (thay xuống dòng bằng dấu |)
     const description = descRaw.replace(/\n/g, ' | ');
 
-    // Validate cơ bản
     if (!model || !id || !price) {
         alert("Vui lòng nhập đầy đủ Tên, ID và Giá!");
         return;
     }
 
-    // currentViewingBrandName ở đây chính là tên của Brand (VD: 'laptop', 'balo')
-    const brandName = currentViewingBrandName; 
+    // --- TRUY CẬP HÀM QUA GLOBAL ---
+    // Vì findBrandByName không được expose, ta định nghĩa lại nó một lần nữa 
+    // (hoặc chỉ cần gán globalJsonData ở phạm vi toàn cục là đủ)
     const findBrandByName = (name) => globalJsonData.product.brand.find(b => b.name === name);
+    const brandName = currentViewingBrandName; 
     const brand = findBrandByName(brandName);
 
     if (!brand) {
@@ -166,23 +171,20 @@ window.handleProductFormSubmit = () => {
         return;
     }
 
-    // Đảm bảo mảng loại tồn tại (Type ở đây là các mảng con như brand.laptop, brand.balo)
     if (!brand[type]) brand[type] = [];
 
     if (isEditingMode) {
-        // --- LOGIC SỬA ---
+        // --- LOGIC SỬA DỮ LIỆU (Giữ nguyên) ---
         const product = brand[currentEditType][currentEditIndex];
         if (product) {
             product.model = model;
-            product.price = price;
+            product.price = price; 
             product.description = description;
             product.image = image;
-            
             alert("Cập nhật thành công!");
         }
     } else {
-        // --- LOGIC THÊM MỚI ---
-        // Kiểm tra trùng ID trong mảng con
+        // --- LOGIC THÊM MỚI DỮ LIỆU (Giữ nguyên) ---
         const isDuplicate = brand[type].some(p => p.id === id);
         if (isDuplicate) {
             alert("Lỗi: Mã sản phẩm (ID) này đã tồn tại trong loại này!");
@@ -201,24 +203,24 @@ window.handleProductFormSubmit = () => {
         alert("Thêm mới thành công!");
     }
 
-    // Lưu và Render lại (sử dụng hàm recompileProductList đã tồn tại)
-    saveDataToLocalStorage();
-    
-    // Cập nhật lại danh sách hiển thị
-    // recompileProductList sẽ tự động gọi showProductsForCurrentPage và tính toán lại pagination
-    if (!isEditingMode) {
-         currentProductPage = Math.ceil((brand[type].length) / productsPerPage); // Nhảy đến trang cuối nếu thêm mới
+    // 3. LƯU VÀ RENDER LẠI GIAO DIỆN
+
+    // GỌI HÀM LƯU ĐÃ ĐƯỢC EXPOSE
+    if (window.saveDataToLocalStorageGlobal) {
+        window.saveDataToLocalStorageGlobal();
     }
     
-    // Vì recompileProductList cần brand object, ta truyền brand object tìm được ở trên
-    // Gọi thủ công logic recompileProductList
-    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
-    currentProductsList = productTypes.flatMap(t => {
-        return (Array.isArray(brand[t]) ? brand[t] : []).map((p, index) => ({...p, type: t, originalIndex: index}));
-    });
-    filteredProductsList = [];
-    showProductsForCurrentPage(currentViewingBrandName);
-    renderBrands(); // Cập nhật số lượng Brand
+    if (!isEditingMode) {
+         currentProductPage = Math.ceil((brand[type].length) / productsPerPage);
+    }
+    
+    // GỌI HÀM TÁI TẠO DANH SÁCH ĐÃ ĐƯỢC EXPOSE
+    if (window.recompileProductListGlobal) {
+        window.recompileProductListGlobal(brand);
+    } else {
+        // Fallback (Nếu không gán kịp, dù không nên)
+        console.error("Không thể cập nhật UI vì recompileProductListGlobal chưa được định nghĩa.");
+    }
 
     closeProductForm();
 };
@@ -596,7 +598,8 @@ const updatePageTitle = (newTitle) => {
         currentProductsList = [];
         filteredProductsList = [];
     };
-
+    window.saveDataToLocalStorageGlobal = saveDataToLocalStorage;
+    
     const recompileProductList = (brand) => {
         currentProductsList = productTypes.flatMap(type => {
             return (Array.isArray(brand[type]) ? brand[type] : []).map((p, index) => ({...p, type: type, originalIndex: index}));
@@ -605,6 +608,7 @@ const updatePageTitle = (newTitle) => {
         showProductsForCurrentPage(currentViewingBrandName);
         renderBrands(); // Cập nhật số lượng Brand
     };
+    window.recompileProductListGlobal = recompileProductList;
 
     window.deleteProduct = (brandName, type, index, btn) => {
         const brand = findBrandByName(brandName);
@@ -617,7 +621,7 @@ const updatePageTitle = (newTitle) => {
         }
     };
 
-    // <--- THAY THẾ HÀM editProduct CŨ BẰNG MODAL FORM MỚI --->
+    // <--- HÀM editProduct GỌI MODAL FORM MỚI --->
     window.editProduct = (brandName, type, index) => {
         const brand = findBrandByName(brandName);
         const product = brand?.[type]?.[index];
@@ -645,7 +649,7 @@ const updatePageTitle = (newTitle) => {
         }
     };
 
-    // <--- THAY THẾ HÀM addNewProduct CŨ BẰNG MODAL FORM MỚI --->
+    // <--- HÀM addNewProduct GỌI MODAL FORM MỚI --->
     window.addNewProduct = () => {
         if (!currentViewingBrandName) return alert("Vui lòng chọn một Loại sản phẩm để xem chi tiết trước khi thêm.");
         // GỌI FORM MODAL MỚI
@@ -711,6 +715,7 @@ const updatePageTitle = (newTitle) => {
         if (event.target.id === 'detailsModal') event.target.style.display = "none";
     };
 
+    // HÀM NÀY VẪN GIỮ PROMPT VÌ NÓ DÙNG ĐỂ SỬA ƯU ĐÃI CHUNG, KHÔNG PHẢI DỮ LIỆU SẢN PHẨM
     window.editOffer = () => {
         const newContent = prompt("Nhập nội dung ưu đãi mới:", currentOfferContent.trim());
 
@@ -732,7 +737,6 @@ const updatePageTitle = (newTitle) => {
         document.getElementById('detail-status').textContent = `Tình trạng: ${row.dataset.statusText === 'Hiển thị' ? 'Còn hàng' : 'Hết hàng'}`;
         document.getElementById('detail-offer-content').textContent = currentOfferContent;
         document.getElementById('detail-product-image').src = row.dataset.image;
-        document.getElementById('detail-description-content').textContent = row.dataset.description.replace(/ \| /g, '\n');
         const rawDescription = row.dataset.description || "Đang cập nhật...";
         const formattedDescription = rawDescription.replace(/ \| /g, '\n').replace(/\|/g, '\n'); // Thay thế " | " và "|"
     
