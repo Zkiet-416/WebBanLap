@@ -735,7 +735,6 @@ const products = window.globalJsonData = {
     ]
   }
 };
-
 // ========== HÀM CHUẨN HÓA DỮ LIỆU (Mới) ==========
 function normalizeData(data) {
     if (!data || !data.product || !data.product.brand) return [];
@@ -745,12 +744,6 @@ function normalizeData(data) {
         const groupName = brandGroup.name; 
         const subProducts = brandGroup[groupName];
         
-        if (brandGroup.status === 'inactive') {
-            // Nếu brand group (ví dụ: "laptop") bị inactive, bỏ qua toàn bộ sản phẩm trong nhóm này.
-            console.log(`Bỏ qua nhóm Brand: ${groupName} (inactive)`);
-            return; 
-        }
-        
         if (Array.isArray(subProducts)) {
             subProducts.forEach(product => {
                 
@@ -758,8 +751,6 @@ function normalizeData(data) {
                 
                 let productCategory = groupName === 'laptop' ? 'laptop' : 'phukien';
                 let productType = '';
-                
-                if (product.status === 'an')    return;
                 
                 if (productCategory === 'laptop') {
                     // Xác định type/brand laptop từ ID prefix
@@ -771,6 +762,7 @@ function normalizeData(data) {
                     else if (idPrefix === 'DE') productType = 'Dell';
                     else productType = 'Khac';
                 } else {
+                    
                     // Đối với phụ kiện/balo, type chính là tên nhóm/id chính
                     // Ví dụ: de-tan-nhiet-1 -> de-tan-nhiet
                     if (groupName === 'balo') {
@@ -784,8 +776,6 @@ function normalizeData(data) {
                     } else if (groupName === 'chuot') {
                         productType = 'chuot'; // Bổ sung cho nhóm 'chuot'
                     } else {
-                        // Giá trị mặc định hoặc fallback cho các nhóm khác (như ASUS, HP, Dell...)
-                        // Thường lấy từ phần đầu của ID sản phẩm (ví dụ: "AC" từ "AC-AS5-...")
                         productType = product.id.split('-')[0];
                 }}
                 
@@ -860,6 +850,7 @@ function createProductCard(product) {
     card.className = "product-card";
     // SỬ DỤNG product.model thay vì product.name (vì không có thuộc tính name)
     // SỬ DỤNG product.id cho data-id để đảm bảo thêm đúng sản phẩm
+    
     card.innerHTML = `
         <img src="${product.image}" alt="${product.model}" >
         <h3>${shortenProductName(product.model, 45)}</h3>
@@ -868,6 +859,7 @@ function createProductCard(product) {
             Thêm vào giỏ hàng
         </button>
     `;
+    
     
     const addToCartBtn = card.querySelector('.add-to-cart');
     addToCartBtn.addEventListener('click', function() {
@@ -988,10 +980,12 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
     const pageProducts = productsList.slice(start, end);
     
     pageProducts.forEach(product => {
-        if(product.status==='hien'){
-        const productCard = createProductCard(product);
-        grid.appendChild(productCard);
-    }
+        // 1. Lấy trạng thái Brand/Category (Mới)
+        const categoryActiveStatus = product.categoryStatus || 'active'; 
+        if( product.status === 'hien' && categoryActiveStatus === 'active' ){
+            const productCard = createProductCard(product);
+            grid.appendChild(productCard);
+        }
     });
     
     updateProductCount(total, page, gridId);
@@ -1199,7 +1193,7 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Đang khởi tạo trang sản phẩm...");
     
     // Gán lại allProducts sau khi DOMContentLoaded để đảm bảo local storage được load
-    allProducts = getLocalProducts(); 
+    let allProducts = getLocalProducts(); 
     
     // Lọc laptop và phụ kiện
     const laptops = allProducts.filter(p => p.category === "laptop");
