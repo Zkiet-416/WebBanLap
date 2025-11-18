@@ -1,6 +1,85 @@
 // checkout.js - TÍCH HỢP VỚI CART.JS VÀ CARTDETAIL.JS
 
 /* ===========================
+   CÁC HÀM TIỆN ÍCH & QUẢN LÝ KHO
+   =========================== */
+
+/**
+ * Định dạng đối tượng Date thành chuỗi "HH:MM:SS DD/MM/YYYY"
+ * @param {Date} dateObj 
+ * @returns {string} Chuỗi ngày giờ đã định dạng
+ */
+function formatOrderDate(dateObj) {
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+    
+    // Định dạng mong muốn: HH:MM:SS DD/MM/YYYY
+    return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+}
+
+/**
+ * Đọc dữ liệu tồn kho hiện tại từ Local Storage (do stock.js lưu).
+ * @returns {Map<string, number>} Map với key là tên sản phẩm, value là số lượng tồn.
+ */
+function loadCurrentStock() {
+    try {
+        const rawStock = localStorage.getItem('currentInventoryStock');
+        if (!rawStock) return new Map();
+
+        const stockArray = JSON.parse(rawStock);
+        const stockMap = new Map();
+
+        if (Array.isArray(stockArray)) {
+            stockArray.forEach(item => {
+                // Sử dụng tên sản phẩm làm key
+                stockMap.set(item.name, parseInt(item.qty) || 0);
+            });
+        }
+        return stockMap;
+    } catch (error) {
+        console.error("Lỗi khi đọc tồn kho từ Local Storage:", error);
+        return new Map();
+    }
+}
+
+/**
+ * Cập nhật tồn kho sau khi bán và lưu lại Local Storage.
+ * @param {Array<Object>} soldItems Danh sách sản phẩm đã bán.
+ */
+function updateStockAfterSale(soldItems) {
+    const stockMap = loadCurrentStock();
+    let changesMade = false;
+
+    soldItems.forEach(item => {
+        const itemName = item.name;
+        const soldQty = parseInt(item.quantity) || 0;
+        
+        if (stockMap.has(itemName)) {
+            let currentQty = stockMap.get(itemName);
+            let newQty = Math.max(0, currentQty - soldQty); // Đảm bảo số lượng không âm
+            stockMap.set(itemName, newQty);
+            changesMade = true;
+        } else {
+            // Nếu sản phẩm không tồn tại trong kho (dữ liệu cũ), coi như đã bán hết
+            stockMap.set(itemName, 0); 
+            changesMade = true;
+        }
+    });
+
+    if (changesMade) {
+        // Chuyển Map thành Array để lưu lại Local Storage (để stock.js đọc được)
+        const newStockArray = Array.from(stockMap, ([name, qty]) => ({ name, qty }));
+        localStorage.setItem('currentInventoryStock', JSON.stringify(newStockArray));
+        console.log('✅ Đã cập nhật tồn kho sau khi bán.');
+    }
+}
+
+
+/* ===========================
    QUẢN LÝ MODAL CHECKOUT
    =========================== */
 
@@ -309,6 +388,39 @@ window.completeOrder = function () {
         return;
     }
 
+    // Lấy danh sách sản phẩm đã chọn
+    const selectedItems = window.cartData.filter(item => item.checked);
+    
+    // ===================================
+    // BỔ SUNG: KIỂM TRA TỒN KHO TRƯỚC KHI TẠO ĐƠN
+    // ===================================
+    const currentStock = loadCurrentStock();
+    let outOfStockItems = [];
+
+    selectedItems.forEach(item => {
+        // Lấy số lượng tồn kho theo tên sản phẩm
+        const stockQty = currentStock.get(item.name) || 0; 
+        
+        if (item.quantity > stockQty) {
+            outOfStockItems.push({
+                name: item.name,
+                requested: item.quantity,
+                available: stockQty
+            });
+        }
+    });
+
+    if (outOfStockItems.length > 0) {
+        let message = "❌ Rất tiếc, một số sản phẩm đã hết hàng hoặc không đủ số lượng:\n\n";
+        outOfStockItems.forEach(item => {
+            message += `- ${item.name}: Yêu cầu ${item.requested}, Tồn kho ${item.available}\n`;
+        });
+        alert(message);
+        return; 
+    }
+    // ===================================
+
+
     // Lấy thông tin khách hàng
     const customerInfo = {
         name: document.getElementById('customerName').value.trim(),
@@ -327,8 +439,6 @@ window.completeOrder = function () {
         'ewallet': 'Ví điện tử'
     };
 
-    // Lấy danh sách sản phẩm đã chọn
-    const selectedItems = window.cartData.filter(item => item.checked);
     let total = 0;
     selectedItems.forEach(item => {
         total += item.price * item.quantity;
@@ -343,7 +453,8 @@ window.completeOrder = function () {
         },
         items: selectedItems,
         total: total,
-        orderDate: new Date().toLocaleString('vi-VN')
+        // CẬP NHẬT ĐỊNH DẠNG NGÀY GIỜ
+        orderDate: formatOrderDate(new Date())
     };
 
     // Hiển thị xác nhận đơn hàng
@@ -508,6 +619,12 @@ function saveOrderOnce(orderData) {
 // Hàm xử lý sau checkout
 function processAfterCheckout() {
     console.log('🔄 Xử lý sau checkout...');
+    
+    // Lấy danh sách sản phẩm đã đặt (trước khi xóa khỏi cartData)
+    const orderedItems = window.cartData.filter(item => item.checked);
+
+    // BỔ SUNG: CẬP NHẬT TỒN KHO
+    updateStockAfterSale(orderedItems);
 
     // Xóa sản phẩm đã đặt
     window.cartData = window.cartData.filter(item => !item.checked);
