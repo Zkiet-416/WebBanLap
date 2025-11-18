@@ -331,6 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "pricing":
+          pageStyle.href = "../assets/css/pricing.css";
           content.innerHTML = "";
           loadPricing();
           break;
