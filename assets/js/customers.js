@@ -98,6 +98,7 @@ function renderTable(data) {
     const isLocked = user.status === "locked"
     if (isAdmin) {
       tbody.innerHTML += `
+
     <tr>
       <td>${index + 1}</td>
       <td>${user.fullname}</td>
@@ -111,7 +112,7 @@ function renderTable(data) {
         <span class="password-text" style="display:block;text-align:center;">${user.password}</span>
       </td>
       <td>
-        <input type="checkbox" class="switch" ${user.status ? 'checked' : ''} 
+        <input type="checkbox" class="switch" ${user.status === "active" ? "checked" : ""}
                onchange="updateField(${index}, 'status', this.checked)">
       </td>
     </tr>
@@ -132,8 +133,7 @@ function renderTable(data) {
           <td>${user.username}</td>
           <td>${user.password}</td>
           <td>
-            <input type="checkbox" class="switch" ${user.status ? 'checked' : ''} disabled>
-          </td>
+     <input type="checkbox" class="switch" ${user.status ? 'checked' : ''} disabled>          </td>
         </tr>
       `;
     }
@@ -319,7 +319,7 @@ function updateField(identifier, field, value) {
   // Áp dụng giá trị (chuyển boolean cho status)
   if (field === "status") {
 
-    const newStatus = value ? "locked" : "active";
+    const newStatus = value ? "active" : "locked";
     list[idx].status = newStatus;
 
     // ĐỒNG BỘ VỚI ACCOUNTS
