@@ -70,13 +70,14 @@
     gap: 20px;
 }
 
-.order-card {
+.history-page .order-card {
     background: white;
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border-left: 4px solid #d6453b;
     transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
 }
 
 .order-card:hover {
@@ -107,22 +108,29 @@
     color: #666;
 }
 
+/* ====== TRẠNG THÁI ĐƠN HÀNG ====== */
 .order-status {
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
+    border: 2px solid transparent;
 }
 
+/* ĐANG XỬ LÝ - MÀU CAM */
+.status-processing {
+    background: orange;
+}
+
+/* ĐÃ ĐẶT - MÀU XANH */
 .status-completed {
-    background: #d4edda;
-    color: #155724;
+    background: #00d28a;
 }
 
+/* ĐÃ HỦY - MÀU ĐỎ */
 .status-cancelled {
-    background: #f8d7da;
-    color: #721c24;
+    background: #e74c3c;
 }
 
 .order-items {
@@ -182,35 +190,48 @@
     color: #d6453b;
 }
 
-.order-actions {
+.history-page .order-actions {
     display: flex;
     gap: 10px;
 }
 
-.btn-action {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
+.history-page .btn-action {
+    padding: 10px 16px;
+    border: none;
     border-radius: 6px;
     background: white;
     color: #333;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: inherit;
 }
 
 .btn-action:hover {
-    background: #f8f9fa;
-    border-color: #999;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.btn-reorder {
+.history-page .btn-reorder {
     background: #d6453b;
     color: white;
-    border: none;
 }
 
 .btn-reorder:hover {
     background: #c13a32;
+}
+
+.history-page .btn-cancel {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
 }
 
 .empty-history {
@@ -304,5 +325,10 @@
     .order-item {
         flex-direction: column;
         text-align: center;
+    }
+
+    .btn-action {
+        flex: 1;
+        justify-content: center;
     }
 }
