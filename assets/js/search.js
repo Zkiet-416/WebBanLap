@@ -10,6 +10,95 @@ function removeVietnameseTones(str) {
     return str;
 }
 
+// Hàm chuẩn hóa chuỗi giá tiền thành số
+function normalizePrice(priceStr) {
+    if (!priceStr) return 0;
+    const numericString = priceStr.toString().replace(/[^\d]/g, '');
+    return parseInt(numericString) || 0;
+}
+
+// Hàm phân tích từ khóa tìm kiếm theo giá
+function parsePriceSearch(term) {
+    const pricePatterns = [
+        // Nhập số trực tiếp (10.000.000, 10000000, 5.5tr, 500k)
+        { pattern: /^(\d{1,3}(?:\.\d{3})*(?:\.\d+)?)\s*$/, type: 'exact', multiplier: 1 },
+        { pattern: /^(\d+)\s*$/, type: 'exact', multiplier: 1 },
+        
+        // Dưới X triệu
+        { pattern: /duoi\s*(\d+)\s*trieu/i, type: 'under', multiplier: 1000000 },
+        { pattern: /dưới\s*(\d+)\s*trieu/i, type: 'under', multiplier: 1000000 },
+        
+        // Trên X triệu
+        { pattern: /tren\s*(\d+)\s*trieu/i, type: 'over', multiplier: 1000000 },
+        { pattern: /trên\s*(\d+)\s*trieu/i, type: 'over', multiplier: 1000000 },
+        
+        // Khoảng X-Y triệu
+        { pattern: /tu\s*(\d+)\s*den\s*(\d+)\s*trieu/i, type: 'range', multiplier: 1000000 },
+        { pattern: /từ\s*(\d+)\s*đến\s*(\d+)\s*trieu/i, type: 'range', multiplier: 1000000 },
+        { pattern: /(\d+)\s*-\s*(\d+)\s*trieu/i, type: 'range', multiplier: 1000000 },
+        
+        // Giá cụ thể (triệu)
+        { pattern: /gia\s*(\d+)\s*trieu/i, type: 'exact', multiplier: 1000000 },
+        { pattern: /giá\s*(\d+)\s*trieu/i, type: 'exact', multiplier: 1000000 },
+        { pattern: /(\d+)\s*trieu/i, type: 'exact', multiplier: 1000000 },
+        
+        // Giá cụ thể (nghìn)
+        { pattern: /(\d+)\s*nghin/i, type: 'exact', multiplier: 1000 },
+        { pattern: /(\d+)\s*nghìn/i, type: 'exact', multiplier: 1000 },
+        
+        // Chỉ số (15tr, 20tr, 5k, 10k)
+        { pattern: /(\d+)\s*tr/i, type: 'exact', multiplier: 1000000 },
+        { pattern: /(\d+)\s*k/i, type: 'exact', multiplier: 1000 }
+    ];
+
+    const normalizedTerm = removeVietnameseTones(term.toLowerCase());
+    
+    // Kiểm tra nếu chỉ là số (bao gồm số có dấu chấm)
+    const justNumbers = normalizedTerm.replace(/[\.\s]/g, '');
+    if (/^\d+$/.test(justNumbers)) {
+        const priceValue = parseInt(justNumbers);
+        if (priceValue > 1000) { // Chỉ xử lý nếu số đủ lớn (trên 1000đ)
+            const tolerance = priceValue * 0.15;
+            return { 
+                type: 'exact', 
+                min: Math.max(0, priceValue - tolerance), 
+                max: priceValue + tolerance, 
+                originalTerm: term 
+            };
+        }
+    }
+    
+    for (const pricePattern of pricePatterns) {
+        const match = normalizedTerm.match(pricePattern.pattern);
+        if (match) {
+            if (pricePattern.type === 'range') {
+                const min = parseInt(match[1].replace(/\./g, '')) * pricePattern.multiplier;
+                const max = parseInt(match[2].replace(/\./g, '')) * pricePattern.multiplier;
+                return { type: 'range', min, max, originalTerm: term };
+            } else if (pricePattern.type === 'under') {
+                const max = parseInt(match[1].replace(/\./g, '')) * pricePattern.multiplier;
+                return { type: 'under', max, originalTerm: term };
+            } else if (pricePattern.type === 'over') {
+                const min = parseInt(match[1].replace(/\./g, '')) * pricePattern.multiplier;
+                return { type: 'over', min, originalTerm: term };
+            } else if (pricePattern.type === 'exact') {
+                let numberStr = match[1].replace(/\./g, '');
+                const exact = parseInt(numberStr) * pricePattern.multiplier;
+                // Cho phép sai số ±15%
+                const tolerance = exact * 0.15;
+                return { 
+                    type: 'exact', 
+                    min: Math.max(0, exact - tolerance), 
+                    max: exact + tolerance, 
+                    originalTerm: term 
+                };
+            }
+        }
+    }
+    
+    return null;
+}
+
 function initializeSearch() {
     const searchInput = document.getElementById('searchInput');
     
@@ -43,33 +132,60 @@ function performSearch(term) {
     }
     
     const searchText = removeVietnameseTones(term.toLowerCase());
+    const priceSearch = parsePriceSearch(term);
     
-    // Hiển thị tất cả tên sản phẩm đã chuẩn hóa
-    window.allProducts.forEach(product => {
-        if (product && product.model) {
-            const normalizedName = removeVietnameseTones(product.model.toLowerCase());
-            console.log('   -', normalizedName);
+    let results = [];
+    
+    // Ưu tiên tìm kiếm theo giá nếu phát hiện
+    if (priceSearch) {
+        console.log(`Tìm kiếm theo giá:`, priceSearch);
+        results = searchByPrice(priceSearch);
+    } else {
+        // Tìm kiếm theo tên thông thường
+        results = searchByName(searchText);
+    }
+    
+    const productResults = results.slice(0, 8);
+    displaySearchResults(productResults, term, priceSearch);
+}
+
+// Hàm tìm kiếm theo giá
+function searchByPrice(priceSearch) {
+    return window.allProducts.filter(product => {
+        if (!product || !product.priceValue) return false;
+        
+        const price = product.priceValue;
+        
+        switch (priceSearch.type) {
+            case 'under':
+                return price <= priceSearch.max;
+                
+            case 'over':
+                return price >= priceSearch.min;
+                
+            case 'range':
+                return price >= priceSearch.min && price <= priceSearch.max;
+                
+            case 'exact':
+                return price >= priceSearch.min && price <= priceSearch.max;
+                
+            default:
+                return false;
         }
-    });
-    
-    const results = window.allProducts.filter(product => {
+    }).sort((a, b) => a.priceValue - b.priceValue);
+}
+
+// Hàm tìm kiếm theo tên
+function searchByName(searchText) {
+    return window.allProducts.filter(product => {
         if (!product || !product.model) return false;
         
         const productName = removeVietnameseTones(product.model.toLowerCase());
-        const hasMatch = productName.includes(searchText);
-        
-        if (hasMatch) {
-            console.log('✅ Khớp:', product.model);
-        }
-        
-        return hasMatch;
+        return productName.includes(searchText);
     });
-    
-    const productResults = results.slice(0, 8);
-    displaySearchResults(productResults, term);
 }
 
-function displaySearchResults(products, term) {
+function displaySearchResults(products, term, priceSearch) {
     const container = document.querySelector('.search-results-content');
     const results = document.getElementById('searchResults');
     
@@ -85,10 +201,17 @@ function displaySearchResults(products, term) {
             </div>
         `;
     } else {
+        // Thêm thông tin tìm kiếm theo giá nếu có
+        let priceInfo = '';
+        if (priceSearch) {
+            priceInfo = getPriceSearchInfo(priceSearch);
+        }
+        
         html += `
             <div class="search-section">
                 <div class="section-header">
                     <span class="section-title">KẾT QUẢ TÌM KIẾM (${products.length} sản phẩm)</span>
+                    ${priceInfo}
                 </div>
                 <div class="search-items">
         `;
@@ -120,6 +243,29 @@ function displaySearchResults(products, term) {
     
     container.innerHTML = html;
     results.classList.add('active');
+}
+
+// Hàm hiển thị thông tin tìm kiếm theo giá
+function getPriceSearchInfo(priceSearch) {
+    let infoText = '';
+    
+    switch (priceSearch.type) {
+        case 'under':
+            infoText = `Dưới ${window.formatPrice(priceSearch.max)}`;
+            break;
+        case 'over':
+            infoText = `Trên ${window.formatPrice(priceSearch.min)}`;
+            break;
+        case 'range':
+            infoText = `Từ ${window.formatPrice(priceSearch.min)} đến ${window.formatPrice(priceSearch.max)}`;
+            break;
+        case 'exact':
+            const exactPrice = (priceSearch.min + priceSearch.max) / 2;
+            infoText = `Khoảng ${window.formatPrice(exactPrice)}`;
+            break;
+    }
+    
+    return `<div class="price-search-info">${infoText}</div>`;
 }
 
 function hideSearchResults() {
