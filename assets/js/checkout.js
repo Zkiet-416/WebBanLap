@@ -125,7 +125,7 @@ const addressData = {
         "An Thới", "Bùi Hữu Nghĩa"
     ],
     "Khánh Hòa": [
-        "xã Nam Cam Ranh", "Nam Nha Trang", "xã Bắc Ninh Hòa", "xã Tân Định",
+        "xã Nam Cam Ranh", "xã Nam Nha Trang", "xã Bắc Ninh Hòa", "xã Tân Định",
         "xã Nam Ninh Hòa", "xã Tây Ninh Hòa", "xã Hòa Trí", "xã Đại Lãnh",
         "xã Tu Bông", "xã Vạn Thắng", "xã Cam An", "phường Tây Nha Trang",
         "phường Nam Nha Trang", "phường Bắc Cam Ranh", "phường Cam Ranh",
@@ -540,8 +540,17 @@ function resetCheckoutForm() {
     document.getElementById('customerName').value = '';
     document.getElementById('customerPhone').value = '';
     document.getElementById('customerAddress').value = '';
-    document.getElementById('province').value = '';
-    document.getElementById('district').innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
+    const provinceSelect = document.getElementById('province');
+    // ===============T THÊM PHẦN NÀY===============
+    if (provinceSelect) {
+        provinceSelect.value = '';
+    }
+    const districtSelect = document.getElementById('district');
+    if (districtSelect) {
+        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+    }
+    // =============================================
+
     document.getElementById('orderNote').value = '';
     document.getElementById('savedAddress').value = '';
     document.querySelector('input[name="payment"][value="cod"]').checked = true;
@@ -558,6 +567,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modal) {
         modal.style.display = 'none';
     }
+    initCitiesCheckout();
 
     // Cập nhật các nút thanh toán để gọi openCheckoutModal
     // Trong cart dropdown
