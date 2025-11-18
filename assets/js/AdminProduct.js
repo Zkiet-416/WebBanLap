@@ -75,6 +75,159 @@ let currentProductPage = 1;
 let currentProductsList = [];
 let filteredProductsList = [];
 
+// --- BIẾN TRẠNG THÁI FORM MỚI ---
+let isEditingMode = false;
+let currentEditIndex = -1;
+let currentEditType = "";
+
+// ===================================
+// --- CÁC HÀM XỬ LÝ MODAL FORM MỚI ---
+// ===================================
+
+window.openProductForm = (mode, productData = null, brandName = "", type = "", index = -1) => {
+    // brandName ở đây chính là currentViewingBrandName (tên loại sản phẩm)
+    const modal = document.getElementById('product-form-modal');
+    const title = document.getElementById('custom-form-title');
+    
+    // Reset form inputs
+    document.getElementById('inp-model').value = "";
+    document.getElementById('inp-id').value = "";
+    document.getElementById('inp-price').value = "";
+    document.getElementById('inp-desc').value = "";
+    document.getElementById('inp-image').value = "";
+    
+    isEditingMode = (mode === 'edit');
+    modal.style.display = 'flex';
+
+    const typeSelect = document.getElementById('inp-type');
+    
+    if (isEditingMode && productData) {
+        // CHẾ ĐỘ SỬA
+        title.textContent = "Chỉnh sửa";
+        currentEditType = type;
+        currentEditIndex = index;
+
+        // Điền dữ liệu cũ vào form
+        document.getElementById('inp-model').value = productData.model || "";
+        typeSelect.value = type; // Auto select type
+        typeSelect.disabled = true; // Không cho sửa loại khi đang edit
+        document.getElementById('inp-id').value = productData.id || "";
+        document.getElementById('inp-id').disabled = true; // Thường không nên sửa ID
+        document.getElementById('inp-price').value = productData.price || "";
+        // Chuyển dấu | thành xuống dòng để dễ chỉnh sửa trong textarea
+        document.getElementById('inp-desc').value = (productData.description || "").replace(/ \| /g, '\n'); 
+        document.getElementById('inp-image').value = productData.image || "";
+    } else {
+        // CHẾ ĐỘ THÊM MỚI
+        title.textContent = "+ Thêm";
+        currentEditIndex = -1; // Đảm bảo
+        
+        // Tự động chọn loại dựa trên currentViewingBrandName nếu hợp lệ
+        const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
+        if (productTypes.includes(currentViewingBrandName)) {
+             typeSelect.value = currentViewingBrandName;
+        } else {
+             typeSelect.value = 'laptop'; // Default
+        }
+        typeSelect.disabled = false;
+        document.getElementById('inp-id').disabled = false;
+    }
+};
+
+window.closeProductForm = () => {
+    document.getElementById('product-form-modal').style.display = 'none';
+};
+
+window.handleProductFormSubmit = () => {
+    // Lấy dữ liệu từ form
+    const model = document.getElementById('inp-model').value.trim();
+    const type = document.getElementById('inp-type').value;
+    const id = document.getElementById('inp-id').value.trim();
+    const price = document.getElementById('inp-price').value.trim();
+    const descRaw = document.getElementById('inp-desc').value.trim();
+    const image = document.getElementById('inp-image').value.trim() || "https://placehold.co/150x150?text=NoImage";
+    
+    // Chuẩn hóa mô tả (thay xuống dòng bằng dấu |)
+    const description = descRaw.replace(/\n/g, ' | ');
+
+    // Validate cơ bản
+    if (!model || !id || !price) {
+        alert("Vui lòng nhập đầy đủ Tên, ID và Giá!");
+        return;
+    }
+
+    // currentViewingBrandName ở đây chính là tên của Brand (VD: 'laptop', 'balo')
+    const brandName = currentViewingBrandName; 
+    const findBrandByName = (name) => globalJsonData.product.brand.find(b => b.name === name);
+    const brand = findBrandByName(brandName);
+
+    if (!brand) {
+        alert("Lỗi: Không xác định được thương hiệu/loại sản phẩm hiện tại.");
+        return;
+    }
+
+    // Đảm bảo mảng loại tồn tại (Type ở đây là các mảng con như brand.laptop, brand.balo)
+    if (!brand[type]) brand[type] = [];
+
+    if (isEditingMode) {
+        // --- LOGIC SỬA ---
+        const product = brand[currentEditType][currentEditIndex];
+        if (product) {
+            product.model = model;
+            product.price = price;
+            product.description = description;
+            product.image = image;
+            
+            alert("Cập nhật thành công!");
+        }
+    } else {
+        // --- LOGIC THÊM MỚI ---
+        // Kiểm tra trùng ID trong mảng con
+        const isDuplicate = brand[type].some(p => p.id === id);
+        if (isDuplicate) {
+            alert("Lỗi: Mã sản phẩm (ID) này đã tồn tại trong loại này!");
+            return;
+        }
+
+        const newProduct = {
+            id: id,
+            model: model,
+            price: price,
+            image: image,
+            description: description,
+            status: "hien"
+        };
+        brand[type].push(newProduct);
+        alert("Thêm mới thành công!");
+    }
+
+    // Lưu và Render lại (sử dụng hàm recompileProductList đã tồn tại)
+    saveDataToLocalStorage();
+    
+    // Cập nhật lại danh sách hiển thị
+    // recompileProductList sẽ tự động gọi showProductsForCurrentPage và tính toán lại pagination
+    if (!isEditingMode) {
+         currentProductPage = Math.ceil((brand[type].length) / productsPerPage); // Nhảy đến trang cuối nếu thêm mới
+    }
+    
+    // Vì recompileProductList cần brand object, ta truyền brand object tìm được ở trên
+    // Gọi thủ công logic recompileProductList
+    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
+    currentProductsList = productTypes.flatMap(t => {
+        return (Array.isArray(brand[t]) ? brand[t] : []).map((p, index) => ({...p, type: t, originalIndex: index}));
+    });
+    filteredProductsList = [];
+    showProductsForCurrentPage(currentViewingBrandName);
+    renderBrands(); // Cập nhật số lượng Brand
+
+    closeProductForm();
+};
+
+// ===================================
+// --- KẾT THÚC HÀM MODAL FORM MỚI ---
+// ===================================
+
+
 window.loadAdminProductPage = () => {
     const DOM = {
         brandManagementArea: document.getElementById('brand-management-area'),
@@ -464,26 +617,14 @@ const updatePageTitle = (newTitle) => {
         }
     };
 
+    // <--- THAY THẾ HÀM editProduct CŨ BẰNG MODAL FORM MỚI --->
     window.editProduct = (brandName, type, index) => {
         const brand = findBrandByName(brandName);
         const product = brand?.[type]?.[index];
         if (!product) return alert("Lỗi: Không tìm thấy sản phẩm để chỉnh sửa.");
-
-        const newModel = prompt("Chỉnh sửa Model sản phẩm:", product.model);
-        if (newModel === null) return;
-        const originalImage = product.image;
-        const newImage = prompt("Chỉnh sửa URL Hình ảnh:", originalImage);
-        if (newImage === null) return;
-
-        const newDescription = prompt("Chỉnh sửa Thông số chi tiết (tách bằng |):", (product.description || '').replace(/\n/g, ' | '));
-        if (newDescription === null) return;
-
-        product.model = newModel.trim();
-        product.image = newImage.trim();
-        product.description = newDescription.trim();
-
-        recompileProductList(brand);
-        saveDataToLocalStorage(); // Lưu thay đổi
+        
+        // GỌI FORM MODAL MỚI
+        openProductForm('edit', product, brandName, type, index);
     };
 
     window.toggleProductStatus = (brandName, type, index, btn) => {
@@ -504,59 +645,11 @@ const updatePageTitle = (newTitle) => {
         }
     };
 
+    // <--- THAY THẾ HÀM addNewProduct CŨ BẰNG MODAL FORM MỚI --->
     window.addNewProduct = () => {
-        if (!currentViewingBrandName) return alert("Lỗi: Không xác định được thương hiệu hiện tại.");
-
-        const brand = findBrandByName(currentViewingBrandName);
-        if (!brand) return;
-
-        // currentViewingBrandName chính là "loại" (ví dụ: 'laptop', 'balo')
-        // Tuy nhiên, logic code đang coi đó là "brand". Ta cần hỏi loại SP.
-        const productTypeInput = prompt(`Nhập Loại SP (${productTypes.join(', ')}):`);
-        if (!productTypeInput) return;
-        const type = productTypeInput.trim().toLowerCase();
-        
-        // Kiểm tra xem 'brand' (loại sản phẩm) này có hỗ trợ 'type' (mảng con) này không
-        // Logic này đang bị ngược. 'currentViewingBrandName' *chính là* loại sản phẩm.
-        // Ví dụ: currentViewingBrandName = 'laptop' hoặc 'balo'.
-        // Chúng ta nên thêm trực tiếp vào mảng con có tên trùng với currentViewingBrandName.
-        
-        // *** SỬA LOGIC: ***
-        // 'type' chính là 'currentViewingBrandName' (ví dụ: 'laptop', 'balo')
-        // 'brand' là object chứa các mảng này
-        const targetTypeArrayKey = currentViewingBrandName; 
-        if (!productTypes.includes(targetTypeArrayKey)) {
-             return alert(`Loại SP "${targetTypeArrayKey}" không hợp lệ. Vui lòng chọn từ: ${productTypes.join(', ')}.`);
-        }
-
-        const id = prompt(`Nhập Mã SP (ID) cho loại ${targetTypeArrayKey}:`);
-        if (!id) return;
-        
-        // Kiểm tra ID trùng lặp trong mảng con
-        if (brand[targetTypeArrayKey] && brand[targetTypeArrayKey].some(p => p.id === id)) {
-            return alert("Lỗi: Mã SP này đã tồn tại!");
-        }
-
-        const model = prompt("Nhập Model SP:");
-        if (!model) return;
-
-        const price = prompt("Nhập Giá nhập: (ví dụ: 15.000.000):");
-        if (!price) return;
-
-        const image = prompt("Nhập URL Hình ảnh:", "https://placehold.co/150x150?text=IMG");
-        if (!image) return;
-
-        const description = prompt("Nhập Thông số chi tiết (ngăn cách bằng dấu |):", "Thông tin mô tả...");
-        if (!description) return;
-
-        const newProduct = { "id": id, "model": model, "price": price, "image": image, "description": description, "status": "hien" };
-
-        if (!brand[targetTypeArrayKey]) brand[targetTypeArrayKey] = [];
-        brand[targetTypeArrayKey].push(newProduct);
-
-        currentProductPage = Math.ceil((currentProductsList.length + 1) / productsPerPage);
-        recompileProductList(brand);
-        saveDataToLocalStorage(); // Lưu thay đổi
+        if (!currentViewingBrandName) return alert("Vui lòng chọn một Loại sản phẩm để xem chi tiết trước khi thêm.");
+        // GỌI FORM MODAL MỚI
+        openProductForm('add');
     };
 
     // HÀM LỌC BRAND (Loại sản phẩm)
