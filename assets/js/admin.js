@@ -204,18 +204,13 @@ document.addEventListener("DOMContentLoaded", () => {
                                <textarea id="inp-desc" rows="4" placeholder="Thông số kỹ thuật (ngăn cách bằng dấu |)..."></textarea>
                            </div>
 
-                            <div class="form-group">
-                                 <label>Hình ảnh:</label>
-                                 <input type="file" id="inp-image-file" accept="image/*" style="width: 100%; margin-bottom: 5px;">
-
-                                 <input type="hidden" id="inp-image">
-
-                                 <small style="font-size: 0.8rem; color: #666;">*Chọn ảnh từ máy tính</small>
-                              </div>
-
-                              <div class="form-group" style="text-align: center;">
-                                 <img id="image-preview" src="" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; display: none; margin-top: 10px; object-fit: contain;">
-                              </div>
+                           <div class="form-group">
+                               <label>Hình ảnh (URL):</label>
+                               <div class="file-input-wrapper">
+                                   <input type="text" id="inp-image" placeholder="https://..." style="width: 100%;">
+                               </div>
+                               <small style="font-size: 0.8rem; color: #666;">*Nhập đường dẫn ảnh</small>
+                           </div>
 
                            <div class="custom-form-actions">
                                <button class="btn-custom-reset" onclick="closeProductForm()">Hủy / Đặt lại</button>
@@ -506,10 +501,12 @@ function loadDashboard() {
             <td style="padding: 10px;">${formatCurrency(order.totalAmount)}</td>
             <td style="padding: 10px;">
               <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; 
-                background-color: ${order.status === 'Đã giao' ? '#4CAF50' : order.status === 'Đang xử lý' ? '#FF9800' : '#f44336'}; 
-                color: white;">
-                ${escapeHtml(order.status)}
-              </span>
+  background-color: ${order.status === 'Đã giao' ? '#4CAF50' : 
+                   order.status === 'Đang xử lý' ? '#FF9800' : 
+                   order.status === 'Mới đặt' ? '#2196F3' : '#f44336'}; 
+  color: white;">
+  ${escapeHtml(order.status)}
+</span>
             </td>
             <td style="padding: 10px;">${escapeHtml(order.createdAt)}</td>
           </tr>
