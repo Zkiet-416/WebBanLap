@@ -64,7 +64,13 @@ window.addEventListener("DOMContentLoaded", function () {
             phone: "0123456789",
             password: "123456",
             image: "../assets/images/defaultAvt.png",
-            status: "active"
+            status: "active",
+            fullname: "User nè",
+            gender: "Nữ",
+            birthday: "2006-2-8",
+            city: "Hồ Chí Minh",
+            district: "Vườn Lài",
+            addressDetail: "Nguyễn Chí Thanh"
         }
     ];
     if (!localStorage.getItem("accounts")) {
@@ -197,6 +203,8 @@ function checkLockedUser() {
     if (!user || user.status === "locked" || user.status === false) {
         alert("Tài khoản của bạn đã bị khóa bởi admin.");
         localStorage.removeItem("currentUser");
+        loginText.textContent = `Đăng nhập`;
+        avatarUser.classList.add("hidden");
         window.parent.document.getElementById("popupLogin").classList.remove("hidden");
     }
 }
