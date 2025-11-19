@@ -204,13 +204,18 @@ document.addEventListener("DOMContentLoaded", () => {
                                <textarea id="inp-desc" rows="4" placeholder="Thông số kỹ thuật (ngăn cách bằng dấu |)..."></textarea>
                            </div>
 
-                           <div class="form-group">
-                               <label>Hình ảnh (URL):</label>
-                               <div class="file-input-wrapper">
-                                   <input type="text" id="inp-image" placeholder="https://..." style="width: 100%;">
-                               </div>
-                               <small style="font-size: 0.8rem; color: #666;">*Nhập đường dẫn ảnh</small>
-                           </div>
+                            <div class="form-group">
+                                 <label>Hình ảnh:</label>
+                                 <input type="file" id="inp-image-file" accept="image/*" style="width: 100%; margin-bottom: 5px;">
+
+                                 <input type="hidden" id="inp-image">
+
+                                 <small style="font-size: 0.8rem; color: #666;">*Chọn ảnh từ máy tính</small>
+                              </div>
+
+                              <div class="form-group" style="text-align: center;">
+                                 <img id="image-preview" src="" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; display: none; margin-top: 10px; object-fit: contain;">
+                              </div>
 
                            <div class="custom-form-actions">
                                <button class="btn-custom-reset" onclick="closeProductForm()">Hủy / Đặt lại</button>
