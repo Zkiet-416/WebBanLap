@@ -85,7 +85,7 @@ function updateStockAfterSale(soldItems) {
 
 // Mở modal checkout
 window.openCheckoutModal = function () {
-    // =====  KIỂM TRA ĐĂNG NHẬP =====
+    // =====  KIỂM TRA ĐĂNG NHẬP =====
     const isLoggedIn = localStorage.getItem("currentUser") !== null;
     if (!isLoggedIn) {
         alert("Vui lòng đăng nhập để tiếp tục thanh toán!");
@@ -472,9 +472,9 @@ function showOrderConfirmation(orderInfo) {
     });
 
     const confirmMessage = `
-                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                                          XÁC NHẬN ĐƠN HÀNG
-                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                      XÁC NHẬN ĐƠN HÀNG
+                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📦 SẢN PHẨM:
 ${itemsList}
@@ -530,7 +530,8 @@ Xác nhận đặt hàng?
                 price: item.price,
                 quantity: item.quantity,
                 image: item.image
-            })),
+            }))
+            .filter(item => item.id !== undefined), // Đảm bảo chỉ lấy sản phẩm có ID (nếu cần)
 
             // 🚨 ĐỒNG BỘ TỔNG TIỀN
             total: totalAmount,
@@ -618,30 +619,39 @@ function saveOrderOnce(orderData) {
 
 // Hàm xử lý sau checkout
 function processAfterCheckout() {
-    console.log('🔄 Xử lý sau checkout...');
+    console.log('🔄 Xử lý sau checkout - Đang chờ xác nhận máy chủ (giả lập 1s)...');
     
     // Lấy danh sách sản phẩm đã đặt (trước khi xóa khỏi cartData)
     const orderedItems = window.cartData.filter(item => item.checked);
 
-    // BỔ SUNG: CẬP NHẬT TỒN KHO
-    updateStockAfterSale(orderedItems);
+    // Đóng modal ngay lập tức
+    closeCheckoutModal(); 
 
-    // Xóa sản phẩm đã đặt
-    window.cartData = window.cartData.filter(item => !item.checked);
-    window.saveCartData();
+    // Giả lập độ trễ xử lý đơn hàng (1 giây)
+    setTimeout(() => {
+        console.log('✅ Đã nhận và xử lý đơn hàng. Bắt đầu cập nhật dữ liệu...');
 
-    // Cập nhật UI
-    if (typeof window.renderCartDropdown === 'function') window.renderCartDropdown();
-    if (typeof window.renderCartDetailPage === 'function') window.renderCartDetailPage();
+        // BỔ SUNG: CẬP NHẬT TỒN KHO
+        updateStockAfterSale(orderedItems);
 
-    // Đóng modal và thông báo
-    closeCheckoutModal();
-    alert('🎉 Đặt hàng thành công!');
+        // Xóa sản phẩm đã đặt
+        window.cartData = window.cartData.filter(item => !item.checked);
+        window.saveCartData();
 
-    // Reset về trang chủ
-    if (typeof window.resetToHomePage === 'function') {
-        window.resetToHomePage();
-    }
+        // Cập nhật UI
+        if (typeof window.renderCartDropdown === 'function') window.renderCartDropdown();
+        if (typeof window.renderCartDetailPage === 'function') window.renderCartDetailPage();
+
+        // Thông báo và chuyển hướng
+        alert('🎉 Đặt hàng thành công! Đơn hàng của bạn đang được xử lý.');
+
+        // Reset về trang chủ
+        if (typeof window.resetToHomePage === 'function') {
+            window.resetToHomePage();
+        }
+        
+        console.log('🏁 Hoàn tất xử lý sau checkout.');
+    }, 1000); // Đặt trễ 1 giây (1000ms)
 }
 
 /* ===========================
