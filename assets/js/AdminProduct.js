@@ -89,12 +89,24 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
     const modal = document.getElementById('product-form-modal');
     const title = document.getElementById('custom-form-title');
     
+    // DOM Elements cho ảnh
+    const fileInput = document.getElementById('inp-image-file');
+    const hiddenInput = document.getElementById('inp-image');
+    const preview = document.getElementById('image-preview');
+
     // Reset form inputs
     document.getElementById('inp-model').value = "";
     document.getElementById('inp-id').value = "";
     document.getElementById('inp-price').value = "";
     document.getElementById('inp-desc').value = "";
-    document.getElementById('inp-image').value = "";
+    
+    // Reset ảnh
+    if(fileInput) fileInput.value = "";
+    if(hiddenInput) hiddenInput.value = "";
+    if(preview) {
+        preview.src = "";
+        preview.style.display = "none";
+    }
     
     isEditingMode = (mode === 'edit');
     modal.style.display = 'flex';
@@ -120,12 +132,21 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
         
         // Chuyển dấu | thành xuống dòng để dễ chỉnh sửa trong textarea
         document.getElementById('inp-desc').value = (productData.description || "").replace(/ \| /g, '\n'); 
-        document.getElementById('inp-image').value = productData.image || "";
+        
+        // Xử lý hiển thị ảnh cũ
+        const oldImage = productData.image || "";
+        if (oldImage && oldImage !== "https://placehold.co/150x150?text=NoImage") {
+            hiddenInput.value = oldImage;
+            preview.src = oldImage;
+            preview.style.display = "block";
+        }
     } else {
         // CHẾ ĐỘ THÊM MỚI
         title.textContent = "+ Thêm";
         currentEditIndex = -1; // Đảm bảo
         
+        hiddenInput.value = "https://placehold.co/150x150?text=NoImage"; // Mặc định
+
         // Tự động chọn loại dựa trên currentViewingBrandName nếu hợp lệ
         const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
         if (productTypes.includes(currentViewingBrandName)) {
@@ -150,6 +171,8 @@ window.handleProductFormSubmit = () => {
     const id = document.getElementById('inp-id').value.trim();
     const price = document.getElementById('inp-price').value.trim(); 
     const descRaw = document.getElementById('inp-desc').value.trim();
+    
+    // Lấy giá trị từ input ẩn (đã chứa Base64 hoặc URL cũ)
     const image = document.getElementById('inp-image').value.trim() || "https://placehold.co/150x150?text=NoImage";
     
     const description = descRaw.replace(/\n/g, ' | ');
@@ -180,7 +203,7 @@ window.handleProductFormSubmit = () => {
             product.model = model;
             product.price = price; 
             product.description = description;
-            product.image = image;
+            product.image = image; // Lưu chuỗi Base64
             alert("Cập nhật thành công!");
         }
     } else {
@@ -195,7 +218,7 @@ window.handleProductFormSubmit = () => {
             id: id,
             model: model,
             price: price,
-            image: image,
+            image: image, // Lưu chuỗi Base64
             description: description,
             status: "hien"
         };
@@ -272,6 +295,34 @@ const updatePageTitle = (newTitle) => {
     }
 };
     
+     // --- EVENT LISTENER CHO FILE UPLOAD (THÊM MỚI) ---
+    const imgFileInput = document.getElementById('inp-image-file');
+    const imgHiddenInput = document.getElementById('inp-image');
+    const imgPreview = document.getElementById('image-preview');
+
+    if (imgFileInput) {
+        imgFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Kiểm tra file có phải là ảnh không
+                if (!file.type.startsWith('image/')) {
+                    alert("Vui lòng chọn file hình ảnh!");
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Hiển thị preview
+                    imgPreview.src = event.target.result;
+                    imgPreview.style.display = 'block';
+                    // Lưu Base64 vào input ẩn
+                    imgHiddenInput.value = event.target.result;
+                };
+                // Đọc file dưới dạng DataURL (Base64)
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 
     // --- CÁC HÀM LOCAL STORAGE (ĐÃ CẬP NHẬT) ---
     // Key cho trang products.js (dùng mảng flat đã chuẩn hóa)
@@ -745,6 +796,8 @@ const updatePageTitle = (newTitle) => {
     };
 
     window.viewProduct = (link) => {
+        resetForm();
+        
         const row = link.closest('tr');
         const isViewOnly = !(row.dataset.viewMode === 'true');
         row.dataset.viewMode = isViewOnly;
