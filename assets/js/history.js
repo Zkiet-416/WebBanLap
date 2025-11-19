@@ -107,7 +107,8 @@ function renderOrders(orders) {
     
     container.innerHTML = orders.map(order => createOrderHTML(order)).join('');
 }
-
+setInterval(loadOrderHistory,1000);
+setInterval(getOrderHistory,1000);
 // Tạo HTML cho một đơn hàng
 function createOrderHTML(order) {
     // Xử lý thời gian an toàn
@@ -566,4 +567,5 @@ window.getOrderHistory = getOrderHistory;
 window.syncDataFromOrdersManagement = syncDataFromOrdersManagement;
 window.cancelOrder = cancelOrder;
 window.continueShopping = continueShopping;
-window.deleteOrderSync = deleteOrderSync;
+
+window.deleteOrderSync = deleteOrderSync; 
