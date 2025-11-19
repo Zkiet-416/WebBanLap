@@ -357,7 +357,7 @@ function loadUsers() {
   if (typeof renderTable === 'function') renderTable(users);
   return users;
 }
-
+setInterval(loadUsers,1000);
 // Lưu window.users vào localStorage (an toàn với JSON)
 function saveUsersToLocal() {
   const usersToSave = Array.isArray(window.users) ? window.users : [];
