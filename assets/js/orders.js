@@ -126,7 +126,7 @@
         return false;
     }
   }
-
+  
   // 🎯 HÀM CẬP NHẬT ID TRONG USER HISTORY
   function updateOrderIdInUserHistory(oldOrderId, newOrderId) {
     try {
@@ -238,7 +238,7 @@
         <div style="margin-top:8px; text-align:right; font-weight:600">Tổng: ${formatCurrency(calculateOrderTotal(o))}</div>
       </div>
     `).join('');
-
+  setInterval(renderOrdersManagement,1000);
     // Gắn sự kiện nút Sửa và Xóa
     ordersContainer.querySelectorAll('.btn.edit').forEach(btn => {
       btn.addEventListener('click', () => openEditModal(Number(btn.dataset.index)));
