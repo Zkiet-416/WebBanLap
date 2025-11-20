@@ -41,8 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFilter.addEventListener('change', filterOrders);
     }
     
-    // Tự động đồng bộ mỗi 3 giây
-    setInterval(syncDataFromOrdersManagement, 3000);
+    // Đồng bộ mỗi 3 giây (khi người dùng đang xem lịch sử)
+    setInterval(fullSyncFromCentralOrders, 3000);
+
+    // Đồng bộ ngay khi mở trang
+    fullSyncFromCentralOrders();
+
+    // Đồng bộ khi focus lại tab (rất quan trọng!)
+    window.addEventListener('focus', fullSyncFromCentralOrders);
 });
 
 // ========== QUẢN LÝ DỮ LIỆU ==========
@@ -107,8 +113,6 @@ function renderOrders(orders) {
     
     container.innerHTML = orders.map(order => createOrderHTML(order)).join('');
 }
-setInterval(loadOrderHistory,1000);
-setInterval(getOrderHistory,1000);
 // Tạo HTML cho một đơn hàng
 function createOrderHTML(order) {
     // Xử lý thời gian an toàn
@@ -452,63 +456,84 @@ function formatCurrency(amount) {
 // ========== HỆ THỐNG ĐỒNG BỘ ==========
 
 // Hàm đồng bộ dữ liệu từ orders-management
-function syncDataFromOrdersManagement() {
+// === ĐỒNG BỘ HOÀN TOÀN MỚI - LUÔN CHẠY, KHÔNG PHỤ THUỘC ADMIN ===
+function fullSyncFromCentralOrders() {
     try {
         const currentUser = localStorage.getItem('currentUser');
         if (!currentUser) return;
-        
+
         const user = JSON.parse(currentUser);
-        const userHistoryKey = `orderHistory_${user.email}`;
-        const ordersHistory = JSON.parse(localStorage.getItem('ordersHistory') || '[]');
-        
-        let userOrders = JSON.parse(localStorage.getItem(userHistoryKey) || '[]');
-        let updated = false;
-        
-        // Đồng bộ từ ordersHistory sang user history
-        ordersHistory.forEach(adminOrder => {
-            const orderId = adminOrder.orderId || adminOrder.id;
-            const existingUserOrder = userOrders.find(userOrder => userOrder.orderId === orderId);
-            
-            if (existingUserOrder) {
-                // 🎯 CẬP NHẬT TRẠNG THÁI THEO ADMIN
-                const adminStatus = adminOrder.status;
-                if (adminStatus && existingUserOrder.status !== adminStatus) {
-                    existingUserOrder.status = adminStatus;
-                    updated = true;
-                    console.log(`🔄 Đồng bộ trạng thái đơn ${orderId}: ${existingUserOrder.status} → ${adminStatus}`);
-                }
-                
-                // Cập nhật thông tin khác
-                existingUserOrder.items = adminOrder.items || existingUserOrder.items;
-                existingUserOrder.totalAmount = adminOrder.totalAmount || adminOrder.total || existingUserOrder.totalAmount;
-                existingUserOrder.shippingAddress = adminOrder.shippingAddress || adminOrder.address || existingUserOrder.shippingAddress;
-                
-            } else if (adminOrder.customerName || adminOrder.customer) {
-                // Thêm đơn hàng mới từ admin
-                const newUserOrder = {
+        const userKey = `orderHistory_${user.email}`;
+        const centralOrders = JSON.parse(localStorage.getItem('ordersHistory') || '[]');
+
+        let userOrders = JSON.parse(localStorage.getItem(userKey) || '[]');
+        let hasChanged = false;
+
+        // Tạo map nhanh theo orderId từ central
+        const centralMap = {};
+        centralOrders.forEach(o => {
+            const id = o.orderId || o.id;
+            if (id) centralMap[id] = o;
+        });
+
+        // 1. Đồng bộ / thêm đơn từ central → user
+        centralOrders.forEach(centralOrder => {
+            const orderId = centralOrder.orderId || centralOrder.id;
+            if (!orderId) return;
+
+            const existingIdx = userOrders.findIndex(o => (o.orderId || o.id) === orderId);
+
+            if (existingIdx === -1) {
+                // Thêm mới hoàn toàn
+                userOrders.unshift({
                     orderId: orderId,
-                    orderDate: adminOrder.orderDate || adminOrder.createdAt || new Date().toISOString(),
-                    items: adminOrder.items || [],
-                    totalAmount: adminOrder.totalAmount || adminOrder.total || 0,
-                    shippingAddress: adminOrder.shippingAddress || adminOrder.address || '',
-                    paymentMethod: adminOrder.paymentMethod || (adminOrder.payment && adminOrder.payment.methodText) || '',
-                    status: adminOrder.status || 'Mới đặt'
-                };
-                userOrders.unshift(newUserOrder);
-                updated = true;
-                console.log(`➕ Thêm đơn mới từ admin: ${orderId} - ${newUserOrder.status}`);
+                    orderDate: centralOrder.createdAt || centralOrder.orderDate || new Date().toISOString(),
+                    items: centralOrder.items || [],
+                    totalAmount: centralOrder.totalAmount || centralOrder.total || 0,
+                    shippingAddress: centralOrder.shippingAddress || centralOrder.address || '',
+                    customerName: centralOrder.customerName || '',
+                    customerPhone: centralOrder.customerPhone || '',
+                    paymentMethod: centralOrder.paymentMethod || '',
+                    status: centralOrder.status || 'Mới đặt'
+                });
+                hasChanged = true;
+            } else {
+                // Cập nhật toàn bộ (status, items, total, address, v.v.)
+                const userOrder = userOrders[existingIdx];
+                if (
+                    userOrder.status !== (centralOrder.status || 'Mới đặt') ||
+                    JSON.stringify(userOrder.items) !== JSON.stringify(centralOrder.items || []) ||
+                    userOrder.totalAmount !== (centralOrder.totalAmount || centralOrder.total) ||
+                    userOrder.shippingAddress !== (centralOrder.shippingAddress || centralOrder.address || '')
+                ) {
+                    userOrder.status = centralOrder.status || 'Mới đặt';
+                    userOrder.items = centralOrder.items || [];
+                    userOrder.totalAmount = centralOrder.totalAmount || centralOrder.total || 0;
+                    userOrder.shippingAddress = centralOrder.shippingAddress || centralOrder.address || '';
+                    userOrder.paymentMethod = centralOrder.paymentMethod || '';
+                    hasChanged = true;
+                }
             }
         });
-        
-        if (updated) {
-            userOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-            localStorage.setItem(userHistoryKey, JSON.stringify(userOrders));
-            console.log('✅ Đã đồng bộ dữ liệu từ admin');
-            loadOrderHistory();
+
+        // 2. Xóa những đơn đã bị xóa ở central
+        userOrders = userOrders.filter(userOrder => {
+            const orderId = userOrder.orderId || userOrder.id;
+            const stillExists = centralMap.hasOwnProperty(orderId);
+            if (!stillExists) hasChanged = true;
+            return stillExists;
+        });
+
+        if (hasChanged) {
+            // Sắp xếp lại mới nhất lên đầu
+            userOrders.sort((a, b) => new Date(b.orderDate || b.createdAt) - new Date(a.orderDate || a.createdAt));
+            localStorage.setItem(userKey, JSON.stringify(userOrders));
+            console.log('Đồng bộ thành công từ ordersHistory → user history');
+            loadOrderHistory(); // refresh giao diện ngay
         }
-        
-    } catch (error) {
-        console.error('❌ Lỗi đồng bộ dữ liệu:', error);
+
+    } catch (err) {
+        console.error('Lỗi fullSyncFromCentralOrders:', err);
     }
 }
 
