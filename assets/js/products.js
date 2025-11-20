@@ -544,7 +544,7 @@ const products = window.globalJsonData = {
             "model": "Chuột Razer Cobra - Zenless Zone One Edition",
             "price": "1.369.000",
             "status": "hien",
-            "image": "../assets/images/mouse1.jpg",
+            "image": "../assets/images/Mouse1.jpg",
             "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng",
             "qty":"30"
           },
