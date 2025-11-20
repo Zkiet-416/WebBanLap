@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
           content.innerHTML = `
           <div class="container-simple">
         <div>
-            <h1 class="page-title">Sản phẩm</h1>
+            <h1 class="page-title" id="main-page-title">Loại sản phẩm</h1>
         </div>
 
         <div class="search-box" style="margin-bottom:20px;">
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <thead >
                                     <tr>
                                         <th>ID</th>
-                                        <th>Tên / Thương hiệu</th>
+                                        <th>Tên loại sản phẩm</th>
                                         <th>Số lượng</th>
                                         <th>Trạng thái</th>
                                         <th>Thao tác</th> 
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h3 id="form-header">THÊM LOẠI SẢN PHẨM</h3>
                     </div>
                     <div class="form-body">
-                        <label for="ten">Tên / Thương hiệu:</label>
+                        <label for="ten">Tên loại sản phẩm:</label>
                         <input type="text" id="ten" class="form-input">
 
                         <label for="soluong">Số lượng ban đầu:</label>
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <thead>
                                 <tr>
                                     <th>Mã SP</th> <th>Tên / Loại Sản Phẩm</th>
-                                    <th>Giá tiền</th>
+                                    <th>Giá nhập</th>
                                     <th>Trạng thái</th>
                                     <th>Thao tác</th>
                                 </tr>
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div id="product-pagination-container" class="pagination-container page-2-pagination"></div>
     </div>
-        <div id="product-form-modal" class="custom-modal-overlay" style="display: none;">
+                    <div id="product-form-modal" class="custom-modal-overlay" style="display: none;">
                    <div class="custom-form-container">
                        <div class="custom-form-header">
                            <h3 id="custom-form-title">+ Thêm</h3>
@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                    <option value="chuot">Chuột</option>
                                    <option value="ban-phim">Bàn phím</option>
                                    <option value="tai-nghe">Tai nghe</option>
+                                   <option value="phukienkhac">Phụ kiện khác</option>
                                </select>
                            </div>
 
@@ -204,13 +205,18 @@ document.addEventListener("DOMContentLoaded", () => {
                                <textarea id="inp-desc" rows="4" placeholder="Thông số kỹ thuật (ngăn cách bằng dấu |)..."></textarea>
                            </div>
 
-                           <div class="form-group">
-                               <label>Hình ảnh (URL):</label>
-                               <div class="file-input-wrapper">
-                                   <input type="text" id="inp-image" placeholder="https://..." style="width: 100%;">
-                               </div>
-                               <small style="font-size: 0.8rem; color: #666;">*Nhập đường dẫn ảnh</small>
-                           </div>
+                            <div class="form-group">
+                                 <label>Hình ảnh:</label>
+                                 <input type="file" id="inp-image-file" accept="image/*" style="width: 100%; margin-bottom: 5px;">
+
+                                 <input type="hidden" id="inp-image">
+
+                                 <small style="font-size: 0.8rem; color: #666;">*Chọn ảnh từ máy tính</small>
+                              </div>
+
+                              <div class="form-group" style="text-align: center;">
+                                 <img id="image-preview" src="" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; display: none; margin-top: 10px; object-fit: contain;">
+                              </div>
 
                            <div class="custom-form-actions">
                                <button class="btn-custom-reset" onclick="closeProductForm()">Hủy / Đặt lại</button>
