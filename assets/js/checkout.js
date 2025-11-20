@@ -78,26 +78,6 @@ function updateStockAfterSale(soldItems) {
     }
 }
 
-/* ===========================
-   KHÔI PHỤC GIỎ HÀNG KHI ĐÓNG MODAL
-   =========================== */
-function restoreOriginalCart() {
-    // Nếu đang dùng giỏ hàng tạm thời từ "Mua sắm ngay", khôi phục lại giỏ hàng gốc
-    if (window.originalCartData && window.cartData === window.tempCartForBuyNow) {
-        window.cartData = window.originalCartData;
-        window.originalCartData = null;
-        window.tempCartForBuyNow = null;
-        
-        // Cập nhật lại UI
-        if (typeof window.saveCartData === 'function') {
-            window.saveCartData();
-        }
-        if (typeof window.renderCartDropdown === 'function') {
-            window.renderCartDropdown();
-        }
-        console.log('✅ Đã khôi phục giỏ hàng gốc');
-    }
-}
 
 /* ===========================
    QUẢN LÝ MODAL CHECKOUT
@@ -105,7 +85,7 @@ function restoreOriginalCart() {
 
 // Mở modal checkout
 window.openCheckoutModal = function () {
-    // =====  KIỂM TRA ĐĂNG NHẬP =====
+    // =====  KIỂM TRA ĐĂNG NHẬP =====
     const isLoggedIn = localStorage.getItem("currentUser") !== null;
     if (!isLoggedIn) {
         alert("Vui lòng đăng nhập để tiếp tục thanh toán!");
@@ -125,11 +105,6 @@ window.openCheckoutModal = function () {
         return;
     }
 
-    // Lưu giỏ hàng gốc trước khi mở modal (nếu chưa có từ "Mua sắm ngay")
-    if (!window.originalCartData) {
-        window.originalCartData = [...window.cartData];
-    }
-
     // Hiển thị modal
     const modal = document.getElementById('checkoutModal');
     if (modal) {
@@ -146,8 +121,6 @@ window.closeCheckoutModal = function () {
     const modal = document.getElementById('checkoutModal');
     if (modal) {
         modal.style.display = 'none';
-        // KHÔI PHỤC GIỎ HÀNG KHI ĐÓNG MODAL
-        restoreOriginalCart();
     }
 };
 
@@ -346,12 +319,12 @@ function validateCheckoutForm() {
 
     // Validate số điện thoại
     const phone = document.getElementById('customerPhone').value.trim();
-    const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+    const phoneRegex = /^(0)+([0-9]{9})$/;
     if (!phone) {
         showError('phoneError', 'Vui lòng nhập số điện thoại');
         isValid = false;
     } else if (!phoneRegex.test(phone)) {
-        showError('phoneError', 'Số điện thoại không hợp lệ (VD: 0912345678)');
+        showError('phoneError', 'Số điện thoại không hợp lệ , vui lòng nhập đủ 10 số');
         isValid = false;
     }
 
@@ -499,9 +472,9 @@ function showOrderConfirmation(orderInfo) {
     });
 
     const confirmMessage = `
-                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                                      XÁC NHẬN ĐƠN HÀNG
-                                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                          XÁC NHẬN ĐƠN HÀNG
+                                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📦 SẢN PHẨM:
 ${itemsList}
@@ -557,8 +530,7 @@ Xác nhận đặt hàng?
                 price: item.price,
                 quantity: item.quantity,
                 image: item.image
-            }))
-            .filter(item => item.id !== undefined), // Đảm bảo chỉ lấy sản phẩm có ID (nếu cần)
+            })),
 
             // 🚨 ĐỒNG BỘ TỔNG TIỀN
             total: totalAmount,
@@ -646,42 +618,30 @@ function saveOrderOnce(orderData) {
 
 // Hàm xử lý sau checkout
 function processAfterCheckout() {
-    console.log('🔄 Xử lý sau checkout - Đang chờ xác nhận máy chủ (giả lập 1s)...');
+    console.log('🔄 Xử lý sau checkout...');
     
     // Lấy danh sách sản phẩm đã đặt (trước khi xóa khỏi cartData)
     const orderedItems = window.cartData.filter(item => item.checked);
 
-    // Đóng modal ngay lập tức
-    closeCheckoutModal(); 
+    // BỔ SUNG: CẬP NHẬT TỒN KHO
+    updateStockAfterSale(orderedItems);
 
-    // Giả lập độ trễ xử lý đơn hàng (1 giây)
-    setTimeout(() => {
-        console.log('✅ Đã nhận và xử lý đơn hàng. Bắt đầu cập nhật dữ liệu...');
+    // Xóa sản phẩm đã đặt
+    window.cartData = window.cartData.filter(item => !item.checked);
+    window.saveCartData();
 
-        // BỔ SUNG: CẬP NHẬT TỒN KHO
-        updateStockAfterSale(orderedItems);
+    // Cập nhật UI
+    if (typeof window.renderCartDropdown === 'function') window.renderCartDropdown();
+    if (typeof window.renderCartDetailPage === 'function') window.renderCartDetailPage();
 
-         // Xóa sản phẩm đã đặt (chỉ xóa nếu không phải từ "Mua ngay")
-        // Nếu là từ "Mua ngay" thì giỏ hàng tạm đã được xử lý trong closeCheckoutModal
-        if (window.cartData !== window.tempCartForBuyNow) {
-            window.cartData = window.cartData.filter(item => !item.checked);
-            window.saveCartData();
-        }
+    // Đóng modal và thông báo
+    closeCheckoutModal();
+    alert('🎉 Đặt hàng thành công!');
 
-        // Cập nhật UI
-        if (typeof window.renderCartDropdown === 'function') window.renderCartDropdown();
-        if (typeof window.renderCartDetailPage === 'function') window.renderCartDetailPage();
-
-        // Thông báo và chuyển hướng
-        alert('🎉 Đặt hàng thành công! Đơn hàng của bạn đang được xử lý.');
-
-        // Reset về trang chủ
-        if (typeof window.resetToHomePage === 'function') {
-            window.resetToHomePage();
-        }
-        
-        console.log('🏁 Hoàn tất xử lý sau checkout.');
-    }, 1000); // Đặt trễ 1 giây (1000ms)
+    // Reset về trang chủ
+    if (typeof window.resetToHomePage === 'function') {
+        window.resetToHomePage();
+    }
 }
 
 /* ===========================
@@ -739,3 +699,4 @@ document.addEventListener('DOMContentLoaded', function () {
         checkoutBtn.onclick = openCheckoutModal;
     }
 });
+
