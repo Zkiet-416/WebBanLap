@@ -99,7 +99,7 @@ function LoadReceipt() {
       id: "PN001",
       date: "2025-10-28",
       products: [
-        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "2835000", qty: "10", imagePath: "../assets/images/bp1.png" }, 
+        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "2835000", qty: "10", imagePath: "../assets/images/BP1.png" }, 
         { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "990000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
       ],
     },
@@ -446,4 +446,5 @@ function LoadReceipt() {
   window.updateInvoice = updateInvoice;
   window.cancelEdit = cancelEdit;
   window.searchInvoice = searchInvoice; // expose search function
+
 }
