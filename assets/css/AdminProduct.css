@@ -8,7 +8,7 @@
 
 /* LAYOUT CHUNG */
 .container-simple {
-    margin: 0 auto;    
+    margin: 0 auto;
 }
 
 .main-content {
@@ -17,9 +17,11 @@
 }
 
 .table-and-pagination-wrapper {
-    flex: 1 1 0; 
-    min-width: 0; /* Đảm bảo không bị overflow do content tối thiểu */
+    flex: 1 1 0;
+    min-width: 0;
+    /* Đảm bảo không bị overflow do content tối thiểu */
 }
+
 .table-container {
     padding: 10px;
     border-radius: 8px;
@@ -36,12 +38,12 @@
 .search-box input {
     width: 100%;
     padding: 10px 15px;
-    padding-left: 40px; 
+    padding-left: 40px;
     border: 1px solid #E0E0E0;
     border-radius: 25px;
     background-color: white;
     outline: none;
-    
+
 }
 
 .search-box i {
@@ -60,69 +62,71 @@
 
 .product-type-table table {
     /* Đặt min-width để đảm bảo cột không bị quá hẹp khi cuộn ngang */
-    min-width: 700px; 
+    min-width: 700px;
     width: 100%;
     border-collapse: collapse;
-    height:63vh;
-    
+    height: 63vh;
+
 }
+
 .product-type-table thead,
 .product-type-table tbody {
-    display: block; 
+    display: block;
 }
 
 .product-type-table thead tr,
 .product-type-table tbody tr {
     display: table;
     width: 100%;
-    table-layout: fixed; 
+    table-layout: fixed;
 }
 
 /* Định nghĩa độ rộng và căn lề cho 5 cột */
 .product-type-table th:nth-child(1),
-.product-type-table td:nth-child(1) { 
-    width: 8%; 
+.product-type-table td:nth-child(1) {
+    width: 8%;
     text-align: left;
 }
 
 .product-type-table th:nth-child(2),
-.product-type-table td:nth-child(2) { 
+.product-type-table td:nth-child(2) {
     width: 20%;
-    
+
 }
 
 .product-type-table th:nth-child(3),
-.product-type-table td:nth-child(3) { 
-    width: 12%; 
-    text-align: center; 
+.product-type-table td:nth-child(3) {
+    width: 12%;
+    text-align: center;
 }
 
 .product-type-table th:nth-child(4),
-.product-type-table td:nth-child(4) { 
-    width: 35%; 
-    text-align: center; 
+.product-type-table td:nth-child(4) {
+    width: 35%;
+    text-align: center;
 }
 
 .product-type-table th:nth-child(5),
-.product-type-table td:nth-child(5) { 
+.product-type-table td:nth-child(5) {
     width: 25%;
     text-align: left;
-    
+
 }
+
 .product-type-table th,
 .product-type-table td {
     padding: 15px;
-    text-align: left; 
+    text-align: left;
     border-bottom: 1px solid #F0F0F0;
 }
 
-.product-type-table th { 
+.product-type-table th {
     position: sticky;
     top: 0;
-    z-index: 10; 
+    z-index: 10;
     background-color: #E9F2F3;
-    font-weight: bold; 
-    color: #333; 
+    font-weight: bold;
+    color: #333;
     font-size: 0.95rem;
 }
 
@@ -132,7 +136,9 @@
     cursor: pointer;
     transition: color 0.2s;
 }
-.brand-name-cell:hover { /*hover cho brand*/
+
+.brand-name-cell:hover {
+    /*hover cho brand*/
     color: #217a7a;
     text-decoration: underline;
 }
@@ -140,9 +146,9 @@
 /* container cua nut xoa va mui ten */
 .action-buttons-container {
     display: flex;
-    justify-content: left; 
+    justify-content: left;
     align-items: center;
-    gap: 30px; 
+    gap: 30px;
 }
 
 .delete-btn-v2 {
@@ -151,8 +157,9 @@
     color: #D50000;
     font-size: 1.1rem;
     cursor: pointer;
-    padding: 5px; 
+    padding: 5px;
 }
+
 /*
 .dropdown {
     position: relative;
@@ -197,6 +204,7 @@
     width: 45px;
     height: 25px;
 }
+
 .switch input {
     opacity: 0;
     width: 0;
@@ -212,8 +220,9 @@
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 25px; 
+    border-radius: 25px;
 }
+
 .slider:before {
     position: absolute;
     content: "";
@@ -225,10 +234,12 @@
     transition: .4s;
     border-radius: 50%;
 }
-input:checked + .slider {
+
+input:checked+.slider {
     background-color: #63C15D;
 }
-input:checked + .slider:before {
+
+input:checked+.slider:before {
     transform: translateX(18px);
 }
 
@@ -236,10 +247,10 @@ input:checked + .slider:before {
 .add-product-form {
     width: 300px;
     /* THÊM: Ngăn form bị thu hẹp theo Flexbox */
-    flex-shrink: 0; 
+    flex-shrink: 0;
     background-color: white;
     border-radius: 30px 30px 0 0;
-    overflow: hidden; 
+    overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     height: 300px;
 }
@@ -250,6 +261,7 @@ input:checked + .slider:before {
     padding: 15px 20px;
     text-align: center;
 }
+
 .form-header h3 {
     margin: 0;
     font-size: 1rem;
@@ -263,11 +275,13 @@ input:checked + .slider:before {
     flex-direction: column;
     gap: 10px;
 }
+
 .form-body label {
     font-weight: bold;
     color: #333;
     margin-bottom: -5px;
 }
+
 .form-input {
     padding: 10px;
     border: 1px solid #E0E0E0;
@@ -293,10 +307,12 @@ input:checked + .slider:before {
     border-radius: 25px;
     font-size: 0.9rem;
 }
+
 .btn-reset {
     background-color: #ccc;
     color: #333;
 }
+
 .btn-submit {
     background-color: #66C585;
     color: white;
@@ -307,21 +323,24 @@ input:checked + .slider:before {
     background-color: #f9f9f9;
     pointer-events: none;
 }
+
 .view-mode .dropdown,
 .view-mode .dropdown-toggle,
 .view-mode .dropdown-content a:first-child {
-    pointer-events: auto !important; 
+    pointer-events: auto !important;
     opacity: 1 !important;
 }
 
 /* PHÂN TRANG (PAGINATION) MỚI */
 .pagination-container {
     display: flex;
-    justify-content: center; /* Căn giữa */
+    justify-content: center;
+    /* Căn giữa */
     margin-top: 5px;
     padding: 10px;
-    
+
 }
+
 .page-btn {
     padding: 8px 15px;
     margin: 0 3px;
@@ -333,10 +352,12 @@ input:checked + .slider:before {
     color: #333;
     transition: background-color 0.2s, border-color 0.2s;
 }
+
 .page-btn:hover {
     background-color: #e9e9e9;
     border-color: #ccc;
 }
+
 .page-btn.active {
     background-color: #34A8A6;
     /* Màu xanh tương đồng với bảng */
@@ -344,33 +365,36 @@ input:checked + .slider:before {
     border-color: #34A8A6;
     font-weight: bold;
 }
+
 /* CSS cho dấu '...' */
 .pagination-container span {
     color: #555;
     margin: 0 5px;
     font-weight: bold;
 }
-.page-2-pagination {               /*an page product mac dinh*/
-    display: none; 
+
+.page-2-pagination {
+    /*an page product mac dinh*/
+    display: none;
 }
 
 
 /* PAGE 2 - CHI TIẾT SẢN PHẨM */
 .sp-content-area {
     width: 100%;
-    margin-top: 15px; 
+    margin-top: 15px;
     display: none;
-    padding: 20px; 
+    padding: 20px;
     border-radius: 8px;
     background-color: #E9F2F3;
-    
+
 }
 
-.sp-controls-row-top { 
+.sp-controls-row-top {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
 }
 
 .back-button {
@@ -383,6 +407,7 @@ input:checked + .slider:before {
     font-weight: 500;
     transition: background-color 0.2s;
 }
+
 .sp-create-button {
     background-color: #63C15D;
     color: white;
@@ -397,9 +422,9 @@ input:checked + .slider:before {
 /* Thay đổi: Dùng wrapper mới để xử lý cuộn ngang */
 .sp-product-table-wrapper {
     overflow-x: auto;
-    overflow-y:visible;
+    overflow-y: visible;
     width: 100%;
-    background:white;
+    background: white;
 }
 
 .sp-product-table table {
@@ -415,7 +440,7 @@ input:checked + .slider:before {
 .sp-product-table thead,
 .sp-product-table tbody {
     display: block;
-    
+
 }
 
 .sp-product-table thead tr,
@@ -446,27 +471,30 @@ input:checked + .slider:before {
 
 .sp-product-table th:first-child,
 .sp-product-table td:first-child {
-    width: 10%; 
+    width: 10%;
     text-align: left;
     font-weight: 600;
 }
 
 .sp-product-table th:nth-child(2),
 .sp-product-table td:nth-child(2) {
-    width: 30%; 
+    width: 30%;
 }
+
 .sp-product-table th:nth-child(3),
 .sp-product-table td:nth-child(3) {
     width: 15%;
 }
+
 .sp-product-table th:nth-child(4),
 .sp-product-table td:nth-child(4) {
     width: 15%;
 }
+
 .sp-product-table th:nth-child(5),
 .sp-product-table td:nth-child(5) {
-    width: 30%; 
-    text-align: center; 
+    width: 30%;
+    text-align: center;
 }
 
 
@@ -521,7 +549,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     gap: 10px;
-    justify-content: center; 
+    justify-content: center;
 }
 
 /* KHÔI PHỤC CSS CHO NÚT CHI TIẾT DẠNG TEXT */
@@ -532,6 +560,7 @@ input:checked + .slider:before {
     font-size: 0.9rem;
     font-weight: 500;
 }
+
 .sp-detail-link:hover {
     color: #63C15D;
 }
@@ -543,7 +572,7 @@ input:checked + .slider:before {
     border-radius: 0;
     cursor: pointer;
     background-color: transparent;
-    transition: color 0.2s, background-color 0.2s; 
+    transition: color 0.2s, background-color 0.2s;
     font-size: 1rem;
     padding: 5px;
     color: #343E67;
@@ -551,13 +580,13 @@ input:checked + .slider:before {
 
 /* NÚT XÓA (Nền đỏ, icon trắng) */
 .sp-remove-btn {
-    background-color: #D32F2F; 
-    color: white !important;   
-    width: 28px;               
-    height: 28px;              
-    border-radius: 8px;        
-    font-size: 0.9rem;         
-    padding: 0;                
+    background-color: #D32F2F;
+    color: white !important;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -566,7 +595,7 @@ input:checked + .slider:before {
 
 /* CSS CHO MODAL POPUP (TRANG CHI TIẾT) */
 .modal-overlay {
-    display: none; 
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -574,7 +603,7 @@ input:checked + .slider:before {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     padding-top: 50px;
 }
 
@@ -584,8 +613,8 @@ input:checked + .slider:before {
     padding: 20px;
     border-radius: 10px;
     width: 90%;
-    max-width: 800px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
@@ -605,7 +634,7 @@ input:checked + .slider:before {
     cursor: pointer;
     transition: color 0.2s;
 }
-        
+
 .modal-header h2 {
     font-size: 1.5rem;
     color: #343E67;
@@ -621,7 +650,7 @@ input:checked + .slider:before {
     background-color: white;
     border: 1px solid #E6F6F6;
 }
-        
+
 .detail-image-box {
     flex-basis: 30%;
     border-radius: 5px;
@@ -633,26 +662,31 @@ input:checked + .slider:before {
     justify-content: center;
     padding: 15px;
 }
+
 .detail-image {
     max-width: 100%;
     height: auto;
     display: block;
-}       
+}
+
 .detail-summary {
     flex-basis: 70%;
-}       
+}
+
 .detail-summary h3 {
     font-size: 1.4rem;
     font-weight: 600;
     margin-bottom: 10px;
     color: #333;
-}       
+}
+
 .detail-price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #D32F2F; 
+    color: #D32F2F;
     margin-bottom: 5px;
-}        
+}
+
 .detail-status {
     font-weight: 500;
     color: #388E3C;
@@ -665,6 +699,7 @@ input:checked + .slider:before {
     background-color: #E6F6F6;
     border: 1px solid #CFE9E9;
 }
+
 .detail-specs-title {
     font-size: 1.2rem;
     margin-bottom: 15px;
@@ -673,38 +708,46 @@ input:checked + .slider:before {
     align-items: center;
     font-weight: 500;
 }
-.detail-specs-title::before { 
+
+.detail-specs-title::before {
     font-family: "Font Awesome 6 Free";
-    font-weight: 900; 
-    content: "\f2db"; 
+    font-weight: 900;
+    content: "\f2db";
     margin-right: 8px;
 }
+
 #detail-description-content {
     font-size: 0.95rem;
     line-height: 1.7;
     color: #333;
-    white-space: pre-line; 
+    white-space: pre-line;
 }
+
 /* =========================================
    CUSTOM FORM MODAL (GIAO DIỆN MỚI)
    ========================================= */
 .custom-modal-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Nền tối mờ */
-    z-index: 2000; /* Cao hơn các thành phần khác */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Nền tối mờ */
+    z-index: 2000;
+    /* Cao hơn các thành phần khác */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .custom-form-container {
-    background-color: #B2D8D8; /* Màu xanh nền giống trong ảnh */
+    background-color: #B2D8D8;
+    /* Màu xanh nền giống trong ảnh */
     width: 400px;
     max-width: 90%;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     position: relative;
     font-family: 'Segoe UI', sans-serif;
@@ -719,14 +762,15 @@ input:checked + .slider:before {
 
 .custom-form-header h3 {
     display: inline-block;
-    background-color: #AEEEEE; /* Màu sáng hơn cho tiêu đề */
+    background-color: #AEEEEE;
+    /* Màu sáng hơn cho tiêu đề */
     padding: 8px 25px;
     border-radius: 5px;
     margin: 0;
     font-weight: bold;
     font-size: 1.1rem;
     color: #000;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
@@ -757,8 +801,8 @@ input:checked + .slider:before {
     color: #000;
 }
 
-.form-group input, 
-.form-group select, 
+.form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 8px 10px;
@@ -780,7 +824,8 @@ input:checked + .slider:before {
     margin-top: 25px;
 }
 
-.btn-custom-reset, .btn-custom-submit {
+.btn-custom-reset,
+.btn-custom-submit {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -791,15 +836,18 @@ input:checked + .slider:before {
 }
 
 .btn-custom-reset {
-    background-color: #D3D3D3; /* Màu xám */
+    background-color: #D3D3D3;
+    /* Màu xám */
     color: #333;
 }
 
 .btn-custom-submit {
-    background-color: #33FF66; /* Màu xanh lá tươi */
+    background-color: #33FF66;
+    /* Màu xanh lá tươi */
     color: #000;
 }
 
-.btn-custom-reset:hover, .btn-custom-submit:hover {
+.btn-custom-reset:hover,
+.btn-custom-submit:hover {
     opacity: 0.8;
 }

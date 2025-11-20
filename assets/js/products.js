@@ -1,5 +1,4 @@
 // database/products.js
-// Re-generated on 2025-11-03
 
 const products = window.globalJsonData = {
   "product": {
@@ -545,14 +544,14 @@ const products = window.globalJsonData = {
             "model": "Chuột Razer Cobra - Zenless Zone One Edition",
             "price": "1.369.000",
             "status": "hien",
-            "image": "../assets/images/Mouse1.jpg",
+            "image": "../assets/images/mouse1.jpg",
             "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng",
             "qty":"30"
           },
           {
             "id": "chuot-2",
             "model": "Chuột Logitech G501 Hero RGB",
-            "price": "960.0.000",
+            "price": "9.600.000",
             "status": "hien",
             "image": "../assets/images/Mouse2.jpg",
             "description": "Loại: Quang/Laser | DPI: 800 - 16000 | Kết nối: Có dây/Không dây | Phù hợp: Gaming/Văn phòng",
@@ -735,7 +734,8 @@ const products = window.globalJsonData = {
     ]
   }
 };
-// ========== HÀM CHUẨN HÓA DỮ LIỆU (Mới) ==========
+
+// ========== HÀM CHUẨN HÓA DỮ LIỆU ==========
 function normalizeData(data) {
     if (!data || !data.product || !data.product.brand) return [];
 
@@ -774,7 +774,7 @@ function normalizeData(data) {
                     } else if (groupName === 'ban-phim') {
                         productType = 'ban-phim';
                     } else if (groupName === 'chuot') {
-                        productType = 'chuot'; // Bổ sung cho nhóm 'chuot'
+                        productType = 'chuot';
                     } else {
                         productType = product.id.split('-')[0];
                 }}
@@ -784,14 +784,14 @@ function normalizeData(data) {
                 
                 result.push({
                     ...product,
-                    "id": product.id,                             // ID duy nhất cho frontend
-                    "model": product.model,                        // Dùng 'name' để overwrite 'model'
+                    "id": product.id, // ID duy nhất cho frontend
+                    "model": product.model, // Dùng 'name' để overwrite 'model'
                     "image": product.image, 
                     "description": product.description, 
                     "status": product.status,                    
                     "qty":product.qty,
                     //cac gia tri dung cho user
-                    priceValue: priceValue,               // Giá trị số đã được parse
+                    priceValue: priceValue, // Giá trị số đã được parse
                     category: productCategory,
                     type: productType,
                     
@@ -817,7 +817,6 @@ function getLocalProducts() {
             }
         }
         
-        console.log("Khởi tạo dữ liệu laptop từ mẫu (chuẩn hóa)");
         const productsArray = normalizeData(window.globalJsonData);
         saveLocalProducts(productsArray);
         return productsArray;
@@ -848,83 +847,88 @@ let allProducts = getLocalProducts();
 function createProductCard(product) {
     const card = document.createElement("div");
     card.className = "product-card";
-    // SỬ DỤNG product.model thay vì product.name (vì không có thuộc tính name)
-    // SỬ DỤNG product.id cho data-id để đảm bảo thêm đúng sản phẩm
-    
     card.innerHTML = `
         <img src="${product.image}" alt="${product.model}" >
         <h3>${shortenProductName(product.model, 45)}</h3>
         <p class="price">${formatPrice(product.priceValue)}</p>
-        <button class="add-to-cart" data-id="${product.id}">
-            Thêm vào giỏ hàng
+        <button class="buy-now-btn" data-id="${product.id}">
+            Mua sắm ngay
         </button>
     `;
     
-    
-    const addToCartBtn = card.querySelector('.add-to-cart');
-    addToCartBtn.addEventListener('click', function() {
-        // Truyền ID đã được chuẩn hóa
-        const productId = product.id; 
-        if (typeof window.addToCart === 'function') {
-            window.addToCart(productId);
-        } else {
-            console.warn('Hàm addToCart chưa được tải, sử dụng fallback');
-            addToCartFallback(productId); // Truyền ID đã chuẩn hóa
+    card.addEventListener('click', function(e) {
+        // KHÔNG xử lý nếu click vào nút "Mua sắm ngay"
+        if (e.target.closest('.buy-now-btn')) {
+            return;
         }
+        
+        if (typeof window.showProductDetail === 'function') {
+            window.showProductDetail(product.id);
+        }
+    });
+
+    // GỌI HÀM MUA NGAY
+    const buyNowBtn = card.querySelector('.buy-now-btn');
+    buyNowBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const productId = product.id;
+        buyNowProduct(productId);
     });
     
     return card;
 }
 
-// Hàm fallback tạm thời (Đã sửa để dùng id và lấy product object)
-function addToCartFallback(productId) { // Đổi tên tham số thành productId để rõ ràng
-    // ID lúc này là ID đã được chuẩn hóa (ví dụ: AC-AS5-i5-R2UP-Laptop_Acer_Gaming_Nitro_V_ANV15-41-R2UP)
+// ========== HÀM MUA NGAY SẢN PHẨM ==========
+function buyNowProduct(productId) {
+    // Tìm sản phẩm
+    const productsList = window.productsAPI ? window.productsAPI.getAllProducts() : allProducts;
+    const product = productsList.find(p => p.id === productId);
     
-    // Tìm đối tượng sản phẩm đầy đủ từ allProducts
-    // Sử dụng window.productsAPI.getAllProducts() để đảm bảo lấy được allProducts đã khởi tạo
-    const productsList = window.productsAPI ? window.productsAPI.getAllProducts() : allProducts; 
-    const product = productsList.find(p => p.id === productId); 
-    
-    if (product) {
-        alert(`Đã thêm ${product.model} vào giỏ hàng! (Chế độ tạm thời)`);
-        
-        if (!window.cartData) {
-            window.cartData = [];
-        }
-        
-        // Dùng productId (là ID đã chuẩn hóa) để tìm trong giỏ hàng
-        const existingItem = window.cartData.find(item => item.id === productId);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            // Push vào giỏ hàng với các thuộc tính cần thiết
-            window.cartData.push({
-                id: productId, // Sử dụng ID đã được chuẩn hóa
-                name: product.model, 
-                price: product.priceValue, // Dùng priceValue đã là số
-                image: product.image,
-                quantity: 1,
-                checked: true
-            });
-        }
-        
-        if (typeof window.saveCartData === 'function') {
-            window.saveCartData();
-        } else {
-            localStorage.setItem('cartData', JSON.stringify(window.cartData));
-        }
-        
-        updateCartCounter();
-    } else {
+    if (!product) {
         console.error(`Không tìm thấy sản phẩm với ID: ${productId}`);
+        return;
+    }
+
+    // Kiểm tra đăng nhập
+    const isLoggedIn = localStorage.getItem("currentUser") !== null;
+    if (!isLoggedIn) {
+        alert("Vui lòng đăng nhập để mua hàng!");
+        document.getElementById("popupLogin").classList.remove("hidden");
+        return;
+    }
+
+    // LƯU GIỎ HÀNG GỐC TRƯỚC KHI THAY ĐỔI
+    window.originalCartData = window.cartData ? [...window.cartData] : [];
+    
+    // Tạo giỏ hàng tạm thời chỉ với sản phẩm này
+    const tempCartItem = {
+        id: productId,
+        name: product.model,
+        price: product.priceValue,
+        image: product.image,
+        quantity: 1,
+        checked: true
+    };
+
+    // Đặt giỏ hàng tạm thời
+    window.tempCartForBuyNow = [tempCartItem];
+    window.cartData = window.tempCartForBuyNow;
+    
+    // Mở checkout modal
+    if (typeof window.openCheckoutModal === 'function') {
+        window.openCheckoutModal();
+    } else {
+        alert("Tính năng thanh toán đang được cập nhật!");
+        // Nếu không mở được modal, khôi phục giỏ hàng ngay
+        window.cartData = window.originalCartData;
     }
 }
+
 // Hàm cập nhật số lượng giỏ hàng
 function updateCartCounter() {
     const cartCounter = document.querySelector('.cart-count');
     if (cartCounter && window.cartData) {
-        // Cần ensure window.cartData đã được tải từ cart.js
+      // Cần ensure window.cartData đã được tải từ cart.js
         if (typeof window.getCartData === 'function') {
              window.cartData = window.getCartData();
         }
@@ -942,14 +946,13 @@ function formatPrice(price) {
     }).format(price);
 }
 
-// ========== HÀM MỚI ĐỂ RÚT GỌN TÊN ==========
+// ========== HÀM RÚT GỌN TÊN ==========
 function shortenProductName(name, maxLength = 45) {
     if (name.length <= maxLength) {
         return name;
     }
     return name.substring(0, maxLength) + '...';
 }
-// ============================================
 
 // Render sản phẩm với phân trang
 function renderProducts(productsList, page = 1, gridId = "product-grid") {
@@ -968,7 +971,8 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
         return productStatus.toLowerCase() === 'hien' && categoryActiveStatus.toLowerCase() === 'active';
     });
     
-    // Giữ nguyên việc lưu trữ danh sách ban đầu cho các chức năng khác (nếu cần)
+
+    // PHÂN BIỆT LAPTOP VÀ PHỤ KIỆN
     if (gridId === "product-grid") {
         currentLaptopProducts = productsList;
         currentLaptopPage = page;
@@ -978,9 +982,9 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
     }
     
     grid.innerHTML = "";
-    
+
     // 2. TÍNH TOÁN PHÂN TRANG DỰA TRÊN SỐ LƯỢNG SẢN PHẨM CÓ THỂ HIỂN THỊ (visibleProducts)
-    const total = visibleProducts.length;
+    const total = visibleProducts.length; 
     const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
     
     let currentPage = page;
@@ -989,7 +993,7 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
     
     const start = (currentPage - 1) * PER_PAGE;
     const end = start + PER_PAGE;
-    
+
     // 3. CẮT MẢNG DỰA TRÊN visibleProducts
     const pageProducts = visibleProducts.slice(start, end);
     
@@ -999,8 +1003,11 @@ function renderProducts(productsList, page = 1, gridId = "product-grid") {
         grid.appendChild(productCard);
     });
     
-    // 5. CẬP NHẬT PHÂN TRANG
+     // 5. CẬP NHẬT PHÂN TRANG
+    // Cập nhật số lượng sản phẩm
     updateProductCount(total, currentPage, gridId);
+    
+    // Render phân trang
     renderPagination(totalPages, currentPage, gridId);
 }
 
@@ -1027,7 +1034,7 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
     
     if (totalPages <= 1) return;
     
-    console.log(`📄 Render phân trang: trang ${currentPage}/${totalPages} cho ${gridId}`);
+    console.log(`Render phân trang: trang ${currentPage}/${totalPages} cho ${gridId}`);
 
     // Nút Previous
     const prevBtn = document.createElement("button");
@@ -1035,9 +1042,13 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
     prevBtn.className = "pagination-btn";
     prevBtn.disabled = currentPage <= 1;
     prevBtn.addEventListener("click", () => {
-        const productsToRender = gridId === "product-grid" ? currentLaptopProducts : currentAccessoryProducts;
-        renderProducts(productsToRender, currentPage - 1, gridId);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (currentPage > 1) {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, currentPage - 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, currentPage - 1, gridId);
+            }
+        }
     });
     container.appendChild(prevBtn);
     
@@ -1056,8 +1067,11 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
         firstBtn.textContent = "1";
         firstBtn.className = "pagination-btn";
         firstBtn.addEventListener("click", () => {
-            const productsToRender = gridId === "product-grid" ? currentLaptopProducts : currentAccessoryProducts;
-            renderProducts(productsToRender, 1, gridId);
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, 1, gridId);
+            }
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
         container.appendChild(firstBtn);
@@ -1079,9 +1093,11 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
             pageBtn.classList.add("active");
         }
         pageBtn.addEventListener("click", () => {
-            const productsToRender = gridId === "product-grid" ? currentLaptopProducts : currentAccessoryProducts;
-            renderProducts(productsToRender, i, gridId);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, i, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, i, gridId);
+            }
         });
         container.appendChild(pageBtn);
     }
@@ -1099,9 +1115,11 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
         lastBtn.textContent = totalPages;
         lastBtn.className = "pagination-btn";
         lastBtn.addEventListener("click", () => {
-            const productsToRender = gridId === "product-grid" ? currentLaptopProducts : currentAccessoryProducts;
-            renderProducts(productsToRender, totalPages, gridId);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, totalPages, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, totalPages, gridId);
+            }
         });
         container.appendChild(lastBtn);
     }
@@ -1112,17 +1130,20 @@ function renderPagination(totalPages, currentPage, gridId = "product-grid") {
     nextBtn.className = "pagination-btn";
     nextBtn.disabled = currentPage >= totalPages;
     nextBtn.addEventListener("click", () => {
-        const productsToRender = gridId === "product-grid" ? currentLaptopProducts : currentAccessoryProducts;
-        renderProducts(productsToRender, currentPage + 1, gridId);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (currentPage < totalPages) {
+            if (gridId === "product-grid") {
+                renderProducts(currentLaptopProducts, currentPage + 1, gridId);
+            } else {
+                renderProducts(currentAccessoryProducts, currentPage + 1, gridId);
+            }
+        }
     });
     container.appendChild(nextBtn);
 }
 
-// ========== LỌC SẢN PHẨM (Đã sửa) ==========
+// ========== LỌC SẢN PHẨM ==========
 function filterLaptopsByBrand(brand) {
     const brandName = brand === "all" ? "all" : brand; 
-    
     const filtered = allProducts.filter(product => 
         product.category === "laptop" && (brandName === "all" || product.type === brandName)
     );
@@ -1130,20 +1151,18 @@ function filterLaptopsByBrand(brand) {
 }
 
 function filterAccessoriesByType(type) {
-    // Ánh xạ từ tên hiển thị sang tên key trong dữ liệu đã chuẩn hóa (product.type)
     const typeMap = {
         "Tất cả": "all",
         "Balo": "balo",
         "Đế tản nhiệt": "de-tan-nhiet", 
         "Tai nghe": "tai-nghe",
         "Chuột": "chuot",
-        "Bàn phím": "ban-phim",
+        "Bàn phím": "ban-phim", 
         'Phụ kiện khác':'phukienkhac'
     };
     
     // Lấy key đã chuẩn hóa hoặc dùng type nếu không tìm thấy (và chuyển về chữ thường)
     const typeKey = typeMap[type] || type.toLowerCase();
-    
     const filtered = allProducts.filter(product => 
         product.category === "phukien" && (typeKey === "all" || product.type === typeKey)
     );
@@ -1158,29 +1177,39 @@ function searchProducts() {
     const searchTerm = searchInput.value.trim().toLowerCase();
     
     if (searchTerm === "") {
-        resetToHomePage();
+        // Nếu search rỗng, hiển thị lại tất cả và ẩn dropdown
+        resetToHomePageFromProducts();
         hideSearchResults();
     }
-    // Logic tìm kiếm chi tiết hơn sẽ do search.js xử lý
+    // KHÔNG làm gì khi có search term - để search.js xử lý dropdown
 }
 
 // Hàm reset về trang chủ
-function resetToHomePage() {
+function resetToHomePageFromProducts() {
+
+    allProducts = getLocalProducts();
     const laptops = allProducts.filter(p => p.category === "laptop");
     const accessories = allProducts.filter(p => p.category === "phukien");
     
-    // Reset pages về 1 trước khi render
     renderProducts(laptops, 1, "product-grid");
     renderProducts(accessories, 1, "accessory-grid");
     
     // Hiện lại tất cả section
+    const sliderSection = document.getElementById("slider");
     const suggestionsSection = document.getElementById("suggestions");
     const accessoriesSection = document.getElementById("accessories");
     const productDetailSection = document.getElementById("productDetail");
+    const cartDetailSection = document.getElementById("cartDetail");
+    const historyPageSection = document.getElementById("historyPage");
+    const profile = document.getElementById("profile");
     
+    if (sliderSection) sliderSection.style.display = "block";
     if (suggestionsSection) suggestionsSection.style.display = "block";
     if (accessoriesSection) accessoriesSection.style.display = "block";
     if (productDetailSection) productDetailSection.style.display = "none";
+    if (cartDetailSection) cartDetail.style.display = "none";
+    if (historyPageSection) historyPage.style.display = "none";
+    profile.classList.add("hidden");
     
     // Reset tabs về "Tất cả"
     const laptopTabs = document.querySelectorAll("#brandTabs button");
@@ -1199,22 +1228,16 @@ function resetToHomePage() {
             else tab.classList.remove("active");
         });
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // ========== KHỞI TẠO ==========
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Đang khởi tạo trang sản phẩm...");
-    
-    // Gán lại allProducts sau khi DOMContentLoaded để đảm bảo local storage được load
-    let allProducts = getLocalProducts(); 
+    let allProducts = getLocalProducts();
     
     // Lọc laptop và phụ kiện
     const laptops = allProducts.filter(p => p.category === "laptop");
     const accessories = allProducts.filter(p => p.category === "phukien");
-    
-    console.log(`Tổng sản phẩm: ${allProducts.length}`);
-    console.log(`Laptop: ${laptops.length}`);
-    console.log(`Phụ kiện: ${accessories.length}`);
     
     // Render ban đầu
     renderProducts(laptops, 1, "product-grid");
@@ -1243,7 +1266,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 accessoryTabs.forEach(t => t.classList.remove("active"));
                 tab.classList.add("active");
                 
-                const type = index === 0 ? "Tất cả" : tab.textContent.trim(); // Dùng "Tất cả" để khớp với typeMap
+                const type = index === 0 ? "all" : tab.textContent.trim();
                 filterAccessoriesByType(type);
             });
         });
@@ -1255,8 +1278,9 @@ document.addEventListener("DOMContentLoaded", function() {
         searchInput.addEventListener("input", function() {
           const searchTerm = this.value.trim();
           if (searchTerm === "") {
-            searchProducts(); 
+            searchProducts(); // Chỉ gọi khi search rỗng
           }
+            // Khi có chữ, để search.js xử lý dropdown
           });
     }
     
@@ -1266,7 +1290,41 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Khởi tạo trang sản phẩm thành công!");
 });
 
-// ========== MENU DROPDOWN EVENTS (Đã sửa) ==========
+window.addEventListener('storage', function(e) {
+    // Kiểm tra xem có phải laptopProducts bị thay đổi không
+    if (e.key === 'laptopProducts' && e.newValue !== e.oldValue) {
+        console.log('Phát hiện thay đổi dữ liệu sản phẩm từ Admin!');
+        
+        try {
+            // Parse dữ liệu mới
+            const updatedProducts = JSON.parse(e.newValue);
+            
+            if (Array.isArray(updatedProducts) && updatedProducts.length > 0) {
+                // Cập nhật allProducts
+                window.allProducts = updatedProducts;
+                allProducts = updatedProducts;
+                
+                // Refresh lại giao diện
+                if (typeof window.productsAPI !== 'undefined' && 
+                    typeof window.productsAPI.refreshData === 'function') {
+                    window.productsAPI.refreshData();
+                }
+                
+                console.log('Đã đồng bộ dữ liệu mới:', updatedProducts.length, 'sản phẩm');
+            }
+        } catch (error) {
+            console.error('Lỗi khi đồng bộ dữ liệu:', error);
+        }
+    }
+});
+
+// ========== MENU DROPDOWN EVENTS ==========
+// Hàm để search.js có thể truy cập products
+window.getSearchProducts = function() {
+    return allProducts;
+};
+
+// ========== MENU DROPDOWN EVENTS ==========
 function attachDropdownEvents() {
     // Laptop brands từ dropdown
     const laptopItems = document.querySelectorAll(".dropdown .col:first-child ul li");
@@ -1279,6 +1337,7 @@ function attachDropdownEvents() {
             laptopTabs.forEach(tab => {
                 if (tab.textContent.trim() === brand) {
                     tab.classList.add("active");
+                    found = true;
                 } else {
                     tab.classList.remove("active");
                 }
@@ -1317,7 +1376,7 @@ function attachDropdownEvents() {
             // Nếu không tìm thấy tab, chọn tab "Tất cả"
             if (!found && accessoryTabs[0]) {
                 accessoryTabs[0].classList.add("active");
-                filterAccessoriesByType("Tất cả"); // Dùng "Tất cả" để khớp với logic tab
+                filterAccessoriesByType("all");
             } else {
                 filterAccessoriesByType(type);
             }
@@ -1358,7 +1417,7 @@ window.formatPrice = function(price) {
     }).format(price);
 };
 
-// Hàm ẩn kết quả tìm kiếm (Giả định nằm trong search.js, nhưng được export)
+// Hàm ẩn kết quả tìm kiếm
 function hideSearchResults() {
     const searchResults = document.getElementById('searchResults');
     if (searchResults) {
@@ -1368,4 +1427,4 @@ function hideSearchResults() {
 
 // Xuất hàm ra global để search.js dùng
 window.hideSearchResults = hideSearchResults;
-window.resetToHomePage = resetToHomePage;
+window.resetToHomePageFromProducts = resetToHomePageFromProducts;

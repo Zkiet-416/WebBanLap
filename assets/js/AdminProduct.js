@@ -86,7 +86,7 @@ let autoRefreshIntervalId = null; // Biến lưu trữ ID của setInterval
 // BIẾN PHÂN TRANG
 let brandsPerPage = 10;
 let currentBrandPage = 1;
-let productsPerPage = 6;
+let productsPerPage = 5;
 let currentProductPage = 1;
 let currentProductsList = [];
 let filteredProductsList = [];
@@ -721,7 +721,7 @@ const updatePageTitle = (newTitle) => {
 
         if (brand) {
             const currentDisplayName = brand.displayName || getname(brand.name);
-            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM: ${currentDisplayName.toUpperCase()}`; 
+            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM`; 
             
             DOM.tenInput.value = currentDisplayName;
             DOM.soLuongInput.value = calculateProductCount(brand);

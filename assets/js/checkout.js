@@ -78,6 +78,26 @@ function updateStockAfterSale(soldItems) {
     }
 }
 
+/* ===========================
+   KHÔI PHỤC GIỎ HÀNG KHI ĐÓNG MODAL
+   =========================== */
+function restoreOriginalCart() {
+    // Nếu đang dùng giỏ hàng tạm thời từ "Mua sắm ngay", khôi phục lại giỏ hàng gốc
+    if (window.originalCartData && window.cartData === window.tempCartForBuyNow) {
+        window.cartData = window.originalCartData;
+        window.originalCartData = null;
+        window.tempCartForBuyNow = null;
+        
+        // Cập nhật lại UI
+        if (typeof window.saveCartData === 'function') {
+            window.saveCartData();
+        }
+        if (typeof window.renderCartDropdown === 'function') {
+            window.renderCartDropdown();
+        }
+        console.log('✅ Đã khôi phục giỏ hàng gốc');
+    }
+}
 
 /* ===========================
    QUẢN LÝ MODAL CHECKOUT
@@ -105,6 +125,11 @@ window.openCheckoutModal = function () {
         return;
     }
 
+    // Lưu giỏ hàng gốc trước khi mở modal (nếu chưa có từ "Mua sắm ngay")
+    if (!window.originalCartData) {
+        window.originalCartData = [...window.cartData];
+    }
+
     // Hiển thị modal
     const modal = document.getElementById('checkoutModal');
     if (modal) {
@@ -121,6 +146,8 @@ window.closeCheckoutModal = function () {
     const modal = document.getElementById('checkoutModal');
     if (modal) {
         modal.style.display = 'none';
+        // KHÔI PHỤC GIỎ HÀNG KHI ĐÓNG MODAL
+        restoreOriginalCart();
     }
 };
 
@@ -634,9 +661,12 @@ function processAfterCheckout() {
         // BỔ SUNG: CẬP NHẬT TỒN KHO
         updateStockAfterSale(orderedItems);
 
-        // Xóa sản phẩm đã đặt
-        window.cartData = window.cartData.filter(item => !item.checked);
-        window.saveCartData();
+         // Xóa sản phẩm đã đặt (chỉ xóa nếu không phải từ "Mua ngay")
+        // Nếu là từ "Mua ngay" thì giỏ hàng tạm đã được xử lý trong closeCheckoutModal
+        if (window.cartData !== window.tempCartForBuyNow) {
+            window.cartData = window.cartData.filter(item => !item.checked);
+            window.saveCartData();
+        }
 
         // Cập nhật UI
         if (typeof window.renderCartDropdown === 'function') window.renderCartDropdown();

@@ -25,7 +25,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .product-image-section h2 {
@@ -68,7 +68,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .product-info-section h3 {
@@ -99,7 +99,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   flex: 1;
 }
 
@@ -143,7 +143,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .price-section .product-price {
@@ -194,7 +194,7 @@
   background: #f8f8f8;
   border-color: #999 !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ========== RESPONSIVE ========== */
@@ -202,7 +202,7 @@
   .product-detail-wrapper {
     grid-template-columns: 1fr;
   }
-  
+
   .product-right {
     order: -1;
   }
@@ -212,21 +212,21 @@
   .product-image-section h2 {
     font-size: 20px;
   }
-  
+
   .product-info-section h3,
   .specs-section h3 {
     font-size: 16px;
   }
-  
+
   .action-buttons {
     flex-direction: column;
   }
-  
+
   .action-buttons button {
     width: 100%;
     min-width: unset;
   }
-  
+
   .spec-label {
     min-width: 120px;
   }
@@ -237,32 +237,32 @@
     gap: 20px;
     margin-top: 16px;
   }
-  
+
   .product-left,
   .product-right {
     gap: 16px;
   }
-  
+
   .product-image-section,
   .product-info-section,
   .specs-section,
   .price-section {
     padding: 16px;
   }
-  
+
   .spec-label {
     min-width: 90px;
     font-size: 13px;
   }
-  
+
   .spec-value {
     font-size: 13px;
   }
-  
+
   .main-image {
     min-height: 200px;
   }
-  
+
   .main-image img {
     max-height: 300px;
   }

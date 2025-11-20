@@ -277,7 +277,7 @@ nav.main-menu {
     max-width: 1200px;
     margin: 18px auto;
     padding: 20px;
-    margin-top: 80px;
+    margin-top: 110px;
     overflow-x: hidden;
 }
 
@@ -466,7 +466,7 @@ section.products h2 {
 }
 
 /* Nút thêm vào giỏ hàng */
-.product-card .add-to-cart {
+.product-card .buy-now-btn {
     background: linear-gradient(135deg, #2acbc0, #9fcfe5);
     color: white;
     border: none;
@@ -481,7 +481,7 @@ section.products h2 {
     letter-spacing: 0.5px;
 }
 
-.product-card .add-to-cart:hover {
+.product-card .buy-now-btn:hover {
     background: linear-gradient(135deg, #c13a32, #e55a5a);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(214, 69, 59, 0.3);

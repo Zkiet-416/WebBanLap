@@ -65,12 +65,14 @@ window.showCartDetail = function() {
     const slider = document.querySelector('.slider');
     const productDetail = document.getElementById('productDetail');
     const historyPage = document.getElementById('historyPage');
+    const profile = document.getElementById("profile");
 
     if (suggestions) suggestions.style.display = 'none';
     if (accessories) accessories.style.display = 'none';
     if (slider) slider.style.display = 'none';
     if (productDetail) productDetail.style.display = 'none';
-    if (historyPage) historyPage.style.display = 'none'; 
+    if (historyPage) historyPage.style.display = 'none';
+    profile.classList.add("hidden");
     
     // Hiển thị cart detail
     const cartDetail = document.getElementById('cartDetail');

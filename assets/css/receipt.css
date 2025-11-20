@@ -16,7 +16,8 @@ h2 {
     margin-bottom: 15px;
 }
 
-input, button {
+input,
+button {
     padding: 8px 12px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -27,16 +28,30 @@ button {
     cursor: pointer;
 }
 
-button.save { background: #4CAF50; color: white; }
-button.cancel { background: #ccc; }
-button.edit { background: #0a84ff; color: white; }
-button.delete { background: #d9534f; color: white; }
+button.save {
+    background: #4CAF50;
+    color: white;
+}
+
+button.cancel {
+    background: #ccc;
+}
+
+button.edit {
+    background: #0a84ff;
+    color: white;
+}
+
+button.delete {
+    background: #d9534f;
+    color: white;
+}
 
 .table-container {
     background: #eaf4f3;
     padding: 15px;
     border-radius: 8px;
-    margin-top: 15px; 
+    margin-top: 15px;
 }
 
 table {
@@ -44,7 +59,8 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
     border-bottom: 1px solid black;
     text-align: center;
     padding: 10px;
@@ -78,7 +94,7 @@ th, td {
     align-items: center;
     gap: 10px;
     /* Yêu cầu căn lề trái */
-    text-align: left; 
+    text-align: left;
 }
 
 .receipt-product-image {
