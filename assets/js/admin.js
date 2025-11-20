@@ -11,6 +11,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // === Load mặc định Dashboard ===
   loadDashboard();
 
+  // === LẮnG NGHE THAY ĐỔI TỪ LOCALSTORAGE ===
+  // Khi user mua hàng, localStorage sẽ thay đổi, ta sẽ tự động reload Dashboard
+  window.addEventListener('storage', function(e) {
+    // Kiểm tra nếu đang ở trang Dashboard và có thay đổi đơn hàng
+    const isDashboardActive = document.querySelector('.menu-item[data-page="dashboard"]')?.classList.contains('active');
+    
+    if (isDashboardActive && e.key === 'ordersHistory') {
+      console.log('🔄 Phát hiện đơn hàng mới, đang cập nhật Dashboard...');
+      loadDashboard();
+    }
+  });
+
+  // === POLLING: Kiểm tra định kỳ mỗi 3 giây ===
+  let lastOrderCount = 0;
+  
+  function checkForNewOrders() {
+    const isDashboardActive = document.querySelector('.menu-item[data-page="dashboard"]')?.classList.contains('active');
+    
+    if (isDashboardActive) {
+      try {
+        const ordersData = localStorage.getItem('ordersHistory');
+        if (ordersData) {
+          const orders = JSON.parse(ordersData);
+          const currentCount = Array.isArray(orders) ? orders.length : 0;
+          
+          // Nếu số lượng đơn hàng thay đổi, reload Dashboard
+          if (lastOrderCount !== 0 && currentCount !== lastOrderCount) {
+            console.log(`🔄 Cập nhật Dashboard: ${lastOrderCount} → ${currentCount} đơn hàng`);
+            loadDashboard();
+          }
+          
+          lastOrderCount = currentCount;
+        }
+      } catch (err) {
+        console.error('Lỗi kiểm tra đơn hàng:', err);
+      }
+    }
+  }
+  
+  // Chạy polling mỗi 3 giây
+  setInterval(checkForNewOrders, 3000);
+
   // === Gán sự kiện click cho menu ===
   menuItems.forEach((item) => {
     item.addEventListener("click", () => {
@@ -109,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     </tr>
                                 </thead>
                                 <tbody id="brand-list-tbody">
-                                </tbody >
+                                </tbody>
                             </table>
                         </div>
                     </section>
@@ -157,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 </tr>
                             </thead>
                             <tbody id="product-list">
-                            </tbody >
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -367,7 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <thead id="inventory-thead">
                                 </thead>
                             <tbody id="inventory-tbody">
-                                </tbody >
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -543,5 +585,16 @@ function loadDashboard() {
       ${orderHistoryHTML}
     </div>
   `;
+  
+  // Cập nhật lastOrderCount sau khi load
+  try {
+    const ordersData = localStorage.getItem('ordersHistory');
+    if (ordersData) {
+      const orders = JSON.parse(ordersData);
+      lastOrderCount = Array.isArray(orders) ? orders.length : 0;
+    }
+  } catch (err) {
+    console.error('Lỗi cập nhật lastOrderCount:', err);
+  }
 }
 });
