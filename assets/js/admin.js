@@ -544,43 +544,4 @@ function loadDashboard() {
     </div>
   `;
 }
-
-// ============================
-// TỰ ĐỘNG CẬP NHẬT DASHBOARD KHI CÓ ĐƠN MỚI (REALTIME)
-// ============================
-
-let lastOrderCount = -1; // Để so sánh lần đầu
-
-function autoRefreshDashboard() {
-  const ordersData = localStorage.getItem('ordersHistory');
-  if (!ordersData) return;
-
-  try {
-    const orders = JSON.parse(ordersData);
-    const currentCount = Array.isArray(orders) ? orders.length : 0;
-
-    // Nếu số lượng đơn hàng thay đổi → reload dashboard
-    if (currentCount !== lastOrderCount) {
-      lastOrderCount = currentCount;
-      console.log('Có đơn hàng mới! Tự động cập nhật dashboard...');
-      loadDashboard(); // Hàm bạn đã có sẵn
-    }
-  } catch (e) {
-    console.error('Lỗi parse ordersHistory khi auto refresh');
-  }
-}
-
-// Cách 1: Dùng storage event (tốt nhất – cập nhật ngay lập tức khi user đặt hàng ở tab khác)
-window.addEventListener('storage', (e) => {
-  if (e.key === 'ordersHistory') {
-    console.log('ordersHistory thay đổi từ tab khác → refresh dashboard');
-    loadDashboard();
-  }
-});
-
-// Cách 2: Dự phòng – cứ mỗi 3 giây kiểm tra 1 lần (tránh trường hợp cùng 1 tab)
-setInterval(autoRefreshDashboard, 3000);
-
-// Gọi lần đầu khi mở trang admin
-autoRefreshDashboard();
 });
