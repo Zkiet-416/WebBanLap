@@ -248,18 +248,13 @@ document.addEventListener("DOMContentLoaded", () => {
                            </div>
 
                             <div class="form-group">
-                                 <label>Hình ảnh:</label>
+                                <label>Hình ảnh:</label>
+                                <div style="display:flex">
                                  <input type="file" id="inp-image-file" accept="image/*" style="width: 100%; margin-bottom: 5px;">
-
                                  <input type="hidden" id="inp-image">
-
-                                 <small style="font-size: 0.8rem; color: #666;">*Chọn ảnh từ máy tính</small>
+                                 <img id="image-preview" src="" style="max-width:150px; max-height:150px; background-color:black; border: 2px solid #ddd; display: none; margin-top: 10px; object-fit: contain;">
                               </div>
-
-                              <div class="form-group" style="text-align: center;">
-                                 <img id="image-preview" src="" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; display: none; margin-top: 10px; object-fit: contain;">
-                              </div>
-
+                            </div>
                            <div class="custom-form-actions">
                                <button class="btn-custom-reset" onclick="closeProductForm()">Hủy / Đặt lại</button>
                                <button class="btn-custom-submit" onclick="handleProductFormSubmit()">Hoàn tất</button>
