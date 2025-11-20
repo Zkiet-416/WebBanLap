@@ -10,8 +10,17 @@ function normalizeData(data) {
         const categoryStatus = brandGroup.status;
         const subProducts = brandGroup[groupName];
         
+        // ĐÃ SỬA: Quét thêm cả key 'phukienkhac' nếu groupName không chứa dữ liệu
+        // Điều này đảm bảo các Brand tùy chỉnh (lưu trong phukienkhac) vẫn được chuẩn hóa
+        let productsToProcess = [];
         if (Array.isArray(subProducts)) {
-            subProducts.forEach(product => {
+            productsToProcess = subProducts;
+        } else if (Array.isArray(brandGroup['phukienkhac'])) {
+             productsToProcess = brandGroup['phukienkhac'];
+        }
+
+        if (productsToProcess.length > 0) {
+            productsToProcess.forEach(product => {
                 // Xử lý giá, loại bỏ dấu chấm
                 const priceValue = parseInt(String(product.price).replace(/\./g, '').replace(/\.0+$/, ''), 10);
                 
@@ -40,19 +49,25 @@ function normalizeData(data) {
                     } else if (groupName === 'chuot') {
                         productType = 'chuot'; 
                     } else {
-                        // Fallback
-                        productType = product.id.split('-')[0];
+                        productType = 'phukienkhac';
                 }}
                 
                 // Sử dụng ID + Model để tạo key duy nhất (Định dạng của products.js)
                 const id = `${product.id}-${product.model.replace(/\s/g, '_')}`;
-                
+                let finalQty = product.qty;
+                // Hoặc đơn giản: nếu type là 'phukienkhac' thì luôn là "0"
+                if (productType === 'phukienkhac') {
+                    finalQty = "0"; 
+                    // Đảm bảo category cũng là 'phukien'
+                    productCategory = 'phukien'; 
+                }
                 result.push({
                     ...product,
                     id: product.id,
                     priceValue: priceValue,
                     category: productCategory,
                     type: productType ,
+                    qty:finalQty,
                     categoryStatus: categoryStatus
                 });
             });
@@ -66,6 +81,7 @@ function normalizeData(data) {
 let editingRow = null;
 let currentOfferContent = "Ưu đãi đặc biệt: Tặng chuột không dây và túi chống sốc cao cấp!";
 let currentViewingBrandName = null;
+let autoRefreshIntervalId = null; // Biến lưu trữ ID của setInterval
 
 // BIẾN PHÂN TRANG
 let brandsPerPage = 10;
@@ -147,14 +163,22 @@ window.openProductForm = (mode, productData = null, brandName = "", type = "", i
         
         hiddenInput.value = "https://placehold.co/150x150?text=NoImage"; // Mặc định
 
-        // Tự động chọn loại dựa trên currentViewingBrandName nếu hợp lệ
-        const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe'];
-        if (productTypes.includes(currentViewingBrandName)) {
+        // Tự động chọn loại dựa trên currentViewingBrandName
+        // <--- ĐÃ SỬA: Logic thông minh hơn để chọn category --->
+        const standardTypes = ['laptop', 'balo', 'de-tan-nhiet', 'chuot', 'ban-phim', 'tai-nghe'];
+        
+        if (currentViewingBrandName && standardTypes.includes(currentViewingBrandName)) {
+             // Nếu là brand chuẩn (balo, laptop...), chọn đúng tên đó
              typeSelect.value = currentViewingBrandName;
         } else {
-             typeSelect.value = 'laptop'; // Default
+             // Nếu là brand tùy chỉnh (Loa, Ghế...), chọn 'phukienkhac'
+             typeSelect.value = 'phukienkhac'; 
         }
-        typeSelect.disabled = false;
+        
+        // Kiểm tra xem việc gán value có thành công không (trường hợp option chưa load)
+        if (!typeSelect.value) typeSelect.value = 'phukienkhac';
+
+        typeSelect.disabled = true; // Khóa lại, không cho người dùng đổi lung tung
         idInput.disabled = false;
         priceInput.disabled = false; // <--- ĐIỂM CHỈNH SỬA: Bật chỉnh sửa Giá khi thêm mới
     }
@@ -272,9 +296,32 @@ window.loadAdminProductPage = () => {
     // --- CÁC HÀM TIỆN ÍCH DỮ LIỆU JSON ---
     const findBrandByName = (name) => globalJsonData.product.brand.find(b => b.name === name);
     const findBrandIndexByName = (name) => globalJsonData.product.brand.findIndex(b => b.name === name);
-    // Giữ nguyên logic 'brand' (loại sản phẩm)
-    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe']; 
+    
+    // <--- ĐÃ SỬA: THÊM 'phukienkhac' VÀO DANH SÁCH NÀY ĐỂ CODE QUÉT ĐƯỢC DỮ LIỆU CỦA BRAND TÙY CHỈNH --->
+    const productTypes = ['laptop', 'balo', 'de-tan-nhiet','chuot','ban-phim','tai-nghe', 'phukienkhac']; 
 
+    // --- HÀM TIỆN ÍCH CHUYỂN ĐỔI TÊN TIẾNG VIỆT (ĐÃ THÊM MỚI) ---
+    const getname = (englishName) => {
+        switch (englishName) {
+            case 'laptop':
+                return 'Laptop';
+            case 'balo':
+                return 'Balo';
+            case 'de-tan-nhiet':
+                return 'Đế tản nhiệt';
+            case 'chuot':
+                return 'Chuột';
+            case 'ban-phim':
+                return 'Bàn phím';
+            case 'tai-nghe':
+                return 'Tai nghe';
+            case 'phukienkhac':  // <--- ĐÃ SỬA: Thêm case cho phụ kiện khác
+                return 'Khác';
+            default:
+                return englishName; // Giữ nguyên nếu không tìm thấy
+        }
+    };
+    
     // Tính tổng số lượng sản phẩm
     const calculateProductCount = (brand) => {
     let count = 0;
@@ -340,7 +387,7 @@ const updatePageTitle = (newTitle) => {
             // 1. Lưu dữ liệu NESTED (dạng object) cho trang Admin
             localStorage.setItem(ADMIN_DATA_KEY, JSON.stringify(globalJsonData));
             
-            // 2. Chuẩn hóa và lưu dữ liệu FLAT (dạng mảng) cho trang products.js
+            // 2. Chuẩn hóa và lưu dữ liệu FLAT (dùng normalizeData) cho trang products.js
             const normalizedProducts = normalizeData(globalJsonData);
             localStorage.setItem(MAIN_PRODUCTS_KEY, JSON.stringify(normalizedProducts));
 
@@ -411,22 +458,52 @@ const updatePageTitle = (newTitle) => {
 
     // --- HÀM TẠO PHÂN TRANG ---
    function createPagination(totalItems, itemsPerPage, currentPage, pageContainer, onPageChangeCallback) {
-    // 1. Tính tổng số trang (ít nhất là 1)
+    if (!pageContainer) return;
     const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     pageContainer.innerHTML = '';
-    
-    if (totalPages <= 1) {
-        return;
+
+    if (totalPages <= 1) return;
+    if (currentPage > totalPages) currentPage = totalPages;
+    let startPage = Math.max(1, currentPage - 1);
+    let endPage = Math.min(totalPages, currentPage + 1);
+    const maxPagesToShow = 3;
+    if (totalPages > maxPagesToShow) {
+        if (currentPage === 1) { 
+            startPage = 1;
+            endPage = Math.min(totalPages, maxPagesToShow);
+        } else if (currentPage === totalPages) {
+            startPage = Math.max(1, totalPages - (maxPagesToShow - 1));
+            endPage = totalPages;
+        } else {
+            startPage = Math.max(1, currentPage - 1);
+            endPage = Math.min(totalPages, currentPage + 1);
+        }
+    } else {
+        startPage = 1;
+        endPage = totalPages;
     }
-    if (currentPage > totalPages) {
-        currentPage = totalPages;
+    if (startPage > 1) {
+        pageContainer.appendChild(createButton(1, currentPage, onPageChangeCallback)); 
+        if (startPage > 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            pageContainer.appendChild(dots);
+        }
     }
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = startPage; i <= endPage; i++) {
         pageContainer.appendChild(createButton(i, currentPage, onPageChangeCallback));
-    }   
     }
-
-
+    if (endPage < totalPages) {
+        // Dấu ...
+        if (endPage < totalPages - 1) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            pageContainer.appendChild(dots);
+        }
+        // Nút Trang cuối
+        pageContainer.appendChild(createButton(totalPages, currentPage, onPageChangeCallback));
+    }
+}
     // RENDER BRAND VÀ PHÂN TRANG
     function renderBrands(filteredBrands = null) {
         DOM.tableBody.innerHTML = '';
@@ -440,6 +517,10 @@ const updatePageTitle = (newTitle) => {
         brandsToRender.forEach((brand) => {
             const soLuong = calculateProductCount(brand);
             const brandName = brand.name;
+            
+            // DÒNG ĐÃ SỬA: Ưu tiên displayName, nếu không có thì dùng tên ánh xạ từ getname
+            const vietnameseBrandName = brand.displayName || getname(brandName);
+            
             const originalIndex = globalJsonData.product.brand.findIndex(b => b.name === brandName);
 
             const newRow = DOM.tableBody.insertRow();
@@ -448,7 +529,7 @@ const updatePageTitle = (newTitle) => {
             newRow.dataset.id = originalIndex + 1;
 
             newRow.innerHTML = `
-                <td>${originalIndex + 1}</td> <td class="brand-name-cell">${brandName}</td>
+                <td>${originalIndex + 1}</td> <td class="brand-name-cell">${vietnameseBrandName}</td>
                 <td>${soLuong}</td>
                 <td>
                     <label class="switch">
@@ -461,13 +542,8 @@ const updatePageTitle = (newTitle) => {
                         <button class="action-btn delete-btn-v2" onclick="deleteBrand('${brandName}', this)">
                             <i class="fas fa-times"></i>
                         </button>
-                        <div class="dropdown">
-                            <i class="fas fa-chevron-down dropdown-toggle"></i>
-                            <div class="dropdown-content">
-                                <a href="#" onclick="viewProduct(this); return false;"><i class="fas fa-eye"></i> Chỉ xem</a>
-                                <a href="#" onclick="editBrand('${brandName}', this); return false;"><i class="fas fa-edit"></i> Chỉnh sửa</a>
-                            </div>
-                        </div>
+                        <a href="#" onclick="editBrand('${brandName}', this); return false;"><i class="fas fa-edit", style="color:black"></i> </a>
+                        
                     </div>
                 </td>
             `;
@@ -478,6 +554,30 @@ const updatePageTitle = (newTitle) => {
             renderBrands(filteredBrands);
         });
     }
+    
+    // --- HÀM LÀM MỚI DANH SÁCH SẢN PHẨM ---
+    window.refreshCurrentProductList = () => {
+        if (!currentViewingBrandName) {
+            console.warn("Chưa có loại sản phẩm nào được chọn.");
+            return;
+        }
+        
+        // 1. Reset ô tìm kiếm
+        DOM.brandSearchInput.value = '';
+        
+        // 2. Reset danh sách sản phẩm đã lọc
+        filteredProductsList = [];
+        
+        // 3. Reset về trang đầu tiên
+        // Giữ nguyên trang hiện tại để tiện cho người dùng theo dõi
+        // currentProductPage = 1; 
+        
+        // 4. Gọi lại hàm hiển thị
+        window.showProductsForCurrentPage(currentViewingBrandName);
+        
+        console.log(`Đã làm mới danh sách sản phẩm cho loại: ${getname(currentViewingBrandName)}`);
+    };
+
     // HIỂN THỊ SẢN PHẨM CỦA TRANG HIỆN TẠI
     window.showProductsForCurrentPage = (brandName) => {
         const productsToPaginate = filteredProductsList.length > 0 ? filteredProductsList : currentProductsList;
@@ -493,11 +593,19 @@ const updatePageTitle = (newTitle) => {
         DOM.productListTbody.innerHTML = '';
 
         if (productsToRender.length > 0) {
+            const targetBrand = findBrandByName(brandName);
+            // Lấy tên hiển thị: ưu tiên displayName nếu có
+            const vietnameseBrandName = targetBrand.displayName || getname(brandName); 
+            
             productsToRender.forEach((product, localIndex) => {
                 const isVisible = (product.status || 'an').toLowerCase().trim() === 'hien';
                 const statusText = isVisible ? "Hiển thị" : "Đã ẩn";
                 const eyeIcon = isVisible ? "fas fa-eye" : "fas fa-eye-slash";
-                const productTypeDisplay = product.type === 'laptop' ? '' : ` (${product.type})`;
+                
+                // Áp dụng hàm ánh xạ cho tên loại sản phẩm (type)
+                const vietnameseType = getname(product.type); 
+                const productTypeDisplay = product.type === 'laptop' ? '' : ` (${vietnameseType})`; 
+                
                 const newRow = DOM.productListTbody.insertRow();
 
                 newRow.dataset.brandName = brandName;
@@ -515,7 +623,7 @@ const updatePageTitle = (newTitle) => {
                     <div class="sp-product-info">
                         <img src="${newRow.dataset.image}" alt="${newRow.dataset.model}" class="sp-product-image"> <div>
                             <div class="sp-product-name">${newRow.dataset.model}</div>
-                            <div class="sp-product-brand">${brandName}${productTypeDisplay}</div>
+                            <div class="sp-product-brand">${vietnameseBrandName}${productTypeDisplay}</div>
                         </div>
                     </div>
                 `;
@@ -534,8 +642,8 @@ const updatePageTitle = (newTitle) => {
         } else {
             const searchTerm = DOM.brandSearchInput.value.trim();
             const message = searchTerm ?
-                `Không tìm thấy sản phẩm nào khớp với từ khóa "${searchTerm}" cho thương hiệu ${brandName}.` :
-                `Không tìm thấy sản phẩm nào cho thương hiệu ${brandName}.`;
+                `Không tìm thấy sản phẩm nào khớp với từ khóa "${searchTerm}" cho thương hiệu ${getname(brandName)}.` :
+                `Không tìm thấy sản phẩm nào cho thương hiệu ${getname(brandName)}.`;
             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${message}</td></tr>`;
         }
 
@@ -550,7 +658,7 @@ const updatePageTitle = (newTitle) => {
         currentViewingBrandName = brandName;
         currentProductPage = 1;
         filteredProductsList = []; // Reset danh sách lọc khi chuyển thương hiệu
-            updatePageTitle(`Sản phẩm`);
+        updatePageTitle(`Sản phẩm`);
         DOM.productDetailsArea.style.display = 'block';
         DOM.productPaginationContainer.style.display = 'flex';
         DOM.brandManagementArea.style.display = 'none';
@@ -562,8 +670,19 @@ const updatePageTitle = (newTitle) => {
                 return (Array.isArray(targetBrand[type]) ? targetBrand[type] : []).map((p, index) => ({...p, type: type, originalIndex: index}));
             });
             showProductsForCurrentPage(brandName);
+            
+            // BẮT ĐẦU TỰ ĐỘNG LÀM MỚI (AUTO-REFRESH)
+            // Dừng interval cũ nếu có
+            if (autoRefreshIntervalId) clearInterval(autoRefreshIntervalId);
+            
+            // Thiết lập interval mới (ví dụ: 60000ms = 60 giây)
+            autoRefreshIntervalId = setInterval(() => {
+                console.log("Auto-refreshing product list...");
+                window.refreshCurrentProductList(); 
+            }, 1000); // Tự động làm mới sau mỗi 60 giây
+            
         } else {
-             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Không tìm thấy thương hiệu ${brandName}.</td></tr>`;
+             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Không tìm thấy thương hiệu ${getname(brandName)}.</td></tr>`;
         }
     };
 
@@ -575,7 +694,7 @@ const updatePageTitle = (newTitle) => {
         if (row.dataset.viewMode === 'true') return;
 
         const index = findBrandIndexByName(brandName);
-        if (index !== -1 && confirm(`Bạn có chắc muốn xóa Brand: ${brandName} không?`)) {
+        if (index !== -1 && confirm(`Bạn có chắc muốn xóa Loại sản phẩm: ${getname(brandName)} không?`)) {
             globalJsonData.product.brand.splice(index, 1);
             const totalBrands = globalJsonData.product.brand.length;
             const totalPages = Math.ceil(totalBrands / brandsPerPage);
@@ -601,11 +720,13 @@ const updatePageTitle = (newTitle) => {
         const brand = findBrandByName(brandName);
 
         if (brand) {
-            DOM.tenInput.value = brand.name;
+            const currentDisplayName = brand.displayName || getname(brand.name);
+            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM: ${currentDisplayName.toUpperCase()}`; 
+            
+            DOM.tenInput.value = currentDisplayName;
             DOM.soLuongInput.value = calculateProductCount(brand);
 
             DOM.submitBtn.textContent = 'Cập nhật';
-            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM`;
             editingRow = row;
         }
 
@@ -614,25 +735,46 @@ const updatePageTitle = (newTitle) => {
     };
 
     DOM.submitBtn.addEventListener('click', () => {
-        const ten = DOM.tenInput.value.trim();
+        const ten = DOM.tenInput.value.trim(); // Lấy tên mới người dùng nhập vào
         if (!ten) return alert('Vui lòng nhập Tên/Thương hiệu hợp lệ!');
 
         if (editingRow) {
-            const brand = findBrandByName(editingRow.dataset.brandName);
+            // --- LOGIC SỬA TÊN HIỂN THỊ (EDIT) ---
+            const originalBrandName = editingRow.dataset.brandName; 
+            const brand = findBrandByName(originalBrandName);
+
             if (brand) {
-                brand.name = ten;
+                // DÒNG CẬP NHẬT MỚI: Lưu tên hiển thị tùy chỉnh vào thuộc tính displayName
+                brand.displayName = ten; 
+                
+                // Cập nhật tên hiển thị trong bảng bằng TÊN MỚI NHẬP VÀO
                 editingRow.querySelector('.brand-name-cell').textContent = ten;
-                editingRow.dataset.brandName = ten;
+
+                // Log thông báo
+                console.log(`Đã cập nhật tên hiển thị (displayName) và lưu lại: "${ten}". Tên ID gốc ("${originalBrandName}") không đổi.`);
             }
         } else {
-            // Giữ nguyên logic tạo "brand" (loại sản phẩm)
-            const newBrand = { "name": ten, "status": "active", "laptop": [], "balo": [], "de-tan-nhiet":[], "chuot":[], "ban-phim":[], "tai-nghe": [] };
+            // --- LOGIC THÊM MỚI ---
+            // Thêm thuộc tính displayName để hiển thị tên tiếng Việt mặc định
+            const newBrand = { 
+                "name": ten, 
+                "status": "active", 
+                "laptop": [], 
+                "balo": [], 
+                "de-tan-nhiet": [], 
+                "chuot": [], 
+                "ban-phim": [], 
+                "tai-nghe": [],
+                "phukienkhac": [], // <--- ĐÃ SỬA: Thêm sẵn mảng này
+                "displayName": getname(ten) // Thêm displayName mặc định
+            };
             globalJsonData.product.brand.push(newBrand);
             currentBrandPage = Math.ceil(globalJsonData.product.brand.length / brandsPerPage);
             renderBrands();
         }
+        
         resetForm();
-        saveDataToLocalStorage(); // Lưu thay đổi
+        saveDataToLocalStorage(); // Lưu thay đổi (bao gồm cả displayName mới)
     });
 
     // --- CÁC HÀM KHÁC ---
@@ -644,6 +786,14 @@ const updatePageTitle = (newTitle) => {
         DOM.brandManagementArea.style.display = 'block';
         DOM.brandSearchInput.value = '';
         filterBrands('');
+        
+        // DỪNG TỰ ĐỘNG LÀM MỚI (AUTO-REFRESH)
+        if (autoRefreshIntervalId) {
+            clearInterval(autoRefreshIntervalId);
+            autoRefreshIntervalId = null;
+            console.log("Đã dừng auto-refresh.");
+        }
+        
         currentViewingBrandName = null;
         currentProductPage = 1;
         currentProductsList = [];
@@ -688,15 +838,8 @@ const updatePageTitle = (newTitle) => {
 
         if (product) {
             product.status = (product.status === 'hien') ? 'an' : 'hien';
-
-            const row = btn.closest('tr');
-            const statusText = (product.status === 'hien') ? 'Hiển thị' : 'Đã ẩn';
-
-            row.dataset.statusText = statusText;
-            row.querySelector('.sp-status').textContent = statusText;
-            row.querySelector('.sp-status').className = `sp-status ${product.status === 'hien' ? 'sp-in-stock' : 'sp-out-of-stock'}`;
-            btn.querySelector('i').className = product.status === 'hien' ? 'fas fa-eye' : 'fas fa-eye-slash';
-            saveDataToLocalStorage(); // Lưu thay đổi
+            saveDataToLocalStorage(); 
+            if (window.recompileProductListGlobal) window.recompileProductListGlobal(brand);
         }
     };
 
@@ -715,8 +858,9 @@ const updatePageTitle = (newTitle) => {
         for (let i = 0; i < globalJsonData.product.brand.length; i++) {
             const brand = globalJsonData.product.brand[i];
             const brandName = (brand.name || '').toLowerCase();
+            const displayName = (brand.displayName || '').toLowerCase(); // Lọc bằng tên tùy chỉnh
 
-            if (brandName.includes(term)) {
+            if (brandName.includes(term) || displayName.includes(term)) {
                 filtered.push(brand);
             }
         }
@@ -783,7 +927,13 @@ const updatePageTitle = (newTitle) => {
 
         const modal = document.getElementById('detailsModal');
         document.getElementById('modal-title').textContent = `Chi tiết ${row.dataset.model}`;
-        document.getElementById('detail-product-name').textContent = `${row.dataset.brandName} ${row.dataset.model}`;
+        
+        // Lấy tên hiển thị của brand hiện tại
+        const brand = findBrandByName(row.dataset.brandName);
+        const vietnameseBrandName = brand.displayName || getname(row.dataset.brandName);
+
+        document.getElementById('detail-product-name').textContent = `${vietnameseBrandName} ${row.dataset.model}`;
+        
         document.getElementById('detail-price').innerHTML = `Giá: <strong>${row.dataset.price}</strong> VNĐ`;
         document.getElementById('detail-status').textContent = `Tình trạng: ${row.dataset.statusText === 'Hiển thị' ? 'Còn hàng' : 'Hết hàng'}`;
         document.getElementById('detail-offer-content').textContent = currentOfferContent;
@@ -806,15 +956,15 @@ const updatePageTitle = (newTitle) => {
         const deleteBtn = row.querySelector('.delete-btn-v2');
         const editLink = row.querySelector('.dropdown-content a:nth-child(2)');
 
-        deleteBtn.disabled = isViewOnly;
-        deleteBtn.style.opacity = isViewOnly ? "0.5" : "1";
-        deleteBtn.style.pointerEvents = isViewOnly ? "none" : "auto";
-
-        editLink.style.pointerEvents = isViewOnly ? "none" : "auto";
-        editLink.style.opacity = isViewOnly ? "0.5" : "1";
-
-        link.innerHTML = isViewOnly ? '<i class="fas fa-eye-slash"></i> Thoát xem' : '<i class="fas fa-eye"></i> Chỉ xem';
-        link.closest('.dropdown-content').style.display = 'none';
+//        deleteBtn.disabled = isViewOnly;
+//        deleteBtn.style.opacity = isViewOnly ? "0.5" : "1";
+//        deleteBtn.style.pointerEvents = isViewOnly ? "none" : "auto";
+//
+//        editLink.style.pointerEvents = isViewOnly ? "none" : "auto";
+//        editLink.style.opacity = isViewOnly ? "0.5" : "1";
+//
+//        link.innerHTML = isViewOnly ? '<i class="fas fa-eye-slash"></i> Thoát xem' : '<i class="fas fa-eye"></i> Chỉ xem';
+//        link.closest('.dropdown-content').style.display = 'none';
 
         return false;
     };
@@ -832,25 +982,32 @@ const updatePageTitle = (newTitle) => {
 
     DOM.tableBody.addEventListener('click', (e) => {
         const brandNameCell = e.target.closest('.brand-name-cell');
-        if (brandNameCell) showProductDetails(brandNameCell.textContent);
-    });
-
-    document.addEventListener('click', (e) => {
-        const target = e.target;
-
-        const isDropdownClick = target.closest('.dropdown');
-        if (!isDropdownClick) document.querySelectorAll('.dropdown-content').forEach(dc => dc.style.display = 'none');
-
-        if (target.classList.contains('dropdown-toggle')) {
-            const dropdownContent = target.nextElementSibling;
-            document.querySelectorAll('.dropdown-content').forEach(dc => {
-                if (dc !== dropdownContent) dc.style.display = 'none';
-            });
-
-            if (dropdownContent) {
-                dropdownContent.style.display = (dropdownContent.style.display === 'block') ? 'none' : 'block';
+        // Vẫn gọi showProductDetails bằng tên không dấu (brandName) để logic chạy đúng
+        if (brandNameCell) {
+            // Lấy tên brand không dấu từ dataset của row cha
+            const row = brandNameCell.closest('tr');
+            if(row && row.dataset.brandName) {
+                 showProductDetails(row.dataset.brandName);
             }
         }
     });
+
+//    document.addEventListener('click', (e) => {
+//        const target = e.target;
+//
+//        const isDropdownClick = target.closest('.dropdown');
+//        if (!isDropdownClick) document.querySelectorAll('.dropdown-content').forEach(dc => dc.style.display = 'none');
+//
+//        if (target.classList.contains('dropdown-toggle')) {
+//            const dropdownContent = target.nextElementSibling;
+//            document.querySelectorAll('.dropdown-content').forEach(dc => {
+//                if (dc !== dropdownContent) dc.style.display = 'none';
+//            });
+//
+//            if (dropdownContent) {
+//                dropdownContent.style.display = (dropdownContent.style.display === 'block') ? 'none' : 'block';
+//            }
+//        }
+//    });
     loadStaticData();
 };
