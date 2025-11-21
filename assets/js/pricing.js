@@ -333,17 +333,38 @@ async function loadPricing() {
       filteredProducts = [];
       return mode === "product" ? products : categories;
     }
-    const kw = normalizeForSearch(keyword);
+    
+    // ✅ Xử lý tìm kiếm lợi nhuận (cho phép nhập "15" hoặc "15%")
+    const cleanKeyword = keyword.trim().replace('%', '');
+    const isNumberSearch = /^\d+(\.\d+)?$/.test(cleanKeyword);
     
     if (mode === "product") {
       filteredProducts = products.filter((item) => {
-        const txt = `${item.name} ${item.brand} ${item.importPrice} ${item.sellPrice} ${item.profit}`;
+        // Nếu tìm kiếm là số, so sánh chính xác với profit
+        if (isNumberSearch) {
+          const searchNum = parseFloat(cleanKeyword);
+          const itemProfit = parseFloat(item.profit);
+          if (itemProfit === searchNum) return true;
+        }
+        
+        // Tìm kiếm thông thường
+        const kw = normalizeForSearch(keyword);
+        const txt = `${item.name} ${item.brand} ${item.importPrice} ${item.sellPrice} ${item.profit}%`;
         return normalizeForSearch(txt).includes(kw);
       });
       return filteredProducts;
     } else {
       return categories.filter((item) => {
-        const txt = `${item.name} ${item.profit}`;
+        // Nếu tìm kiếm là số, so sánh chính xác với profit
+        if (isNumberSearch) {
+          const searchNum = parseFloat(cleanKeyword);
+          const itemProfit = parseFloat(item.profit);
+          if (itemProfit === searchNum) return true;
+        }
+        
+        // Tìm kiếm thông thường
+        const kw = normalizeForSearch(keyword);
+        const txt = `${item.name} ${item.profit}%`;
         return normalizeForSearch(txt).includes(kw);
       });
     }
