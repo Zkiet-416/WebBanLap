@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <thead>
                                 <tr>
                                     <th>Mã SP</th> <th>Tên / Loại Sản Phẩm</th>
-                                    <th>Giá nhập</th>
+                                    <th>Giá bán</th>
                                     <th>Trạng thái</th>
                                     <th>Thao tác</th>
                                 </tr>
