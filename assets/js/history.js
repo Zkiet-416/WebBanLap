@@ -569,12 +569,12 @@ function validateAndFixOrderData() {
         
         if (fixed) {
             localStorage.setItem(userHistoryKey, JSON.stringify(userOrders));
-            console.log('✅ Đã sửa lỗi dữ liệu đơn hàng');
+            console.log('Đã sửa lỗi dữ liệu đơn hàng');
             loadOrderHistory();
         }
         
     } catch (error) {
-        console.error('❌ Lỗi kiểm tra dữ liệu:', error);
+        console.error('Lỗi kiểm tra dữ liệu:', error);
     }
 }
 
@@ -582,15 +582,12 @@ function validateAndFixOrderData() {
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         validateAndFixOrderData();
-        syncDataFromOrdersManagement();
     }, 1000);
 });
 
 // Export hàm để sử dụng từ file khác
 window.loadOrderHistory = loadOrderHistory;
 window.getOrderHistory = getOrderHistory;
-window.syncDataFromOrdersManagement = syncDataFromOrdersManagement;
 window.cancelOrder = cancelOrder;
 window.continueShopping = continueShopping;
-
 window.deleteOrderSync = deleteOrderSync; 
