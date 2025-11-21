@@ -137,7 +137,6 @@ window.openCheckoutModal = function () {
         renderOrderSummary();
         resetCheckoutForm();
         initCitiesCheckout();
-        autoFillAddressFromProfile();
     }
 };
 
@@ -315,16 +314,6 @@ window.fillAddressFromProfile = function () {
     clearErrors();
     alert("Đã điền địa chỉ từ hồ sơ cá nhân!");
 };
-
-function autoFillAddressFromProfile() {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-    if (currentUser && currentUser.city && currentUser.district && currentUser.addressDetail) {
-        // Tự động điền mà không cần hỏi
-        fillAddressFromProfile();
-
-    }
-}
 
 /* ===========================
    VALIDATION
