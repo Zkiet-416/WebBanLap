@@ -12,6 +12,7 @@ function LoadReceipt() {
                     <th>Ngày nhập</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
+                    <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
@@ -42,6 +43,41 @@ function LoadReceipt() {
         <button class="save" onclick="updateInvoice()">Lưu thay đổi</button>
     </div>
 `;
+
+  // *************** LOGIC KHO HÀNG (ĐÃ CHỈNH SỬA) *******************
+  
+  // Lấy dữ liệu tồn kho từ Local Storage
+  function getWarehouseStock() {
+      return JSON.parse(localStorage.getItem('warehouseStockData')) || [];
+  }
+
+  // Lưu dữ liệu tồn kho vào Local Storage
+  function saveWarehouseStock(stock) {
+      localStorage.setItem('warehouseStockData', JSON.stringify(stock));
+  }
+  
+  // Cập nhật tồn kho (thêm số lượng nhập)
+  function updateStock(invoice) {
+      let stock = getWarehouseStock();
+      invoice.products.forEach(p => {
+          const qty = Number(p.qty);
+          if (qty <= 0) return;
+
+          let stockItem = stock.find(item => item.name === p.name);
+          if (stockItem) {
+              stockItem.qty += qty;
+          } else {
+              stock.push({ name: p.name, qty: qty });
+          }
+      });
+      saveWarehouseStock(stock);
+      alert(`Đã cập nhật kho thành công cho phiếu ${invoice.id}!`);
+  }
+
+  // Loại bỏ hàm revertStock vì không cho phép mở khóa
+  
+  // *************** KẾT THÚC LOGIC KHO *******************
+
 
   // Hàm tiện ích để trích xuất danh sách sản phẩm phẳng từ globalJsonData
   function getAllProductsFromAdminData() {
@@ -97,16 +133,9 @@ function LoadReceipt() {
   let invoices = JSON.parse(localStorage.getItem('receiptData')) || [
     {
       id: "PN001",
-      date: "2025-10-28",
-      products: [
-        { name: "Bàn phím Akko MonsGeek M1W HE-SP V3 Dark Night", price: "2835000", qty: "10", imagePath: "../assets/images/BP1.png" }, 
-        { name: "Chuột Razer Cobra - Zenless Zone One Edition", price: "990000", qty: "15", imagePath: "../assets/images/Mouse1.jpg" },
-      ],
-    },
-    {
-      id: "PN002",
       date: "2025-10-30",
       products: [{ name: "Laptop Acer Gaming Nitro V ANV15-41-R2UP", price: "14751000", qty: "5", imagePath: "../assets/images/Acer1.png" }],
+      isLocked: true
     },
   ];
 
@@ -142,7 +171,6 @@ function LoadReceipt() {
     // Tạo HTML cho <select> sử dụng productList đã được cập nhật
     let selectHTML = '<select class="product-select" onchange="updatePrice(this)"><option value="">--- Chọn sản phẩm ---</option>';
     productList.forEach(p => {
-        // Giá trị của option là giá tiền (chuỗi số đã làm sạch), text là tên sản phẩm
         selectHTML += `<option value="${p.price}">${p.name}</option>`;
     });
     selectHTML += '</select>';
@@ -166,6 +194,26 @@ function LoadReceipt() {
         priceInput.value = price;
     }
   }
+  
+  // *************** CHỈNH SỬA: KHÓA PHIẾU VĨNH VIỄN VÀ CẬP NHẬT KHO *******************
+  function toggleInvoiceLock(index) {
+      const invoice = invoices[index];
+      
+      // Kiểm tra nếu đã khóa rồi thì thoát
+      if (invoice.isLocked) return; 
+
+      const confirmLock = confirm(`Bạn có chắc chắn muốn KHÓA phiếu ${invoice.id} VĨNH VIỄN? Thao tác này sẽ cập nhật số lượng hàng vào kho và KHÔNG THỂ HOÀN TÁC!`);
+      
+      if (!confirmLock) return;
+      
+      // Cập nhật kho và đặt trạng thái khóa
+      updateStock(invoice); 
+      invoice.isLocked = true;
+      
+      saveToLocalStorage();
+      renderTable();
+  }
+  // *************** KẾT THÚC CHỈNH SỬA *******************
 
 
   function renderTable() {
@@ -179,14 +227,22 @@ function LoadReceipt() {
       // Cần tìm lại index gốc để chỉnh sửa/xóa
       const originalIndex = invoices.findIndex(inv => inv.id === invoice.id); 
 
+      // Kiểm tra trạng thái khóa
+      const isLocked = invoice.isLocked;
+      const statusText = isLocked ? 'Đã Khóa' : 'Chưa Khóa';
+      // Nếu đã khóa, nút Sửa/Xóa bị vô hiệu hóa
+      const disabledAttr = isLocked ? 'disabled' : '';
+      // Nếu đã khóa, nút toggle cũng bị vô hiệu hóa
+      const toggleDisabledAttr = isLocked ? 'disabled' : '';
+
+
       invoice.products.forEach((p, i) => {
         // Định dạng giá tiền 
         const formattedPrice = Number(p.price).toLocaleString('vi-VN');
         
-        // *************** BỔ SUNG LOGIC HIỂN THỊ ẢNH *******************
+        // BỔ SUNG LOGIC HIỂN THỊ ẢNH
         const imageUrl = p.imagePath || 'placeholder.jpg'; 
         
-        // Sử dụng một class mới cho TD để dễ dàng định dạng CSS (ví dụ: căn giữa, flex)
         tbody.innerHTML += `
                 <tr>
                     <td>${i === 0 ? invoice.id : ""}</td>
@@ -199,12 +255,25 @@ function LoadReceipt() {
                     <td>${invoice.date}</td>
                     <td>${formattedPrice}</td>
                     <td>${p.qty}</td>
+                    
+                    <td>
+                        ${
+                            i === 0 
+                            ? `<label class="switch">
+                                    <input type="checkbox" ${isLocked ? 'checked' : ''} ${toggleDisabledAttr} onclick="toggleInvoiceLock(${originalIndex})">
+                                    <span class="slider round"></span>
+                                </label>
+                                <br><small style="color: ${isLocked ? 'green' : 'red'};">${statusText}</small>`
+                            : ''
+                        }
+                    </td>
+
                     ${
                       i === 0
                         ? `
                     <td>
-                        <button class="edit" onclick="editInvoice(${originalIndex})">Sửa</button>
-                        <button class="delete" onclick="deleteInvoice(${originalIndex})">Xóa</button>
+                        <button class="edit" ${disabledAttr} onclick="editInvoice(${originalIndex})">Sửa</button>
+                        <button class="delete" ${disabledAttr} onclick="deleteInvoice(${originalIndex})">Xóa</button>
                     </td>`
                         : `<td></td>`
                     }
@@ -267,8 +336,7 @@ function LoadReceipt() {
         return;
     }
 
-    invoices.push({ id, date, products });
-    saveToLocalStorage(); // LƯU VÀO LOCAL STORAGE
+    invoices.push({ id, date, products, isLocked: false }); 
     renderTable();
 
     // Reset form
@@ -277,9 +345,14 @@ function LoadReceipt() {
     document.getElementById("addProductContainer").innerHTML = "";
   }
   
-  // ... (Hàm editInvoice và updateInvoice giữ nguyên logic lưu imagePath) ...
-
   function editInvoice(index) {
+    // *************** LOGIC MỚI: KIỂM TRA TRẠNG THÁI KHÓA *******************
+    if (invoices[index].isLocked) {
+        alert("Phiếu nhập này đã được KHÓA và cập nhật kho. Không thể chỉnh sửa.");
+        return;
+    }
+    // *************** KẾT THÚC LOGIC MỚI *******************
+
     editingIndex = index;
     const invoice = invoices[index];
     
@@ -321,6 +394,14 @@ function LoadReceipt() {
   function updateInvoice() {
     if (editingIndex === null) return; 
 
+    // *************** LOGIC MỚI: KIỂM TRA TRẠNG THÁI KHÓA *******************
+    if (invoices[editingIndex].isLocked) {
+        alert("Phiếu nhập này đã được KHÓA và cập nhật kho. Không thể chỉnh sửa.");
+        cancelEdit(); // Đóng form chỉnh sửa
+        return;
+    }
+    // *************** KẾT THÚC LOGIC MỚI *******************
+
     let date = document.getElementById("editDate").value;
     let products = [...document.querySelectorAll("#editProductContainer .product-row")].map(
         (r) => {
@@ -355,7 +436,8 @@ function LoadReceipt() {
 
     invoices[editingIndex].date = date;
     invoices[editingIndex].products = products;
-    saveToLocalStorage(); // LƯU VÀO LOCAL STORAGE
+    
+    saveToLocalStorage(); 
     renderTable();
     cancelEdit();
   }
@@ -394,6 +476,13 @@ function LoadReceipt() {
     sortedInvoices.forEach((invoice, index) => {
         // Cần tìm lại index gốc để chỉnh sửa/xóa
         const originalIndex = invoices.findIndex(inv => inv.id === invoice.id); 
+        
+        // Kiểm tra trạng thái khóa
+        const isLocked = invoice.isLocked;
+        const statusText = isLocked ? 'Đã Khóa' : 'Chưa Khóa';
+        const disabledAttr = isLocked ? 'disabled' : '';
+        const toggleDisabledAttr = isLocked ? 'disabled' : ''; // KHÓA LUÔN NÚT SAU KHI CLICK
+
 
         invoice.products.forEach((p, i) => {
             const formattedPrice = Number(p.price).toLocaleString('vi-VN');
@@ -412,12 +501,25 @@ function LoadReceipt() {
                     <td>${invoice.date}</td>
                     <td>${formattedPrice}</td>
                     <td>${p.qty}</td>
+                    
+                    <td>
+                        ${
+                            i === 0 
+                            ? `<label class="switch">
+                                    <input type="checkbox" ${isLocked ? 'checked' : ''} ${toggleDisabledAttr} onclick="toggleInvoiceLock(${originalIndex})">
+                                    <span class="slider round"></span>
+                                </label>
+                                <br><small style="color: ${isLocked ? 'green' : 'red'};">${statusText}</small>`
+                            : ''
+                        }
+                    </td>
+                    
                     ${
                       i === 0
                         ? `
                     <td>
-                        <button class="edit" onclick="editInvoice(${originalIndex})">Sửa</button>
-                        <button class="delete" onclick="deleteInvoice(${originalIndex})">Xóa</button>
+                        <button class="edit" ${disabledAttr} onclick="editInvoice(${originalIndex})">Sửa</button>
+                        <button class="delete" ${disabledAttr} onclick="deleteInvoice(${originalIndex})">Xóa</button>
                     </td>`
                         : `<td></td>`
                     }
@@ -426,11 +528,16 @@ function LoadReceipt() {
     });
   }
 
-  // Cập nhật hàm deleteInvoice để lưu vào Local Storage
+  // Cập nhật hàm deleteInvoice để ngăn xóa khi đã khóa
   function deleteInvoice(index) {
+    // *************** LOGIC MỚI: KIỂM TRA TRẠNG THÁI KHÓA *******************
+    if (invoices[index].isLocked) {
+        alert("Phiếu nhập này đã được KHÓA và cập nhật kho. Không thể xóa.");
+        return;
+    }
     if (confirm("Bạn có chắc muốn xóa phiếu này?")) {
       invoices.splice(index, 1);
-      saveToLocalStorage(); // LƯU VÀO LOCAL STORAGE
+      saveToLocalStorage(); 
       renderTable();
     }
   }
@@ -445,6 +552,6 @@ function LoadReceipt() {
   window.deleteInvoice = deleteInvoice;
   window.updateInvoice = updateInvoice;
   window.cancelEdit = cancelEdit;
-  window.searchInvoice = searchInvoice; // expose search function
-
+  window.searchInvoice = searchInvoice; 
+  window.toggleInvoiceLock = toggleInvoiceLock; 
 }
