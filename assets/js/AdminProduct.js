@@ -86,7 +86,7 @@ let autoRefreshIntervalId = null; // Biến lưu trữ ID của setInterval
 // BIẾN PHÂN TRANG
 let brandsPerPage = 10;
 let currentBrandPage = 1;
-let productsPerPage = 5;
+let productsPerPage = 6;
 let currentProductPage = 1;
 let currentProductsList = [];
 let filteredProductsList = [];
@@ -214,7 +214,7 @@ window.handleProductFormSubmit = () => {
     const brand = findBrandByName(brandName);
 
     if (!brand) {
-        alert("Lỗi: Không xác định được thương hiệu/loại sản phẩm hiện tại.");
+        alert("Lỗi: Không xác định được loại sản phẩm hiện tại.");
         return;
     }
 
@@ -642,8 +642,8 @@ const updatePageTitle = (newTitle) => {
         } else {
             const searchTerm = DOM.brandSearchInput.value.trim();
             const message = searchTerm ?
-                `Không tìm thấy sản phẩm nào khớp với từ khóa "${searchTerm}" cho thương hiệu ${getname(brandName)}.` :
-                `Không tìm thấy sản phẩm nào cho thương hiệu ${getname(brandName)}.`;
+                `Không tìm thấy sản phẩm nào khớp với từ khóa "${searchTerm}" cho loại sản phẩm ${getname(brandName)}.` :
+                `Không tìm thấy sản phẩm nào cho loại sản phẩm ${getname(brandName)}.`;
             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${message}</td></tr>`;
         }
 
@@ -657,7 +657,7 @@ const updatePageTitle = (newTitle) => {
     window.showProductDetails = (brandName) => {
         currentViewingBrandName = brandName;
         currentProductPage = 1;
-        filteredProductsList = []; // Reset danh sách lọc khi chuyển thương hiệu
+        filteredProductsList = []; // Reset danh sách lọc khi chuyển loại sản phẩm
         updatePageTitle(`Sản phẩm`);
         DOM.productDetailsArea.style.display = 'block';
         DOM.productPaginationContainer.style.display = 'flex';
@@ -679,10 +679,10 @@ const updatePageTitle = (newTitle) => {
             autoRefreshIntervalId = setInterval(() => {
                 console.log("Auto-refreshing product list...");
                 window.refreshCurrentProductList(); 
-            }, 1000); // Tự động làm mới sau mỗi 60 giây
+            }, 20000); // Tự động làm mới sau mỗi 60 giây
             
         } else {
-             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Không tìm thấy thương hiệu ${getname(brandName)}.</td></tr>`;
+             DOM.productListTbody.innerHTML = `<tr><td colspan="5" style="text-align: center;">Không tìm thấy loại sản phẩm ${getname(brandName)}.</td></tr>`;
         }
     };
 
@@ -721,7 +721,7 @@ const updatePageTitle = (newTitle) => {
 
         if (brand) {
             const currentDisplayName = brand.displayName || getname(brand.name);
-            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM`; 
+            DOM.formHeader.textContent = `CHỈNH SỬA LOẠI SẢN PHẨM: ${currentDisplayName.toUpperCase()}`; 
             
             DOM.tenInput.value = currentDisplayName;
             DOM.soLuongInput.value = calculateProductCount(brand);
@@ -736,7 +736,7 @@ const updatePageTitle = (newTitle) => {
 
     DOM.submitBtn.addEventListener('click', () => {
         const ten = DOM.tenInput.value.trim(); // Lấy tên mới người dùng nhập vào
-        if (!ten) return alert('Vui lòng nhập Tên/Thương hiệu hợp lệ!');
+        if (!ten) return alert('Vui lòng nhập Tên loại sản phẩm hợp lệ!');
 
         if (editingRow) {
             // --- LOGIC SỬA TÊN HIỂN THỊ (EDIT) ---
@@ -870,30 +870,47 @@ const updatePageTitle = (newTitle) => {
     }
     // HÀM LỌC PRODUCT
     function filterProducts(searchTerm) {
-        const term = searchTerm.toLowerCase().trim();
+    const term = searchTerm.toLowerCase().trim();
 
-        if (!term) {
-            filteredProductsList = [];
-        } else {
-            filteredProductsList = [];
-            // Duyệt qua tất cả sản phẩm hiện tại để tìm kiếm
-            for (let i = 0; i < currentProductsList.length; i++) {
-                const product = currentProductsList[i];
-                
-                const model = (product.model || '').toLowerCase();
-                const id = (product.id || '').toLowerCase();
-                const price = (product.price || '').toLowerCase();
-                
-                // Điều kiện tìm kiếm: khớp với Model HOẶC ID HOẶC Giá
-                if (model.includes(term) || id.includes(term) || price.includes(term)) {
-                    filteredProductsList.push(product);
-                }
+    if (!term) {
+        // Trường hợp 1: Từ khóa rỗng (Reset về toàn bộ danh sách)
+        filteredProductsList = [];
+    } else {
+        // Trường hợp 2: Có từ khóa tìm kiếm
+        let tempFilteredProductsList = []; // Dùng mảng tạm để kiểm tra trước
+        
+        for (let i = 0; i < currentProductsList.length; i++) {
+            const product = currentProductsList[i];
+            
+            const model = (product.model || '').toLowerCase();
+            const id = (product.id || '').toLowerCase();
+            
+            // Điều kiện tìm kiếm: khớp với Model HOẶC ID 
+            if (model.includes(term) || id.includes(term)) {
+                tempFilteredProductsList.push(product);
             }
         }
+        
+        // --- LOGIC CHỈNH SỬA: KIỂM TRA KẾT QUẢ TRƯỚC KHI RENDER ---
+        if (tempFilteredProductsList.length === 0) {
+            // KHÔNG TÌM THẤY:
+            
+            // 1. Thông báo cho người dùng
+            alert(`Không tìm thấy sản phẩm nào khớp với từ khóa "${term}"!`);
+            
+            // 2. Thoát khỏi hàm để KHÔNG gọi showProductsForCurrentPage.
+            // Điều này đảm bảo giao diện vẫn hiển thị danh sách sản phẩm trước đó.
+            return; 
+        }
 
-        currentProductPage = 1;
-        showProductsForCurrentPage(currentViewingBrandName);
+        // TÌM THẤY KẾT QUẢ: Cập nhật danh sách lọc
+        filteredProductsList = tempFilteredProductsList;
     }
+
+    // Nếu tìm thấy kết quả hoặc từ khóa rỗng, tiến hành render lại
+    currentProductPage = 1;
+    showProductsForCurrentPage(currentViewingBrandName);
+}
 
     function resetForm() {
         DOM.tenInput.value = '';
