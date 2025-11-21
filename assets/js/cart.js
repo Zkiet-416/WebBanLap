@@ -182,6 +182,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
       window.saveCartData();
       renderCartDropdown();
+
+      // TỰ ĐỘNG LOAD LẠI GIỎ HÀNG CHI TIẾT
+        setTimeout(() => {
+            if (typeof window.renderCartDetailPage === 'function') {
+                window.renderCartDetailPage();
+            }
+        }, 1000);
       
       // Hiển thị thông báo
       showAddToCartNotification(product.name);
@@ -202,6 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
           item.checked = isChecked;
           window.saveCartData();
           calculateAndUpdateSummary();
+
+        // TỰ ĐỘNG LOAD LẠI GIỎ HÀNG CHI TIẾT SAU 500ms
+        setTimeout(() => {
+            if (typeof window.renderCartDetailPage === 'function') {
+                window.renderCartDetailPage();
+            }
+        }, 1000);
       }
   };
 
@@ -215,6 +229,13 @@ document.addEventListener('DOMContentLoaded', function() {
           item.quantity++;
           window.saveCartData();
           renderCartDropdown();
+
+          // TỰ ĐỘNG LOAD LẠI GIỎ HÀNG CHI TIẾT
+        setTimeout(() => {
+            if (typeof window.renderCartDetailPage === 'function') {
+                window.renderCartDetailPage();
+            }
+        }, 1000);
       }
   };
 
@@ -235,6 +256,13 @@ document.addEventListener('DOMContentLoaded', function() {
           
           window.saveCartData();
           renderCartDropdown();
+
+          // TỰ ĐỘNG LOAD LẠI GIỎ HÀNG CHI TIẾT
+        setTimeout(() => {
+            if (typeof window.renderCartDetailPage === 'function') {
+                window.renderCartDetailPage();
+            }
+        }, 1000);
       }
   };
 
@@ -248,6 +276,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.cartData.splice(index, 1);
         window.saveCartData();
         renderCartDropdown();
+
+        // TỰ ĐỘNG LOAD LẠI GIỎ HÀNG CHI TIẾT
+        setTimeout(() => {
+            if (typeof window.renderCartDetailPage === 'function') {
+                window.renderCartDetailPage();
+            }
+        }, 1000);
     }
   };
 
