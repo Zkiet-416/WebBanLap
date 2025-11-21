@@ -16,7 +16,7 @@ function formatOrderDate(dateObj) {
     const hours = String(dateObj.getHours()).padStart(2, '0');
     const minutes = String(dateObj.getMinutes()).padStart(2, '0');
     const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-    
+
     // Định dạng mong muốn: HH:MM:SS DD/MM/YYYY
     return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
 }
@@ -57,7 +57,7 @@ function updateStockAfterSale(soldItems) {
     soldItems.forEach(item => {
         const itemName = item.name;
         const soldQty = parseInt(item.quantity) || 0;
-        
+
         if (stockMap.has(itemName)) {
             let currentQty = stockMap.get(itemName);
             let newQty = Math.max(0, currentQty - soldQty); // Đảm bảo số lượng không âm
@@ -65,7 +65,7 @@ function updateStockAfterSale(soldItems) {
             changesMade = true;
         } else {
             // Nếu sản phẩm không tồn tại trong kho (dữ liệu cũ), coi như đã bán hết
-            stockMap.set(itemName, 0); 
+            stockMap.set(itemName, 0);
             changesMade = true;
         }
     });
@@ -87,7 +87,7 @@ function restoreOriginalCart() {
         window.cartData = window.originalCartData;
         window.originalCartData = null;
         window.tempCartForBuyNow = null;
-        
+
         // Cập nhật lại UI
         if (typeof window.saveCartData === 'function') {
             window.saveCartData();
@@ -417,7 +417,7 @@ window.completeOrder = function () {
 
     // Lấy danh sách sản phẩm đã chọn
     const selectedItems = window.cartData.filter(item => item.checked);
-    
+
     // ===================================
     // BỔ SUNG: KIỂM TRA TỒN KHO TRƯỚC KHI TẠO ĐƠN
     // ===================================
@@ -426,8 +426,8 @@ window.completeOrder = function () {
 
     selectedItems.forEach(item => {
         // Lấy số lượng tồn kho theo tên sản phẩm
-        const stockQty = currentStock.get(item.name) || 0; 
-        
+        const stockQty = currentStock.get(item.name) || 0;
+
         if (item.quantity > stockQty) {
             outOfStockItems.push({
                 name: item.name,
@@ -443,7 +443,7 @@ window.completeOrder = function () {
             message += `- ${item.name}: Yêu cầu ${item.requested}, Tồn kho ${item.available}\n`;
         });
         alert(message);
-        return; 
+        return;
     }
     // ===================================
 
@@ -558,7 +558,7 @@ Xác nhận đặt hàng?
                 quantity: item.quantity,
                 image: item.image
             }))
-            .filter(item => item.id !== undefined), // Đảm bảo chỉ lấy sản phẩm có ID (nếu cần)
+                .filter(item => item.id !== undefined), // Đảm bảo chỉ lấy sản phẩm có ID (nếu cần)
 
             // 🚨 ĐỒNG BỘ TỔNG TIỀN
             total: totalAmount,
@@ -647,12 +647,12 @@ function saveOrderOnce(orderData) {
 // Hàm xử lý sau checkout
 function processAfterCheckout() {
     console.log('🔄 Xử lý sau checkout - Đang chờ xác nhận máy chủ (giả lập 1s)...');
-    
+
     // Lấy danh sách sản phẩm đã đặt (trước khi xóa khỏi cartData)
     const orderedItems = window.cartData.filter(item => item.checked);
 
     // Đóng modal ngay lập tức
-    closeCheckoutModal(); 
+    closeCheckoutModal();
 
     // Giả lập độ trễ xử lý đơn hàng (1 giây)
     setTimeout(() => {
@@ -661,7 +661,7 @@ function processAfterCheckout() {
         // BỔ SUNG: CẬP NHẬT TỒN KHO
         updateStockAfterSale(orderedItems);
 
-         // Xóa sản phẩm đã đặt (chỉ xóa nếu không phải từ "Mua ngay")
+        // Xóa sản phẩm đã đặt (chỉ xóa nếu không phải từ "Mua ngay")
         // Nếu là từ "Mua ngay" thì giỏ hàng tạm đã được xử lý trong closeCheckoutModal
         if (window.cartData !== window.tempCartForBuyNow) {
             window.cartData = window.cartData.filter(item => !item.checked);
@@ -679,7 +679,7 @@ function processAfterCheckout() {
         if (typeof window.showHistoryPage === 'function') {
             window.showHistoryPage();
         }
-        
+
         console.log('🏁 Hoàn tất xử lý sau checkout.');
     }, 1000); // Đặt trễ 1 giây (1000ms)
 }
@@ -709,7 +709,6 @@ function resetCheckoutForm() {
     // =============================================
 
     document.getElementById('orderNote').value = '';
-    document.getElementById('savedAddress').value = '';
     document.querySelector('input[name="payment"][value="cod"]').checked = true;
     clearErrors();
 }
