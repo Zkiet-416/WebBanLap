@@ -858,7 +858,7 @@ const updatePageTitle = (newTitle) => {
         for (let i = 0; i < globalJsonData.product.brand.length; i++) {
             const brand = globalJsonData.product.brand[i];
             const brandName = (brand.name || '').toLowerCase();
-            const displayName = (brand.displayName || '').toLowerCase(); // Lọc bằng tên tùy chỉnh
+            const displayName = (getname(brand.name) || '').toLowerCase(); // Lọc bằng tên tùy chỉnh
 
             if (brandName.includes(term) || displayName.includes(term)) {
                 filtered.push(brand);
@@ -871,43 +871,49 @@ const updatePageTitle = (newTitle) => {
     // HÀM LỌC PRODUCT
     function filterProducts(searchTerm) {
     const term = searchTerm.toLowerCase().trim();
-
+    const searchInput = document.getElementById('searchTermInput'); 
+    let noResultsDiv = document.getElementById('no-results-message');
+    if (!noResultsDiv) {
+        noResultsDiv = document.createElement('div');
+        noResultsDiv.id = 'no-results-message';
+        if (searchInput && searchInput.parentNode) {
+            searchInput.parentNode.insertBefore(noResultsDiv, searchInput);
+        } else {
+            document.body.appendChild(noResultsDiv);
+        }
+    }
     if (!term) {
-        // Trường hợp 1: Từ khóa rỗng (Reset về toàn bộ danh sách)
-        filteredProductsList = [];
+        filteredProductsList = []; 
+        // Ẩn thông báo nếu input trống
+        if (noResultsDiv) noResultsDiv.style.display = 'none';
     } else {
-        // Trường hợp 2: Có từ khóa tìm kiếm
-        let tempFilteredProductsList = []; // Dùng mảng tạm để kiểm tra trước
-        
+        let tempFilteredProductsList = [];    
+        // --- Logic Lọc Sản Phẩm ---
         for (let i = 0; i < currentProductsList.length; i++) {
             const product = currentProductsList[i];
-            
             const model = (product.model || '').toLowerCase();
             const id = (product.id || '').toLowerCase();
-            
-            // Điều kiện tìm kiếm: khớp với Model HOẶC ID 
-            if (model.includes(term) || id.includes(term)) {
-                tempFilteredProductsList.push(product);
-            }
+            if (model.includes(term) || id.includes(term))  tempFilteredProductsList.push(product);
         }
-        
-        // --- LOGIC CHỈNH SỬA: KIỂM TRA KẾT QUẢ TRƯỚC KHI RENDER ---
-        if (tempFilteredProductsList.length === 0) {
-            // KHÔNG TÌM THẤY:
-            
-            // 1. Thông báo cho người dùng
-            alert(`Không tìm thấy sản phẩm nào khớp với từ khóa "${term}"!`);
-            
-            // 2. Thoát khỏi hàm để KHÔNG gọi showProductsForCurrentPage.
-            // Điều này đảm bảo giao diện vẫn hiển thị danh sách sản phẩm trước đó.
-            return; 
-        }
-
-        // TÌM THẤY KẾT QUẢ: Cập nhật danh sách lọc
         filteredProductsList = tempFilteredProductsList;
+        if (filteredProductsList.length === 0) {
+            if (noResultsDiv) {
+                noResultsDiv.innerHTML = `Không tìm thấy sản phẩm nào khớp với từ khóa: <b>${searchTerm}</b>`;
+                noResultsDiv.style.display = 'block'; 
+                noResultsDiv.style.padding = '15px';
+                noResultsDiv.style.margin = '15px 0';
+                noResultsDiv.style.border = '1px solid #f5c6cb';
+                noResultsDiv.style.backgroundColor = '#f8d7da';
+                noResultsDiv.style.color = '#721c24';
+                noResultsDiv.style.borderRadius = '5px';
+                noResultsDiv.style.fontWeight = 'bold';
+                noResultsDiv.style.textAlign = 'center';
+            }
+            if (searchInput) searchInput.value = '';
+        } else {
+            if (noResultsDiv) noResultsDiv.style.display = 'none';
+        }
     }
-
-    // Nếu tìm thấy kết quả hoặc từ khóa rỗng, tiến hành render lại
     currentProductPage = 1;
     showProductsForCurrentPage(currentViewingBrandName);
 }
