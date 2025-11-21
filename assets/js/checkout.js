@@ -676,8 +676,8 @@ function processAfterCheckout() {
         alert('🎉 Đặt hàng thành công! Đơn hàng của bạn đang được xử lý.');
 
         // Reset về trang chủ
-        if (typeof window.resetToHomePage === 'function') {
-            window.resetToHomePage();
+        if (typeof window.showHistoryPage === 'function') {
+            window.showHistoryPage();
         }
         
         console.log('🏁 Hoàn tất xử lý sau checkout.');
