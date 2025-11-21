@@ -146,9 +146,9 @@ async function loadPricing() {
       needsUpdate = true;
     }
 
-    // Nếu chưa có profit, tính lại
+    // ✅ SỬA CÔNG THỨC: (giá bán - giá nhập) / giá nhập * 100
     if (profit === undefined || profit === null || isNaN(profit)) {
-      profit = sellPrice > 0 ? ((sellPrice - importPrice) / sellPrice) * 100 : 0;
+      profit = importPrice > 0 ? ((sellPrice - importPrice) / importPrice) * 100 : 0;
       needsUpdate = true;
     }
 
@@ -318,7 +318,7 @@ async function loadPricing() {
 
       <!-- 🔍 THANH TÌMKIEM RIÊNG CHO PRICING -->
       <div class="pricing-search">
-        <input type="text" id="pricingSearchInput" placeholder="Tìm kiếm sản phẩm hoặc loại..." value="${searchKeyword}">
+        <input type="text" id="pricingSearchInput" placeholder="Tìm kiếm sản phẩm, loại hoặc lợi nhuận (VD: 15 hoặc 15%)..." value="${searchKeyword}">
       </div>
 
       <div class="pricing-wrapper">
@@ -493,8 +493,8 @@ async function loadPricing() {
         return;
       }
       
-      if (newProfit < 0 || newProfit > 100) {
-        alert("% Lợi nhuận phải từ 0 đến 100!");
+      if (newProfit < 0 || newProfit > 200) {
+        alert("% Lợi nhuận phải từ 0 đến 200!");
         return;
       }
       
@@ -503,12 +503,14 @@ async function loadPricing() {
         products.forEach(p => {
           if (p.brand === item.name) {
             p.profit = parseFloat(newProfit.toFixed(1));
+            // ✅ SỬA CÔNG THỨC: giá bán = giá nhập * (1 + lợi nhuận/100)
             p.sellPrice = Math.round(p.importPrice * (1 + newProfit / 100));
           }
         });
       } else {
         // Cập nhật sản phẩm đơn lẻ
         item.profit = parseFloat(newProfit.toFixed(1));
+        // ✅ SỬA CÔNG THỨC: giá bán = giá nhập * (1 + lợi nhuận/100)
         item.sellPrice = Math.round(item.importPrice * (1 + newProfit / 100));
         products[index] = item;
       }
