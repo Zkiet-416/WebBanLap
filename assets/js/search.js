@@ -136,22 +136,31 @@ function performSearch(term) {
     
     let results = [];
     
+    // LỌC CHỈ NHỮNG SẢN PHẨM ĐANG HIỂN THỊ (status = 'hien' và categoryStatus = 'active')
+    const visibleProducts = window.allProducts.filter(product => {
+        const productStatus = product.status || 'an';
+        const categoryActiveStatus = product.categoryStatus || 'active'; 
+        
+        // CHỈ GIỮ LẠI SẢN PHẨM CÓ status='hien' VÀ categoryStatus='active'
+        return productStatus.toLowerCase() === 'hien' && categoryActiveStatus.toLowerCase() === 'active';
+    });
+    
     // Ưu tiên tìm kiếm theo giá nếu phát hiện
     if (priceSearch) {
         console.log(`Tìm kiếm theo giá:`, priceSearch);
-        results = searchByPrice(priceSearch);
+        results = searchByPrice(priceSearch, visibleProducts);
     } else {
         // Tìm kiếm theo tên thông thường
-        results = searchByName(searchText);
+        results = searchByName(searchText, visibleProducts);
     }
     
     const productResults = results.slice(0, 8);
     displaySearchResults(productResults, term, priceSearch);
 }
 
-// Hàm tìm kiếm theo giá
-function searchByPrice(priceSearch) {
-    return window.allProducts.filter(product => {
+// Hàm tìm kiếm theo giá theo tham số productsList
+function searchByPrice(priceSearch, productsList = window.allProducts) {
+    return productsList.filter(product => {
         if (!product || !product.priceValue) return false;
         
         const price = product.priceValue;
@@ -175,9 +184,9 @@ function searchByPrice(priceSearch) {
     }).sort((a, b) => a.priceValue - b.priceValue);
 }
 
-// Hàm tìm kiếm theo tên
-function searchByName(searchText) {
-    return window.allProducts.filter(product => {
+// Hàm tìm kiếm theo tên theo tham số productsList
+function searchByName(searchText, productsList = window.allProducts) {
+    return productsList.filter(product => {
         if (!product || !product.model) return false;
         
         const productName = removeVietnameseTones(product.model.toLowerCase());
